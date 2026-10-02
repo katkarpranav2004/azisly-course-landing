@@ -175,6 +175,8 @@ export const trustedBy = {
 /** The intro video opened from the hero ("Watch the intro"). Drop a new file at the same path to replace it. */
 export const introVideo = {
   src: "/video/intro.mp4",
+  /** thumbnail: shown in the strip and as the player's poster before the video starts */
+  poster: "/video/intro-poster.webp",
   length: "1:25",
   title: "Watch the intro",
   caption: "See what you'll learn and how it helps in real work.",

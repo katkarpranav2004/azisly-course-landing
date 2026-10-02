@@ -1,18 +1,29 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Play, X } from "lucide-react";
 import { introVideo } from "@/content/shared";
 import { CTA } from "@/content/course";
 
+const noop = () => () => {};
+/** False in the server HTML and during hydration, true once the client has taken over. */
+const useHydrated = () => useSyncExternalStore(noop, () => true, () => false);
+
 /**
  * "Watch the intro" strip for the hero, plus the overlay player it opens.
  * The video is only fetched once the overlay opens (preload="metadata" until then), so it costs the
  * page nothing on load. Esc, the backdrop and the close button all close it; focus returns to the strip.
+ *
+ * The overlay is rendered into document.body through a portal. Inside the hero it would sit in an
+ * animated (transformed) box, which makes position:fixed relative to that box instead of the screen
+ * and puts it under the sticky header.
  */
 export default function IntroVideo({ onEnroll }: { onEnroll: () => void }) {
   const [open, setOpen] = useState(false);
+  const hydrated = useHydrated();
   const opener = useRef<HTMLButtonElement>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -49,9 +60,13 @@ export default function IntroVideo({ onEnroll }: { onEnroll: () => void }) {
         className="group flex w-full items-center gap-3.5 rounded-[18px] border border-[#e6e4f0] bg-white p-3 text-left shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)]"
         aria-haspopup="dialog"
       >
-        <span className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-[#fbe3f4]">
-          <span aria-hidden className="absolute inset-0 rounded-full bg-[#ff6fd8] opacity-30 motion-safe:animate-ping" />
-          <Play size={20} fill="currentColor" className="relative ml-0.5 text-[#7c3aed]" />
+        <span className="relative aspect-video w-[88px] shrink-0 overflow-hidden rounded-xl bg-[#1f2026] ring-1 ring-black/10">
+          <Image src={introVideo.poster} alt="" fill sizes="88px" className="object-cover" />
+          <span className="absolute inset-0 flex items-center justify-center bg-black/10">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/95 shadow-md">
+              <Play size={13} fill="currentColor" className="ml-0.5 text-[#7c3aed]" />
+            </span>
+          </span>
         </span>
         <span className="min-w-0 flex-1 leading-snug">
           <span className="block text-[15px] font-bold text-foreground">
@@ -62,6 +77,8 @@ export default function IntroVideo({ onEnroll }: { onEnroll: () => void }) {
         <ArrowRight size={20} className="shrink-0 text-[#4b4f58] transition-transform group-hover:translate-x-1" />
       </motion.button>
 
+      {hydrated &&
+        createPortal(
       <AnimatePresence>
         {open && (
           <motion.div
@@ -96,6 +113,7 @@ export default function IntroVideo({ onEnroll }: { onEnroll: () => void }) {
               <video
                 ref={video}
                 src={introVideo.src}
+                poster={introVideo.poster}
                 controls
                 autoPlay
                 playsInline
@@ -120,7 +138,9 @@ export default function IntroVideo({ onEnroll }: { onEnroll: () => void }) {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+          document.body
+        )}
     </>
   );
 }
