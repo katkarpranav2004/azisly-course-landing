@@ -28,13 +28,13 @@ const BANNER = {
   college: {
     audience: "Freshers",
     headline: "50 free credits for AI Interview practice",
-    body: "Rehearse your first interviews with Azisly's AI Interview practice before the real ones. Add your 50 free credits with the code below.",
+    body: "Rehearse your first interviews with AI before the real ones.",
     cta: "Claim my 50 free credits",
   },
   corporate: {
     audience: "Working professionals",
     headline: "50 free credits for AI Interview practice",
-    body: "Rehearse your next interview with Azisly's AI Interview practice before the real one. Add your 50 free credits with the code below.",
+    body: "Rehearse your next interview with AI before the real one.",
     cta: "Claim my 50 free credits",
   },
 } as const;
@@ -66,19 +66,20 @@ function classParts() {
 /** How many classes the email lists inline; the rest are one tap away on the schedule page. */
 const PREVIEW_CLASSES = 3;
 
-type Kind = "primary" | "yellow" | "white" | "outline";
+type Kind = "primary" | "yellow" | "white" | "outline" | "dark";
 
 /** A button that survives Outlook: a coloured table cell with the link filling it. */
-function button(label: string, href: string, kind: Kind = "primary") {
+function button(label: string, href: string, kind: Kind = "primary", full = false) {
   const s = {
     primary: { bg: PURPLE, fg: "#ffffff", border: PURPLE },
     yellow: { bg: YELLOW, fg: "#1a0a2e", border: YELLOW },
     white: { bg: "#ffffff", fg: PURPLE, border: "#ffffff" },
     outline: { bg: "transparent", fg: "#ffffff", border: "#ffffff" },
+    dark: { bg: "#2a0f66", fg: "#ffffff", border: "#2a0f66" },
   }[kind];
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${s.bg}" style="border-radius:12px;border:2px solid ${s.border};"><a href="${esc(href)}" target="_blank" style="display:inline-block;padding:14px 26px;font-family:${SANS};font-size:15px;font-weight:bold;line-height:20px;color:${s.fg};text-decoration:none;border-radius:12px;">${esc(label)}</a></td></tr></table>`;
+  const radius = full ? 999 : 12;
+  return `<table role="presentation" ${full ? 'width="100%" ' : ""}cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${s.bg}" style="border-radius:${radius}px;border:2px solid ${s.border};"><a href="${esc(href)}" target="_blank" style="display:${full ? "block" : "inline-block"};padding:${full ? 16 : 14}px 26px;font-family:${SANS};font-size:15px;font-weight:bold;line-height:20px;color:${s.fg};text-decoration:none;border-radius:${radius}px;">${esc(label)}</a></td></tr></table>`;
 }
-
 /** Small pill that numbers each section. */
 function pill(n: string, text: string, bg: string, fg: string) {
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${bg}" style="border-radius:999px;padding:6px 14px;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:1.6px;text-transform:uppercase;color:${fg};">${n} &nbsp;&middot;&nbsp; ${esc(text)}</td></tr></table>`;
@@ -116,18 +117,18 @@ export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeI
 <p style="margin:6px 0 0 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:#e6d9ff;">Button not working? Copy this link into your browser:<br><a href="${esc(config.zoomUrl)}" style="color:#ffffff;word-break:break-all;">${esc(config.zoomUrl)}</a></p>`
     : `<p style="margin:0;font-family:${SANS};font-size:15.5px;line-height:24px;color:#f4eeff;">Your ${cohort.platform} link for the live classes is on its way. We will send it to this email and ${cohort.deliveredVia === "email and WhatsApp" ? "on WhatsApp" : "by message"} before Class 1.</p>${config.whatsappUrl ? `<div style="margin-top:16px;">${button("Join the WhatsApp group", config.whatsappUrl, "outline")}</div>` : ""}`;
 
-  // A gold coupon with punched-out sides: "50 free credits" on the left, the code on the right.
+  // A lavender coupon with punched-out sides: "50 free credits" on the left, the code on the right.
   const couponRight = config.creditCode
-    ? `<p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#6b3f00;">Your code</p>
-<p style="margin:4px 0 0 0;font-family:${SANS};font-size:30px;line-height:34px;font-weight:bold;letter-spacing:5px;color:#1a0a2e;">${esc(config.creditCode)}</p>
-<p style="margin:5px 0 0 0;font-family:${SANS};font-size:12px;line-height:17px;color:#5a3500;">Enter it on Azisly to add your credits</p>`
-    : `<p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#6b3f00;">Claim yours</p>
+    ? `<p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#6b4bc8;">Your code</p>
+<p style="margin:4px 0 0 0;font-family:${SANS};font-size:28px;line-height:32px;font-weight:bold;letter-spacing:4px;color:#1a0a2e;">${esc(config.creditCode)}</p>
+<p style="margin:5px 0 0 0;font-family:${SANS};font-size:12px;line-height:17px;color:${MUTED};">Enter it on Azisly to add your credits</p>`
+    : `<p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#6b4bc8;">Claim yours</p>
 <p style="margin:4px 0 0 0;font-family:${SERIF};font-size:21px;line-height:27px;font-style:italic;font-weight:bold;color:#1a0a2e;">Tap the button below</p>`;
-  const coupon = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${YELLOW}" style="margin:22px 0 0 0;border-radius:16px;background-color:${YELLOW};background-image:linear-gradient(135deg,#ffe066 0%,#ffc21a 100%);"><tr>
-  <td width="14" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-dark-left.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
-  <td width="132" align="center" valign="middle" style="padding:18px 6px;"><p class="coupon50" style="margin:0;font-family:${SERIF};font-size:58px;line-height:54px;font-weight:bold;color:#1a0a2e;">50</p><p style="margin:4px 0 0 0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#6b3f00;">Free credits</p></td>
-  <td valign="middle" style="padding:16px 14px 16px 20px;border-left:2px dashed #b27a00;">${couponRight}</td>
-  <td width="14" align="right" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-dark-right.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
+  const coupon = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#efe5ff" style="margin:6px 0 0 0;border-radius:16px;background:#efe5ff;border:1.5px solid #d9c8ff;"><tr>
+  <td width="14" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-cream-left.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
+  <td width="132" align="center" valign="middle" style="padding:18px 6px;"><p class="coupon50" style="margin:0;font-family:${SERIF};font-size:58px;line-height:54px;font-weight:bold;color:#2a0f66;">50</p><p style="margin:4px 0 0 0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:#6b4bc8;">Free credits</p></td>
+  <td valign="middle" style="padding:16px 14px 16px 20px;border-left:2px dashed #b79cf5;">${couponRight}</td>
+  <td width="14" align="right" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-cream-right.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
 </tr></table>`;
   const sampleNotice = config.sample
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background:#fff3cd;padding:8px 12px;font-family:${SANS};font-size:12px;color:#664d03;">DESIGN PREVIEW: the Zoom link, WhatsApp link and credit code below are sample values and are not used in real emails.</td></tr></table>`
@@ -148,7 +149,7 @@ export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeI
     .h1{font-size:32px !important;line-height:38px !important;}
     .bigday{font-size:62px !important;line-height:62px !important;}
     .coupon50{font-size:46px !important;line-height:44px !important;}
-    .stack{display:block !important;width:100% !important;}
+    .stack{display:block !important;width:100% !important;box-sizing:border-box !important;}
   }
 </style>
 </head>
@@ -171,28 +172,27 @@ ${sampleNotice}
     <!-- hero artwork -->
     <tr><td style="font-size:0;line-height:0;" bgcolor="#3d14a8"><img src="${esc(img("email/hero.jpg"))}" width="600" alt="You're in. Seat confirmed for AI Corporate Analyst, with Prasun Choudhary." style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
 
-    <!-- 1 thanks: a notched gold "ticket" band -->
-    <tr><td bgcolor="${YELLOW}" style="background-color:${YELLOW};background-image:linear-gradient(135deg,#ffe066 0%,#ffc21a 100%);">
+    <!-- 1 thanks: dark band with the graduation cap -->
+    <tr><td bgcolor="#24095a" style="background-color:#24095a;background-image:url('${esc(img("email/band.jpg"))}');background-size:cover;background-position:center;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-        <td width="14" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-left.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
-        <td align="center" class="pad" style="padding:34px 20px 8px 20px;">
-          <p style="margin:0;font-family:${SANS};font-size:13px;font-weight:bold;letter-spacing:5px;text-transform:uppercase;color:#6b3f00;">Congratulations${first ? `, ${hello}` : ""}</p>
-          <h1 class="h1" style="margin:10px 0 0 0;font-family:${SERIF};font-size:46px;line-height:50px;font-weight:bold;font-style:italic;color:#1a0a2e;">your seat is<br>confirmed!</h1>
+        <td class="stack pad" valign="middle" style="padding:38px 0 10px 36px;">
+          <p style="margin:0;font-family:${SANS};font-size:12.5px;font-weight:bold;letter-spacing:4px;text-transform:uppercase;color:#cdbbff;">Congratulations${first ? `, ${hello}` : ""}</p>
+          <h1 class="h1" style="margin:12px 0 0 0;font-family:${SERIF};font-size:46px;line-height:52px;font-weight:bold;color:#ffffff;">Your seat is<br><span style="font-style:italic;color:${YELLOW};">confirmed!</span></h1>
         </td>
-        <td width="14" valign="middle" align="right" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-right.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
+        <td class="stack" width="206" valign="bottom" align="center" style="padding:14px 20px 0 0;"><img src="${esc(img("email/cap.png"))}" width="188" alt="" style="display:block;border:0;height:auto;max-width:188px;"></td>
       </tr><tr>
-        <td colspan="3" align="center" style="padding:14px 28px 22px 28px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:2px dashed #b27a00;font-size:0;line-height:0;height:1px;">&nbsp;</td></tr></table>
-          <p style="margin:12px 0 0 0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;color:#5a3500;">Admit one &nbsp;&middot;&nbsp; ${MODULE_COUNT} live classes &nbsp;&middot;&nbsp; AI Corporate Analyst</p>
+        <td colspan="2" class="pad" style="padding:6px 36px 30px 36px;">
+          <span style="display:inline-block;margin:0 8px 8px 0;padding:8px 15px;border:1px solid #6b4bc8;border-radius:999px;background:#2e1272;font-family:${SANS};font-size:12.5px;line-height:16px;color:#efe6ff;"><span style="color:${YELLOW};">&#9679;</span>&nbsp; Admit one</span><span style="display:inline-block;margin:0 8px 8px 0;padding:8px 15px;border:1px solid #6b4bc8;border-radius:999px;background:#2e1272;font-family:${SANS};font-size:12.5px;line-height:16px;color:#efe6ff;"><span style="color:${PINK};">&#9679;</span>&nbsp; ${MODULE_COUNT} live classes</span><span style="display:inline-block;margin:0 0 8px 0;padding:8px 15px;border:1px solid #6b4bc8;border-radius:999px;background:#2e1272;font-family:${SANS};font-size:12.5px;line-height:16px;color:#efe6ff;"><span style="color:#6fd8b9;">&#9679;</span>&nbsp; AI Corporate Analyst</span>
         </td>
       </tr></table>
     </td></tr>
-    <tr><td class="pad" style="padding:30px 36px 8px 36px;">
-      ${pill("1", "Thank you", "#ffe3f8", "#b0127a")}
-      <p style="margin:16px 0 0 0;font-family:${SERIF};font-size:21px;line-height:32px;color:${INK};"><span style="background:#ece4ff;color:${PURPLE};font-weight:bold;padding:2px 10px;border-radius:8px;">${hello},</span> thank you for joining <b>AI Corporate Analyst</b>. Your payment went through and your seat is locked in for all ${MODULE_COUNT} live classes.</p>
-      <p style="margin:14px 0 0 0;font-family:${SANS};font-size:15px;line-height:24px;color:${MUTED};">Here is everything you need, in four quick steps.${orderId ? ` Your order reference is <b style="color:${INK};">${esc(orderId)}</b>.` : ""}</p>
+    <tr><td bgcolor="#1c0b4c" style="background:#1c0b4c;font-size:0;line-height:0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="pad" bgcolor="#ffffff" style="background:#ffffff;border-radius:24px 24px 0 0;padding:30px 36px 8px 36px;font-size:16px;line-height:normal;">
+        ${pill("1", "Thank you", "#ffe3f8", "#b0127a")}
+        <p style="margin:16px 0 0 0;font-family:${SANS};font-size:17px;line-height:27px;color:${INK};"><b>${hello}</b>, thank you for joining <b>AI Corporate Analyst</b>. Your payment went through and your seat is locked in for all ${MODULE_COUNT} live classes.</p>
+        <p style="margin:12px 0 0 0;font-family:${SANS};font-size:15px;line-height:24px;color:${MUTED};">Here is everything you need, in four quick steps.${orderId ? ` Your order reference is <b style="color:${INK};">${esc(orderId)}</b>.` : ""}</p>
+      </td></tr></table>
     </td></tr>
-
     <!-- 2 welcome: a note from Prasun -->
     <tr><td class="pad" style="padding:26px 36px 14px 36px;">
       ${pill("2", "Welcome", "#e9e1ff", PURPLE)}
@@ -235,17 +235,18 @@ ${sampleNotice}
       ${linkBlock}
     </td></tr>
 
-    <!-- Azisly banner -->
-    <tr><td bgcolor="#1a0a2e" style="background:#1a0a2e;font-size:0;line-height:0;"><img src="${esc(img("email/credits.jpg"))}" width="600" alt="50 free credits for AI Interview practice" style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
-    <tr><td class="pad" bgcolor="#1a0a2e" style="background:#1a0a2e;padding:6px 36px 38px 36px;">
-      <p style="margin:18px 0 8px 0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:${YELLOW};">A gift for ${esc(banner.audience.toLowerCase())}</p>
-      <h2 style="margin:0 0 10px 0;font-family:${SERIF};font-size:29px;line-height:35px;color:#ffffff;">50 free credits<br><span style="color:${YELLOW};font-style:italic;">for AI Interview practice</span></h2>
-      <p style="margin:0;font-family:${SANS};font-size:15.5px;line-height:24px;color:#ddd3f5;">${esc(banner.body)}</p>
-      ${coupon}
-      <div style="margin-top:20px;">${button(banner.cta, claimUrl, "white")}</div>
-      <p style="margin:26px 0 0 0;"><img src="${esc(img("logos/azisly-white.png"))}" width="96" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:96px;opacity:.9;"></p>
+    <!-- Azisly banner: light cream card with the robot, at the very end -->
+    <tr><td class="pad" bgcolor="#f7f2ff" style="background:#f7f2ff;padding:36px 36px 4px 36px;">
+      <p style="margin:0 0 10px 0;font-family:${SANS};font-size:11.5px;font-weight:bold;letter-spacing:2.6px;text-transform:uppercase;color:#4b2aa8;">A gift for ${esc(banner.audience.toLowerCase())}</p>
+      <h2 style="margin:0 0 8px 0;font-family:${SERIF};font-size:32px;line-height:38px;color:${INK};">50 free credits<br><span style="font-style:italic;color:${PURPLE};">for AI Interview practice</span></h2>
+      <p style="margin:0;font-family:${SANS};font-size:16px;line-height:25px;color:${MUTED};">${esc(banner.body)}</p>
     </td></tr>
-
+    <tr><td bgcolor="#f7f2ff" style="background:#f7f2ff;font-size:0;line-height:0;"><img src="${esc(img("email/credits-art.png"))}" width="600" alt="An AI interviewer asks &quot;Tell me about yourself&quot; and a friendly robot cheers you on." style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
+    <tr><td class="pad" bgcolor="#f7f2ff" style="background:#f7f2ff;padding:6px 36px 36px 36px;">
+      ${coupon}
+      <div style="margin-top:22px;">${button(`${banner.cta}  →`, claimUrl, "dark", true)}</div>
+      <p style="margin:24px 0 0 0;"><img src="${esc(img("logos/azisly-brand.png"))}" width="104" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:104px;"></p>
+    </td></tr>
     <!-- footer -->
     <tr><td class="pad" style="padding:22px 36px 26px 36px;background:#ffffff;">
       <p style="margin:0 0 6px 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:${MUTED};">Questions? Just reply to this email or write to <a href="mailto:${esc(config.supportEmail)}" style="color:${PURPLE};">${esc(config.supportEmail)}</a>.</p>
