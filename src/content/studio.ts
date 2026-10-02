@@ -7,7 +7,7 @@ import { cohort } from "./shared";
 
 /**
  * Copy for the "studio" landing design, one set per audience. The components are shared;
- * only this text changes between /course, /college and /corporate.
+ * only this text changes between audiences.
  */
 export interface StudioPainRow {
   pain: string;
@@ -41,7 +41,7 @@ const afterPaying: FaqItem = {
   answer: `You get a confirmation and the ${cohort.platform} link on ${cohort.deliveredVia} right after payment. Class 1 is live on ${cohort.startsLabel}, and every class link reaches you the same way.`,
 };
 
-/** /course: general audience (the original copy). */
+/** Generic copy; also the fallback if no audience-specific set applies. */
 const courseStudio: StudioCopy = {
   hero: {
     eyebrow: `Newly launched · ${LIVE}`,

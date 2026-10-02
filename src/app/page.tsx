@@ -17,12 +17,6 @@ export default function Home() {
         >
           View corporate page →
         </Link>
-        <Link
-          href="/course"
-          className="rounded-lg border border-border px-6 py-3 text-sm font-semibold text-foreground"
-        >
-          View course page →
-        </Link>
       </div>
     </div>
   );

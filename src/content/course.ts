@@ -6,7 +6,7 @@ import { cohort, curriculum, faculty } from "./shared";
 export const CTA = "Enroll now";
 
 /**
- * Instructor-led course page (/course) for a general audience.
+ * Shared course content (curriculum highlights, credentials, USPs, placeholder testimonials) used by the studio design.
  * PLACEHOLDER: listPrice, seatsLeft and dates. Confirm before launch.
  */
 export const courseContent: AudienceContent = {
