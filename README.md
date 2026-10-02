@@ -39,14 +39,21 @@ Two ways to take payment:
 
 ## Before launch
 
-- Testimonials, the "just enrolled" popup and learner photos are placeholders (`sample: true`). They exist in development only and never ship; replace them with real, consented ones.
+- **Placeholder content is showing on purpose** (testimonials with learner photos, the "just enrolled" popup, the "Sample" data in `src/content/`) so the pages can be reviewed as designed. Replace it with real, consented testimonials before launch (see Going live below).
 - `offerEndsAt` in `src/content/*.ts` is a hard deadline. After it, the on-site checkout charges the list price.
 - Set the real class start date in `src/content/shared.ts` (`cohort`).
 
 ## Deployment
 
 - Hosted on Vercel as the `azisly-course-landing` project, connected to this repository. Every push to `main` deploys to production.
-- **The site is public** (Deployment Protection is off). Placeholder testimonials, learner photos and "just enrolled" entries are development-only: they are removed from production builds, and `/testimonials/*` is refused in production. Real testimonials must be added to the content files without `sample: true`; real photos go in a folder other than `public/testimonials/`.
+- **The site is public**, so share the link freely for review. While placeholders show, every page sends a `noindex` header so search engines do not pick up the placeholder text.
 - On Vercel's free Hobby plan, deployments are only allowed for commits authored by the project owner. A commit authored by anyone else shows up as **Blocked**. Commit as the owner, or move the project to a team.
 - No environment variables are needed for `/college` and `/corporate` (they use the hosted Cashfree forms). The on-site checkout (only used if an audience has no `paymentUrl`) needs the Cashfree keys from `.env.example` set in Vercel.
 - To serve these pages at `azisly.ai/college` and `azisly.ai/corporate`, forward those paths from the main azisly.ai site to this project.
+
+## Going live (replacing the placeholders)
+
+1. Add the real testimonials (name, short quote, consented photo) to `src/content/course.ts`. Put the photos in a folder other than `public/testimonials/`, without `sample: true`.
+2. In Vercel, add the environment variable `HIDE_SAMPLE_CONTENT=true` for Production and redeploy.
+
+With that variable set, the placeholder testimonials, photos and "just enrolled" entries are removed from the build, `/testimonials/*` is refused, and the `noindex` header is dropped so the site can be indexed.

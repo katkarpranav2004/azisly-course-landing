@@ -1,8 +1,8 @@
 import type { ActivityEvent } from "./corporate-launch";
 import { course } from "./course";
 
-// Same condition as SHOW_SAMPLES, written out here so the production build can drop the placeholder data entirely (no override: placeholders never ship).
-const SAMPLES_ON = process.env.NODE_ENV !== "production";
+// The placeholder switch (see next.config.ts). Resolved at build time, so the data below is dropped from the bundle when it is off.
+const SAMPLES_ON = process.env.SAMPLE_CONTENT === "on";
 
 
 /**
