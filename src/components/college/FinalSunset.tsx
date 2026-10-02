@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Check, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck, Users } from "lucide-react";
 import GlassClock from "@/components/clocks/GlassClock";
 import MagneticButton from "@/components/launch/MagneticButton";
 import OfferPrice from "@/components/launch/OfferPrice";
@@ -41,6 +41,9 @@ export default function FinalSunset({ content, onEnroll }: { content: AudienceCo
             <div>
               <div className="flex items-center justify-between">
                 <span className="badge">🎟️ Student launch pass</span>
+                <span className="flex items-center gap-1.5 text-xs text-white/85">
+                  <Users size={13} /> {pricing.seatsLeft} seats left
+                </span>
               </div>
               <div className="mt-6">
                 <OfferPrice pricing={pricing} size="xl" delay={0.1} variant="sunset" />

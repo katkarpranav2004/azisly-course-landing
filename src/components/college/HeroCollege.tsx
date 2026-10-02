@@ -67,7 +67,7 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
               <div className="flex flex-col items-stretch gap-2 sm:w-[250px]">
                 <span className="badge justify-center whitespace-nowrap px-3 py-1.5 text-[11.5px]">
                   <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_#fff] [animation:soft-pulse_1.2s_infinite]" />
-                  Student launch offer
+                  Student launch offer · {pricing.seatsLeft} seats left
                 </span>
                 <MagneticButton onClick={onEnroll} className="w-full">
                   Grab my seat <ArrowRight size={16} />
