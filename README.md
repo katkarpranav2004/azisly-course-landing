@@ -39,14 +39,14 @@ Two ways to take payment:
 
 ## Before launch
 
-- Testimonials, the "just enrolled" popup and learner photos are placeholders (`sample: true`). They render in development only; replace them with real, consented ones.
+- Testimonials, the "just enrolled" popup and learner photos are placeholders (`sample: true`). They exist in development only and never ship; replace them with real, consented ones.
 - `offerEndsAt` in `src/content/*.ts` is a hard deadline. After it, the on-site checkout charges the list price.
 - Set the real class start date in `src/content/shared.ts` (`cohort`).
 
 ## Deployment
 
 - Hosted on Vercel as the `azisly-course-landing` project, connected to this repository. Every push to `main` deploys to production.
-- **Deployment Protection is on for all deployments**, including the main `*.vercel.app` address: visitors need to sign in to Vercel. To open the site to the public, turn it off in Vercel under Settings, then Deployment Protection. Do that only after the placeholder photos in `public/testimonials/` are replaced or removed, since files in `public/` are reachable by direct URL.
+- **The site is public** (Deployment Protection is off). Placeholder testimonials, learner photos and "just enrolled" entries are development-only: they are removed from production builds, and `/testimonials/*` is refused in production. Real testimonials must be added to the content files without `sample: true`; real photos go in a folder other than `public/testimonials/`.
 - On Vercel's free Hobby plan, deployments are only allowed for commits authored by the project owner. A commit authored by anyone else shows up as **Blocked**. Commit as the owner, or move the project to a team.
 - No environment variables are needed for `/college` and `/corporate` (they use the hosted Cashfree forms). The on-site checkout (only used if an audience has no `paymentUrl`) needs the Cashfree keys from `.env.example` set in Vercel.
 - To serve these pages at `azisly.ai/college` and `azisly.ai/corporate`, forward those paths from the main azisly.ai site to this project.
