@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Azisly: AI Corporate Analyst landing pages
 
-## Getting Started
+Ad landing pages for the **AI Corporate Analyst** course on azisly.ai. Next.js (App Router) with Tailwind v4 and framer-motion.
 
-First, run the development server:
+> This is a newer Next.js than most docs describe. Read `node_modules/next/dist/docs/` before changing routing or data APIs (see `AGENTS.md`).
+
+## Pages
+
+| Route | What it is |
+| --- | --- |
+| `/college` | Students: Sunset Glass design |
+| `/college/v2` | Students: the newer "studio" design (not indexed) |
+| `/corporate` | Working professionals: the "studio" design |
+| `/corporate/v1` | Working professionals: earlier launch design (not indexed) |
+| `/course` | General audience: "studio" design |
+| `/course/classic` | General audience: WebVeda-style layout |
+| `/course/variants` | Internal design options (not indexed, not linked) |
+| `/order/status` | Payment result page for the on-site checkout |
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/content/`: all copy, prices, FAQs, testimonials, curriculum. `college.ts` and `corporate.ts` hold each audience's pricing and `paymentUrl`; `studio.ts` holds the words for the "studio" design; `shared.ts` holds the 13 modules, faculty and the class start date.
+- `src/components/course/`: the "studio" design sections (hero, credentials strip, pain to solution, why this, testimonials, mentors and modules, price, next steps).
+- `src/components/college/`, `src/components/launch/`: the Sunset Glass college page and the earlier corporate design.
+- `public/`: images and logos. These include photos of real people; keep the repository private.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Payments
 
-## Learn More
+Two ways to take payment:
 
-To learn more about Next.js, take a look at the following resources:
+1. **Hosted Cashfree form** (used by `/college` and `/corporate`): set `paymentUrl` on the audience's content. Every Enroll button sends the visitor to that form. The post-payment message and redirect are configured in the Cashfree form itself.
+2. **On-site form** (used when there is no `paymentUrl`, e.g. `/course`): posts to `/api/checkout`, which creates a Cashfree order. Copy `.env.example` to `.env.local` and fill in the Cashfree keys. Prices are resolved on the server per audience.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Before launch
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Testimonials, the "just enrolled" popup and learner photos are placeholders (`sample: true`). They render in development only; replace them with real, consented ones.
+- `offerEndsAt` in `src/content/*.ts` is a hard deadline. After it, the on-site checkout charges the list price.
+- Set the real class start date in `src/content/shared.ts` (`cohort`).
