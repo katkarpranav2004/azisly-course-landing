@@ -8,6 +8,7 @@ import { useCountdown } from "@/lib/useCountdown";
 import { cohort, reach, trustedBy } from "@/content/shared";
 import { CTA } from "@/content/course";
 import { useStudio } from "./StudioContext";
+import IntroVideo from "./IntroVideo";
 import type { AudienceContent } from "@/content/types";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -64,7 +65,7 @@ function PhotoCaption({ name }: { name: string }) {
 /** "Trusted by professionals from ..." card over the bottom of the photo (corporate only). */
 function TrustedCard() {
   return (
-    <div className="absolute -bottom-[3%] right-0 w-[min(100%,21rem)] rounded-[18px] border border-[#e6e4f0] bg-white px-4 pb-3.5 pt-3 shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)] sm:-right-[6%]">
+    <div className="rounded-[18px] border border-[#e6e4f0] bg-white px-4 pb-3.5 pt-3 shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)]">
       <p className="text-[13px] font-medium text-[#33363b]">{trustedBy.heading}</p>
       <Image src={trustedBy.logos} alt={trustedBy.alt} width={284} height={32} sizes="280px" className="mt-2 h-auto w-full max-w-[272px] mix-blend-multiply" />
     </div>
@@ -427,7 +428,10 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
 
               {hero.tags && <TagCards items={hero.tags} />}
               <PhotoCaption name={founder.name} />
-              {content.audience === "corporate" && <TrustedCard />}
+              <div className="absolute -bottom-[3%] right-0 z-10 flex w-[min(100%,21rem)] flex-col gap-2.5 sm:-right-[6%]">
+                {content.audience === "corporate" && <TrustedCard />}
+                <IntroVideo onEnroll={onEnroll} />
+              </div>
             </div>
           </motion.div>
         </div>

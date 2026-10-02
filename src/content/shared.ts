@@ -172,5 +172,13 @@ export const trustedBy = {
   alt: "OYO, Amazon, Microsoft and Google",
 } as const;
 
+/** The intro video opened from the hero ("Watch the intro"). Drop a new file at the same path to replace it. */
+export const introVideo = {
+  src: "/video/intro.mp4",
+  length: "1:25",
+  title: "Watch the intro",
+  caption: "See what you'll learn and how it helps in real work.",
+} as const;
+
 export const MODULE_COUNT = curriculum.length;
 export const BUILD_COUNT = curriculum.filter((m) => m.tag === "Build").length;
