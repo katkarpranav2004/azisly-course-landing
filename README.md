@@ -59,3 +59,12 @@ Two ways to take payment:
 2. In Vercel, add the environment variable `HIDE_SAMPLE_CONTENT=true` for Production and redeploy.
 
 With that variable set, the placeholder testimonials, photos and "just enrolled" entries are removed from the build, `/testimonials/*` is refused, and the `noindex` header is dropped so the site can be indexed.
+
+## Welcome email (sent automatically after payment)
+
+When a buyer pays on either Cashfree form, Cashfree calls `/api/webhooks/cashfree`. For a successful payment this reads the buyer's name and email from the payment itself and queues the welcome email, scheduled 5 minutes later (Resend holds it until then). Student-form payments get the freshers version, corporate-form payments the working-professionals version. The same order is never emailed twice.
+
+- **Design preview:** `/emails/welcome?audience=college` and `/emails/welcome?audience=corporate` (add `&format=text` for the plain-text version). Samples fill any link or code that is not set yet; real emails never use the samples. The email itself is built in `src/lib/email/welcome.ts`.
+- **Settings** (all in Vercel, Environment Variables; see `.env.example`): `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_ZOOM_URL`, `EMAIL_WHATSAPP_URL`, `EMAIL_AZISLY_URL`, `EMAIL_CREDIT_CODE_COLLEGE`, `EMAIL_CREDIT_CODE_CORPORATE`, optionally `EMAIL_CLASS_DATES`. A link or code that is not set is simply left out of the real email.
+- **Turning it on:** verify the sending domain in Resend, set the variables above plus `CASHFREE_SECRET_KEY`, then add `https://<site>/api/webhooks/cashfree` under Developers, Webhooks in Cashfree. Until `RESEND_API_KEY` is set the route does a dry run and sends nothing.
+- **Check with one real test payment** before ads go out: Cashfree's form webhook payload can differ slightly from the standard one, so confirm the email address and the student/corporate detection on a real order.
