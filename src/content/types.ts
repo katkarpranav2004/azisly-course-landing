@@ -1,5 +1,5 @@
 export type Audience = "college" | "corporate" | "course";
-export type Theme = "holo" | "sunset" | "launch" | "classic" | "studio";
+export type Theme = "holo" | "sunset" | "launch" | "studio";
 
 export interface CurriculumModule {
   index: number;

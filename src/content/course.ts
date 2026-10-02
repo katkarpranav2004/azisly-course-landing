@@ -72,33 +72,6 @@ export const courseContent: AudienceContent = {
 };
 
 export const course = {
-  meta: [
-    { icon: "level", label: "Beginner friendly" },
-    { icon: "live", label: "13 live sessions" },
-    { icon: "cert", label: "Certificate" },
-  ],
-  duration: "13 live sessions",
-  leverage: {
-    lead: "What you learn",
-    accent: "becomes your edge",
-    items: [
-      { icon: "framework", text: "A repeatable framework (RTCO) for getting reliable, high-quality output from any AI tool" },
-      { icon: "tools", text: "Hands-on fluency with ChatGPT, Claude, Perplexity and the tools teams actually use" },
-      { icon: "build", text: "Four real builds: your own AI agent, a dashboard agent, a survey agent and a working prototype" },
-      { icon: "career", text: "The confidence to be the person who sets up AI at work, in interviews and in meetings" },
-    ],
-  },
-  summary:
-    "A structured, hands-on journey from AI Curious to AI Corporate Analyst. You learn how AI works, how to prompt it well and how to use it on real data, then build agents, dashboards and a prototype of your own.",
-  instructorBio: [
-    "Prasun blends IIT engineering, a London Business School education and two decades of hands-on corporate leadership across 4 continents and 13 countries.",
-    "As the founder of Azisly.ai, he works where technology, business and innovation meet, and he built this program to make AI practical for everyone, not just engineers.",
-  ],
-  promise: [
-    { title: "One price. Everything included.", text: "₹5,999 with GST included. No upsells, no hidden charges at checkout." },
-    { title: "Build, don't just watch.", text: "Every session is teaching plus hands-on practice, ending in four real builds." },
-    { title: "Yours for life.", text: "Pay once and keep lifetime access to the course material." },
-  ],
   includes: [
     "13 live, hands-on sessions",
     "4 real AI builds",
