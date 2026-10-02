@@ -68,7 +68,7 @@ export const collegeContent: AudienceContent = {
     listPrice: 29999,
     offerPrice: 5999,
     offerStartedAt: "2026-09-30T00:00:00+05:30",
-    offerEndsAt: "2026-10-03T23:59:59+05:30",
+    offerEndsAt: "2026-10-09T23:59:59+05:30",
     seatsLeft: 42,
   },
   paymentUrl: "https://payments.cashfree.com/forms/AzAICorporateAnalystforCollegeStudents",
