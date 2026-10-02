@@ -170,10 +170,10 @@ ${sampleNotice}
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:24px;overflow:hidden;">
 
     <!-- hero artwork -->
-    <tr><td style="font-size:0;line-height:0;" bgcolor="#3d14a8"><img src="${esc(img("email/hero.jpg"))}" width="600" alt="You're in. Seat confirmed for AI Corporate Analyst, with Prasun Choudhary." style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
+    <tr><td style="font-size:0;line-height:0;" bgcolor="#34108a"><img src="${esc(img("email/hero.jpg"))}" width="600" alt="You're in. Seat confirmed for AI Corporate Analyst, with Prasun Choudhary." style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
 
     <!-- 1 thanks: dark band with the graduation cap -->
-    <tr><td bgcolor="#24095a" style="background-color:#24095a;background-image:url('${esc(img("email/band.jpg"))}');background-size:cover;background-position:center;">
+    <tr><td bgcolor="#2a0d6c" style="background-color:#2a0d6c;background-image:url('${esc(img("email/band.jpg"))}');background-size:cover;background-position:center;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
         <td class="stack pad" valign="middle" style="padding:38px 0 10px 36px;">
           <p style="margin:0;font-family:${SANS};font-size:12.5px;font-weight:bold;letter-spacing:4px;text-transform:uppercase;color:#cdbbff;">Congratulations${first ? `, ${hello}` : ""}</p>
@@ -194,7 +194,7 @@ ${sampleNotice}
       </td></tr></table>
     </td></tr>
     <!-- 2 welcome: a note from Prasun -->
-    <tr><td class="pad" style="padding:26px 36px 14px 36px;">
+    <tr><td bgcolor="${DEEP}" style="background:${DEEP};font-size:0;line-height:0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="pad" bgcolor="#ffffff" style="background:#ffffff;border-radius:0 0 26px 26px;padding:26px 36px 36px 36px;font-size:16px;line-height:normal;">
       ${pill("2", "Welcome", "#e9e1ff", PURPLE)}
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;border-radius:20px;background-color:#f6f2ff;border:2px solid #e3d8ff;"><tr><td style="padding:26px 26px 24px 26px;">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
@@ -205,7 +205,8 @@ ${sampleNotice}
         <p style="margin:16px 0 0 0;font-family:${SERIF};font-size:30px;line-height:34px;font-style:italic;color:${PURPLE};">Prasun</p>
         <p style="margin:0;font-family:${SANS};font-size:12.5px;line-height:18px;color:${MUTED};">Founder, Azisly.ai</p>
       </td></tr></table>
-    </td></tr>
+    </td></tr></table></td></tr>
+
     <!-- 3 schedule (dark) -->
     <tr><td class="pad" bgcolor="${DEEP}" style="background:${DEEP};padding:34px 36px 26px 36px;">
       ${pill("3", "Schedule", YELLOW, "#1a0a2e")}
@@ -228,13 +229,16 @@ ${sampleNotice}
     
     </td></tr>
 
-    <!-- 4 link (gradient) -->
-    <tr><td class="pad" bgcolor="#6a2bd9" style="background-color:#6a2bd9;background-image:linear-gradient(135deg,#4b1fb8 0%,#8a2fe0 55%,#d02fc4 100%);padding:36px 36px 38px 36px;">
-      ${pill("4", "Your link", "#ffffff", PURPLE)}
-      <h2 style="margin:16px 0 10px 0;font-family:${SERIF};font-size:30px;line-height:36px;color:#ffffff;">Your seat is one tap away.</h2>
-      ${linkBlock}
+    <!-- 4 link (gradient): dissolves in from the dark section above and out into the cream card below -->
+    <tr><td bgcolor="#6a2bd9" style="background-color:#6a2bd9;background-image:linear-gradient(135deg,#4b1fb8 0%,#8a2fe0 55%,#d02fc4 100%);">
+      <img src="${esc(img("email/fade-from-dark.png"))}" width="600" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="pad" style="padding:4px 36px 6px 36px;">
+        ${pill("4", "Your link", "#ffffff", PURPLE)}
+        <h2 style="margin:16px 0 10px 0;font-family:${SERIF};font-size:30px;line-height:36px;color:#ffffff;">Your seat is one tap away.</h2>
+        ${linkBlock}
+      </td></tr></table>
+      <img src="${esc(img("email/fade-to-cream.png"))}" width="600" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin-top:14px;">
     </td></tr>
-
     <!-- Azisly banner: light cream card with the robot, at the very end -->
     <tr><td class="pad" bgcolor="#f7f2ff" style="background:#f7f2ff;padding:36px 36px 4px 36px;">
       <p style="margin:0 0 10px 0;font-family:${SANS};font-size:11.5px;font-weight:bold;letter-spacing:2.6px;text-transform:uppercase;color:#4b2aa8;">A gift for ${esc(banner.audience.toLowerCase())}</p>
