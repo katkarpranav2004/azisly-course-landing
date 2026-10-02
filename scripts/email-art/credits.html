@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Source for public/email/credits.png. Render: msedge --headless=new --window-size=600,250 --force-device-scale-factor=2 --screenshot=credits.png credits.html -->
+<style>
+  html, body { margin: 0; }
+  body { width: 600px; height: 250px; overflow: hidden; position: relative; font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(ellipse 60% 90% at 24% 55%, #6a2bd9 0%, rgba(106,43,217,0) 70%), linear-gradient(135deg, #1a0a2e 0%, #2d1066 100%); }
+  .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.12) 1.2px, transparent 1.4px); background-size: 20px 20px; }
+  .coin { position: absolute; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #fff3a8 0%, #ffd23f 45%, #e8a600 100%); box-shadow: inset 0 -6px 0 rgba(160,100,0,.35), 0 18px 24px -10px rgba(0,0,0,.6); }
+  .coin:after { content: ""; position: absolute; inset: 9px; border-radius: 50%; border: 2px dashed rgba(150,95,0,.45); }
+  .big { left: 44px; top: 54px; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; }
+  .big b { position: relative; z-index: 2; font: bold 66px Georgia, serif; color: #7a4a00; letter-spacing: -2px; }
+  .c2 { left: 160px; top: 138px; width: 78px; height: 78px; }
+  .c3 { left: 20px; top: 28px; width: 54px; height: 54px; transform: rotate(-14deg); }
+  .bubble { position: absolute; border-radius: 18px; font-size: 13.5px; line-height: 19px; padding: 12px 16px; box-shadow: 0 16px 28px -14px rgba(0,0,0,.6); }
+  .q { right: 36px; top: 32px; width: 236px; background: #fff; color: #1a0a2e; border-bottom-left-radius: 4px; }
+  .q small { display: block; font-size: 10px; font-weight: bold; letter-spacing: 1.4px; color: #7c3aed; margin-bottom: 3px; }
+  .a { right: 70px; top: 124px; width: 232px; background: linear-gradient(135deg, #ff4fd8, #8b3dff); color: #fff; border-bottom-right-radius: 4px; }
+  .a small { display: block; font-size: 10px; font-weight: bold; letter-spacing: 1.4px; color: #ffe3f8; margin-bottom: 3px; }
+  .score { position: absolute; right: 30px; top: 178px; background: #6fd8b9; color: #053b2c; font-weight: bold; font-size: 12px; border-radius: 999px; padding: 7px 13px; box-shadow: 0 12px 20px -10px rgba(0,0,0,.6); }
+  svg.star { position: absolute; }
+</style>
+<div class="dots"></div>
+<div class="coin c3"></div>
+<div class="coin c2"></div>
+<div class="coin big"><b>50</b></div>
+<div class="bubble q"><small>AI INTERVIEWER</small>Tell me about yourself.</div>
+<div class="bubble a"><small>YOU</small>I turn messy data into clear decisions with AI.</div>
+<div class="score">&#9733; Great answer</div>
+<svg class="star" style="left:250px;top:40px" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#ffd23f"/></svg>
+<svg class="star" style="left:262px;top:196px" width="16" height="16" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#fff"/></svg>
