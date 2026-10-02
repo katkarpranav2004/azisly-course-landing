@@ -35,7 +35,7 @@ export default function HeroLaunch({
         </span>
         <span className="badge">
           <span className="h-1.5 w-1.5 rounded-full bg-[#ff2e63] shadow-[0_0_10px_#ff2e63] [animation:soft-pulse_1.2s_infinite]" />
-          Launch offer live · {pricing.seatsLeft} seats left
+          Launch offer live
         </span>
       </header>
 

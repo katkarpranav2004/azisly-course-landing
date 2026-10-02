@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Award, BarChart3, Bot, Briefcase, FileSpreadsheet, FileText, Flame, Package, ShieldCheck, TrendingUp, Users, Video } from "lucide-react";
+import { ArrowRight, Award, BarChart3, Bot, Briefcase, FileSpreadsheet, FileText, Package, ShieldCheck, TrendingUp, Users, Video } from "lucide-react";
 import { useCountdown } from "@/lib/useCountdown";
 import { cohort, reach, trustedBy } from "@/content/shared";
 import { CTA } from "@/content/course";
@@ -375,23 +375,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
             </motion.div>
 
             <motion.div {...rise(0.2)} className="mt-4 flex flex-wrap items-center gap-2">
-              <motion.span
-                whileHover={{ y: -2 }}
-                className="flex items-center gap-2 rounded-full border border-[#ffd0ee] bg-[#fff0f9] py-1.5 pl-2 pr-3 text-[13px] font-semibold text-[#b0127a]"
-              >
-                <motion.span
-                  animate={{ scale: [1, 1.18, 0.94, 1.12, 1], rotate: [0, -6, 4, -3, 0] }}
-                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                  className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-b from-[#ffb36b] to-[#ff4f8b] text-white"
-                >
-                  <Flame size={13} fill="currentColor" />
-                </motion.span>
-                Hurry, only {pricing.seatsLeft} seats left
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff4f8b] opacity-70" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#e11d74]" />
-                </span>
-              </motion.span>
+
               <motion.span
                 whileHover={{ y: -2 }}
                 className="flex items-center gap-2 rounded-full border border-[#e3e6eb] bg-white py-1 pl-1 pr-3 text-[13px] font-semibold text-foreground"

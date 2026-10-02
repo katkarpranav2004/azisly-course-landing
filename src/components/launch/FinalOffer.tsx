@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import FlipClock from "@/components/clocks/FlipClock";
 import MagneticButton from "./MagneticButton";
 import OfferPrice from "./OfferPrice";
@@ -42,9 +42,6 @@ export default function FinalOffer({ content, onEnroll }: { content: AudienceCon
             <div>
               <div className="flex items-center justify-between">
                 <span className="badge">Launch pricing</span>
-                <span className="flex items-center gap-1.5 text-xs text-muted">
-                  <Users size={13} /> {pricing.seatsLeft} seats left
-                </span>
               </div>
               <div className="mt-6">
                 <OfferPrice pricing={pricing} size="xl" delay={0.1} />
