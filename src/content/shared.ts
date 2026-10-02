@@ -4,7 +4,7 @@ export const faculty: Faculty = {
   founder: {
     name: "Prasun Choudhary",
     role: "Founder, Azisly.ai",
-    credentials: "Alumnus, IIT Kharagpur & London Business School",
+    credentials: "Engineering, IIT Kharagpur · London Business School · Ex-President, OYO International",
     photo: "/faculty/prasun-choudhary.png",
     bio: [
       "A distinctive blend of IIT engineering excellence, global business-school expertise, and two decades of hands-on corporate leadership across 4 continents and 13 countries.",
@@ -154,6 +154,12 @@ export const cohort = {
   platform: "Zoom",
   /** what the learner receives right after paying */
   deliveredVia: "email and WhatsApp",
+} as const;
+
+/** How many people have attended Prasun's sessions so far (figure supplied by the team; shown in the heroes). */
+export const reach = {
+  college: "15k+ students attended",
+  corporate: "15k+ working professionals attended",
 } as const;
 
 export const MODULE_COUNT = curriculum.length;

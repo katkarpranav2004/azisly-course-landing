@@ -23,7 +23,7 @@ export interface StudioPainRow {
 export interface StudioCopy {
   hero: { eyebrow: string; title: string; tagline: string; body: string };
   /** `logo` names an entry in experts.founderLogos; `icon` is used where there is no logo */
-  credentials: { value: string; label: string; logo?: string; icon?: "years" | "globe" }[];
+  credentials: { value: string; label?: string; logo?: string; icon?: "years" | "globe" }[];
   founderHighlights: string[];
   pain: { kicker: string; standfirst: string; rows: StudioPainRow[] };
   /** exactly three: live, price, real work */
@@ -127,7 +127,7 @@ const collegeStudio: StudioCopy = {
     },
     {
       title: "Priced for students",
-      text: "₹5,999 one time, GST included. That's under ₹500 per live class, half the regular ₹11,999.",
+      text: "₹5,999 one time, GST included. That's under ₹500 per live class, against the regular ₹29,999.",
     },
     {
       title: "Projects recruiters ask about",

@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Flame } from "lucide-react";
+import { ArrowRight, Flame, Users } from "lucide-react";
 import { useCountdown } from "@/lib/useCountdown";
-import { cohort } from "@/content/shared";
+import { cohort, reach } from "@/content/shared";
 import { CTA } from "@/content/course";
 import { useStudio } from "./StudioContext";
 import type { AudienceContent } from "@/content/types";
@@ -261,6 +261,15 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
                 <CalendarPage label={cohort.startsLabel} />
                 Classes start {cohort.startsLabel}
               </motion.span>
+              {content.audience !== "course" && (
+                <motion.span
+                  whileHover={{ y: -2 }}
+                  className="flex items-center gap-2 rounded-full border border-[#e3e6eb] bg-white py-1.5 pl-2.5 pr-3 text-[13px] font-semibold text-foreground"
+                >
+                  <Users size={15} className="text-accent" />
+                  {reach[content.audience]}
+                </motion.span>
+              )}
             </motion.div>
             <motion.p {...rise(0.22)} className="mt-2.5 text-[12.5px] text-muted">
               Incl. GST · Secure checkout via Cashfree

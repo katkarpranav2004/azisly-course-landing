@@ -10,7 +10,7 @@ export const collegeContent: AudienceContent = {
   metaTitle: "AI Corporate Analyst for Students | Azisly",
   metaDescription:
     "Recruiters now shortlist freshers who can work with AI. 13 hands-on modules and 4 real builds that make your resume impossible to ignore.",
-  eyebrow: "Student launch offer · 50% off",
+  eyebrow: "Student launch offer · 80% off",
   headline: "Don't graduate without",
   headlineAccent: "this AI skill.",
   subheadline:
@@ -65,7 +65,7 @@ export const collegeContent: AudienceContent = {
   },
   pricing: {
     currency: "INR",
-    listPrice: 11999,
+    listPrice: 29999,
     offerPrice: 5999,
     offerStartedAt: "2026-09-30T00:00:00+05:30",
     offerEndsAt: "2026-10-03T23:59:59+05:30",
@@ -99,7 +99,7 @@ export const collegeContent: AudienceContent = {
     {
       question: "What happens after the offer ends?",
       answer:
-        "The course goes back to the full price of ₹11,999. The ₹5,999 launch price (GST included) is only for enrollments made before the countdown hits zero.",
+        "The course goes back to the full price of ₹29,999. The ₹5,999 launch price (GST included) is only for enrollments made before the countdown hits zero.",
     },
   ],
 };

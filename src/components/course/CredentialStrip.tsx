@@ -71,7 +71,7 @@ export default function CredentialStrip() {
                 />
                 <span className={`relative transition-colors duration-300 ${on ? "text-accent" : "text-foreground"}`}>{c.value}</span>
               </p>
-              <p className="mt-0.5 text-[12.5px] text-muted">{c.label}</p>
+              {c.label && <p className="mt-0.5 text-[12.5px] text-muted">{c.label}</p>}
             </li>
           );
         })}

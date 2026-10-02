@@ -42,6 +42,8 @@ Two ways to take payment:
 - **Placeholder content is showing on purpose** (testimonials with learner photos, the "just enrolled" popup, the "Sample" data in `src/content/`) so the pages can be reviewed as designed. Replace it with real, consented testimonials before launch (see Going live below).
 - `offerEndsAt` in `src/content/*.ts` is a hard deadline. After it, the on-site checkout charges the list price.
 - Set the real class start date in `src/content/shared.ts` (`cohort`).
+- **Seats left** is a fixed number today (`seatsLeft` in `src/content/college.ts` and `corporate.ts`). It should track real remaining seats. Plan: lower it with each actual enrolment (for example from Cashfree payment confirmations, or by editing the number as seats are sold). It is deliberately not a random counter: a count that drops without real sign-ups is false urgency, which India's 2023 dark-pattern guidelines prohibit, and the CRO checklist asks for "actual seats left".
+- The "15k+ ... attended" lines come from `reach` in `src/content/shared.ts`; keep them to a figure the team can stand behind.
 
 ## Deployment
 

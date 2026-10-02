@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, Users } from "lucide-react";
 import GlassClock from "@/components/clocks/GlassClock";
 import MagneticButton from "@/components/launch/MagneticButton";
 import OfferPrice from "@/components/launch/OfferPrice";
 import DuoComposition from "./DuoComposition";
 import { hero } from "@/content/college-launch";
+import { reach } from "@/content/shared";
 import type { PricingConfig } from "@/content/types";
 
 const rise = (delay: number) => ({
@@ -22,10 +23,16 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
       <div aria-hidden className="absolute -right-[20vmax] -top-[30vmax] h-[70vmax] w-[70vmax] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,.35),transparent_60%)] blur-2xl" />
 
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between py-4">
-        {/* Logo sits on a white pill so its dark lettering stays readable on the gradient. */}
-        <span className="inline-flex items-center rounded-2xl bg-white px-4 py-2 shadow-[0_12px_30px_-14px_rgba(60,0,60,.55)]">
-          <Image src="/logos/azisly-brand.png" alt="Azisly.ai" width={692} height={233} sizes="120px" priority className="h-[30px] w-auto sm:h-[34px]" />
-        </span>
+        {/* White logo on a transparent background, made for the coloured hero. */}
+        <Image
+          src="/logos/azisly-white.png"
+          alt="Azisly.ai"
+          width={692}
+          height={233}
+          sizes="140px"
+          priority
+          className="h-[34px] w-auto drop-shadow-[0_4px_14px_rgba(60,0,60,.35)] sm:h-[40px]"
+        />
       </header>
 
       <div className="relative z-10 mx-auto mt-4 grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-8 lg:mt-6 lg:grid-cols-[1.05fr_.95fr] lg:gap-6">
@@ -42,6 +49,9 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
           <motion.p {...rise(0.1)} className="mt-4 max-w-[520px] text-[15.5px] leading-relaxed text-white/90 sm:text-[17px]">
             {hero.sub}
           </motion.p>
+          <motion.p {...rise(0.14)} className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold backdrop-blur-md">
+            <Users size={14} /> {reach.college}
+          </motion.p>
 
           <motion.div {...rise(0.18)} className="card relative mt-6 max-w-[560px] rounded-[28px] p-5">
             <OfferPrice pricing={pricing} size="lg" delay={0.5} variant="sunset" />
@@ -53,12 +63,13 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
                 </p>
                 <GlassClock endsAt={pricing.offerEndsAt} size="sm" />
               </div>
-              <div className="flex flex-col items-stretch gap-2 sm:items-end">
-                <span className="badge justify-center self-center whitespace-nowrap px-3 py-1.5 text-[11.5px] sm:self-end">
+              {/* One column, one width: the badge, the button and the checkout line all centre on the same axis. */}
+              <div className="flex flex-col items-stretch gap-2 sm:w-[250px]">
+                <span className="badge justify-center whitespace-nowrap px-3 py-1.5 text-[11.5px]">
                   <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_#fff] [animation:soft-pulse_1.2s_infinite]" />
                   Student launch offer · {pricing.seatsLeft} seats left
                 </span>
-                <MagneticButton onClick={onEnroll}>
+                <MagneticButton onClick={onEnroll} className="w-full">
                   Grab my seat <ArrowRight size={16} />
                 </MagneticButton>
                 <span className="flex items-center justify-center gap-1.5 text-[11px] text-white/80">
