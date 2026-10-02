@@ -4,6 +4,12 @@
  * hidden from production builds until replaced with real data.
  */
 
+/** Sample content renders in development only, so placeholders can never ship by accident. */
+// Same condition as SHOW_SAMPLES, written out here so the production build can drop the placeholder data entirely (no override: placeholders never ship).
+const SAMPLES_ON = process.env.NODE_ENV !== "production";
+
+export const SHOW_SAMPLES = SAMPLES_ON;
+
 export interface PainLine {
   emoji: string;
   text: string;
@@ -121,7 +127,7 @@ export const proof = {
   eyebrow: "Learner stories",
   heading: "From people who've taken it",
   // SAMPLE ONLY: replace with real, attributable learner quotes.
-  testimonials: [
+  testimonials: !SAMPLES_ON ? [] : [
     { sample: true, name: "Learner name", role: "Senior Business Analyst", quote: "Automated a weekly reporting task in week 3. It paid for itself before I'd finished the program." },
     { sample: true, name: "Learner name", role: "Marketing Manager", quote: "The dashboard agent became something my team uses every single week." },
     { sample: true, name: "Learner name", role: "Operations Lead", quote: "I finally understood what to actually ask AI, and how to check its answers." },
@@ -132,7 +138,7 @@ export const proof = {
 };
 
 /** SAMPLE ONLY: wire to real enrollment events before showing in production. */
-export const demoActivity: ActivityEvent[] = [
+export const demoActivity: ActivityEvent[] = !SAMPLES_ON ? [] : [
   { sample: true, name: "Someone", city: "Jammu" },
   { sample: true, name: "Rahul", city: "Delhi" },
   { sample: true, name: "Priya", city: "Pune" },
@@ -170,6 +176,4 @@ export const final = {
   ],
 };
 
-/** Sample content renders in development only, so placeholders can never ship by accident. */
-export const SHOW_SAMPLES =
-  process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_SHOW_SAMPLE_CONTENT === "true";
+

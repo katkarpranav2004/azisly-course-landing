@@ -5,6 +5,10 @@ import { cohort, curriculum, faculty } from "./shared";
 /** One CTA label used on every button of the page (CRO brief: one colour, one text). */
 export const CTA = "Enroll now";
 
+// Same condition as SHOW_SAMPLES, written out here so the production build can drop the placeholder data entirely (no override: placeholders never ship).
+const SAMPLES_ON = process.env.NODE_ENV !== "production";
+
+
 /**
  * Shared course content (curriculum highlights, credentials, USPs, placeholder testimonials) used by the studio design.
  * PLACEHOLDER: listPrice, seatsLeft and dates. Confirm before launch.
@@ -143,7 +147,7 @@ export const course = {
   // Placeholder names and quotes (`sample: true`), so these render in development only.
   // To publish one, replace the name and quote with that person's real words, get their
   // consent to use the photo, and set `sample: false`.
-  testimonials: [
+  testimonials: (!SAMPLES_ON ? [] : [
     { sample: true, name: "Aarav Sen", photo: "/testimonials/learner-1.webp", photoFocus: [43, 48], photoZoom: 1.6, quote: "I automated my weekly report in the third week. It paid for the whole program." },
     { sample: true, name: "Nikhil Joshi", photo: "/testimonials/learner-2.webp", photoFocus: [42, 34], photoZoom: 1.6, quote: "My dashboard agent was the first thing every interviewer asked about." },
     { sample: true, name: "Rahul Yadav", photo: "/testimonials/learner-3.webp", photoFocus: [47, 33], photoZoom: 1.6, quote: "I finally know what to ask AI, and how to check what it gives back." },
@@ -152,5 +156,5 @@ export const course = {
     { sample: true, name: "Sourav Mondal", photo: "/testimonials/learner-6.webp", photoFocus: [55, 43], photoZoom: 2.1, quote: "My month-end deck went from two days to an afternoon." },
     { sample: true, name: "Karan Bhatia", photo: "/testimonials/learner-7.webp", photoFocus: [43, 46], photoZoom: 1.6, quote: "I built something I could actually demo to leadership." },
     { sample: true, name: "Ishaan Rao", photo: "/testimonials/learner-8.webp", photoFocus: [44, 39], photoZoom: 1.5, quote: "Zero coding background and I still built my own AI agent." },
-  ] as Testimonial[],
+  ]) as Testimonial[],
 };

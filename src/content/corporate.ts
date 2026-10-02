@@ -72,20 +72,9 @@ export const corporateContent: AudienceContent = {
     seatsLeft: 70,
   },
   paymentUrl: "https://payments.cashfree.com/forms?code=AzCorporateAnalystforCorporate",
-  testimonials: [
-    {
-      name: "Karan M.",
-      role: "Senior Business Analyst",
-      quote:
-        "I automated a weekly reporting task in week 3 of the course. It paid for itself before I'd even finished the program.",
-    },
-    {
-      name: "Priya D.",
-      role: "Marketing Manager",
-      quote:
-        "The dashboard agent project became something I actually use with my team every week now.",
-    },
-  ],
+  // Unused by the pages (they read their testimonials from the *-launch / studio copy), so left empty
+  // rather than shipping made-up quotes in the page data.
+  testimonials: [],
   faq: [
     {
       question: "I'm not technical. Is this too advanced for me?",

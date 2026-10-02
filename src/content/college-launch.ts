@@ -1,6 +1,10 @@
 import type { ActivityEvent } from "./corporate-launch";
 import { course } from "./course";
 
+// Same condition as SHOW_SAMPLES, written out here so the production build can drop the placeholder data entirely (no override: placeholders never ship).
+const SAMPLES_ON = process.env.NODE_ENV !== "production";
+
+
 /**
  * Copy for the college launch page. Items flagged `sample: true` render in development only
  * (see SHOW_SAMPLES) and must be replaced with real data before they can ship.
@@ -70,7 +74,7 @@ export const proof = {
 };
 
 /** SAMPLE ONLY: wire to real enrollment events before showing in production. */
-export const demoActivity: ActivityEvent[] = [
+export const demoActivity: ActivityEvent[] = !SAMPLES_ON ? [] : [
   { sample: true, name: "Someone", city: "Jaipur" },
   { sample: true, name: "Aditi", city: "Pune" },
   { sample: true, name: "Rohan", city: "Delhi" },

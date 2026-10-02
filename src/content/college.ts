@@ -72,20 +72,9 @@ export const collegeContent: AudienceContent = {
     seatsLeft: 42,
   },
   paymentUrl: "https://payments.cashfree.com/forms/AzAICorporateAnalystforCollegeStudents",
-  testimonials: [
-    {
-      name: "Ananya R.",
-      role: "Final-year student",
-      quote:
-        "I put my dashboard agent project on my resume and it was the first thing every interviewer asked about.",
-    },
-    {
-      name: "Rohit S.",
-      role: "Engineering graduate",
-      quote:
-        "I'd used ChatGPT casually for two years and still learned an entirely different level of using it well.",
-    },
-  ],
+  // Unused by the pages (they read their testimonials from the *-launch / studio copy), so left empty
+  // rather than shipping made-up quotes in the page data.
+  testimonials: [],
   faq: [
     {
       question: "I'm from a non-tech branch (commerce, arts, BBA). Is this for me?",
