@@ -170,7 +170,6 @@ export const trustedBy = {
   heading: "Trusted by professionals from",
   logos: "/logos/trusted-by.png",
   alt: "OYO, Amazon, Microsoft and Google",
-  note: "Company logos belong to their owners. No affiliation implied.",
 } as const;
 
 export const MODULE_COUNT = curriculum.length;

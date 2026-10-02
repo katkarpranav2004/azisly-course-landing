@@ -64,10 +64,9 @@ function PhotoCaption({ name }: { name: string }) {
 /** "Trusted by professionals from ..." card over the bottom of the photo (corporate only). */
 function TrustedCard() {
   return (
-    <div className="absolute -bottom-[3%] right-0 w-[min(100%,21rem)] rounded-[18px] border border-[#e6e4f0] bg-white px-4 pb-3 pt-3 shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)] sm:-right-[6%]">
+    <div className="absolute -bottom-[3%] right-0 w-[min(100%,21rem)] rounded-[18px] border border-[#e6e4f0] bg-white px-4 pb-3.5 pt-3 shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)] sm:-right-[6%]">
       <p className="text-[13px] font-medium text-[#33363b]">{trustedBy.heading}</p>
       <Image src={trustedBy.logos} alt={trustedBy.alt} width={284} height={32} sizes="280px" className="mt-2 h-auto w-full max-w-[272px] mix-blend-multiply" />
-      <p className="mt-2 text-[9.5px] leading-snug text-muted">{trustedBy.note}</p>
     </div>
   );
 }
