@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Award, BarChart3, Bot, Briefcase, FileSpreadsheet, FileText, Flame, Package, ShieldCheck, TrendingUp, Users, Video } from "lucide-react";
 import { useCountdown } from "@/lib/useCountdown";
-import { cohort, reach } from "@/content/shared";
+import { cohort, reach, trustedBy } from "@/content/shared";
 import { CTA } from "@/content/course";
 import { useStudio } from "./StudioContext";
 import type { AudienceContent } from "@/content/types";
@@ -19,8 +19,11 @@ const rise = (delay: number) => ({
   transition: { duration: 0.55, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
 
-/** Name tag on the hero photo; the second line cycles through Prasun's headline credentials. */
-function NameTag({ name }: { name: string }) {
+/**
+ * Caption above the photo: Prasun's name, with a line that cycles through his headline credentials,
+ * and a hand-drawn arrow pointing at him.
+ */
+function PhotoCaption({ name }: { name: string }) {
   const lines = useStudio().copy.founderHighlights;
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
@@ -32,108 +35,115 @@ function NameTag({ name }: { name: string }) {
   }, [reduce, lines.length]);
 
   return (
-    <div className="absolute bottom-[5%] right-0 w-[min(100%,17.5rem)] rounded-2xl border border-[#e3e6eb] bg-white/95 px-4 py-2.5 shadow-[0_16px_34px_-18px_rgba(28,29,31,.45)] backdrop-blur">
+    <div className="absolute -top-[17%] right-0 z-10 hidden w-[min(100%,15.5rem)] text-left lg:block">
       <p className="text-[14.5px] font-bold leading-tight">{name}</p>
       {/* All lines stay mounted; CSS transitions slide the active one in, so a skipped frame can never leave it blank. */}
-      <div className="relative mt-0.5 h-[20px] overflow-hidden" aria-hidden>
+      <div className="relative mt-0.5 h-[34px] overflow-hidden text-[12.5px] leading-snug text-muted" aria-hidden>
         {lines.map((line, k) => (
           <p
             key={line}
-            className={`absolute inset-x-0 top-0 flex items-center gap-1.5 whitespace-nowrap text-[12.5px] font-semibold text-accent transition-[transform,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
+            className={`absolute inset-x-0 top-0 transition-[transform,opacity] duration-500 ease-[cubic-bezier(.22,1,.36,1)] ${
               k === i ? "translate-y-0 opacity-100" : k === (i - 1 + lines.length) % lines.length ? "-translate-y-full opacity-0" : "translate-y-full opacity-0"
             }`}
           >
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#6fd8b9]" />
             {line}
           </p>
         ))}
       </div>
       <span className="sr-only">{lines.join(", ")}</span>
+      <svg aria-hidden viewBox="0 0 70 56" className="pointer-events-none absolute -bottom-[34px] left-3 h-[50px] w-[64px] overflow-visible">
+        <g fill="none" stroke="#5624d0" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+          <motion.path d="M62 4 C 48 6, 20 14, 14 46" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, delay: 0.9, ease: "easeInOut" }} />
+          <motion.path d="M4 37 L 14 49 L 25 39" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.25, delay: 1.45 }} />
+        </g>
+      </svg>
     </div>
   );
 }
 
-/** Price as a tear-off ticket: perforated stub for the discount, a sheen that sweeps across. */
-function PriceTicket({ offer, list, off }: { offer: number; list: number; off: number }) {
+/** "Trusted by professionals from ..." card over the bottom of the photo (corporate only). */
+function TrustedCard() {
   return (
-    <motion.span
-      whileHover={{ y: -3, rotate: -0.6 }}
-      transition={{ type: "spring", stiffness: 400, damping: 22 }}
-      className="relative flex h-[52px] items-stretch overflow-hidden rounded-xl border border-[#e3e6eb] bg-white shadow-[0_10px_24px_-16px_rgba(28,29,31,.5)]"
-    >
-      <span className="flex items-baseline gap-2 self-center pl-4 pr-3">
-        <span className="font-[family-name:var(--font-serif)] text-[24px] font-bold leading-none">{inr(offer)}</span>
-        <span className="text-[13px] text-muted line-through decoration-[#c0392b]/60">{inr(list)}</span>
-      </span>
-      <span className="relative flex flex-col items-center justify-center border-l-2 border-dashed border-[#cfe9df] bg-[#effaf6] px-3 text-center font-bold leading-none text-success">
-        {/* notches punched out of the ticket edge, in the page white */}
-        <span aria-hidden className="absolute -left-[7px] -top-[6px] h-3 w-3 rounded-full border border-[#e3e6eb] bg-white" />
-        <span aria-hidden className="absolute -bottom-[6px] -left-[7px] h-3 w-3 rounded-full border border-[#e3e6eb] bg-white" />
-        <span className="text-[15px]">{off}%</span>
-        <span className="mt-0.5 text-[9.5px] tracking-[0.14em]">OFF</span>
-      </span>
-      <span aria-hidden className="sheen" />
-    </motion.span>
+    <div className="absolute -bottom-[3%] right-0 w-[min(100%,21rem)] rounded-[18px] border border-[#e6e4f0] bg-white px-4 pb-3 pt-3 shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)] sm:-right-[6%]">
+      <p className="text-[13px] font-medium text-[#33363b]">{trustedBy.heading}</p>
+      <Image src={trustedBy.logos} alt={trustedBy.alt} width={284} height={32} sizes="280px" className="mt-2 h-auto w-full max-w-[272px] mix-blend-multiply" />
+      <p className="mt-2 text-[9.5px] leading-snug text-muted">{trustedBy.note}</p>
+    </div>
   );
 }
 
-/** Flip-style tiles; the seconds tile drops in on every tick, and the clock hand sweeps. */
-function CountdownTiles({ left }: { left: ReturnType<typeof useCountdown> }) {
+const pillClock = (
+  <svg viewBox="0 0 20 20" className="h-[22px] w-[22px] shrink-0 text-accent" aria-hidden>
+    <circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" strokeWidth="1.7" />
+    <motion.g
+      animate={{ rotate: 360 }}
+      transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+      style={{ transformBox: "fill-box", transformOrigin: "center" }}
+    >
+      <circle cx="10" cy="10" r="8.2" fill="none" />
+      <line x1="10" y1="10" x2="10" y2="4.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </motion.g>
+    <circle cx="10" cy="10" r="1.3" fill="currentColor" />
+  </svg>
+);
+
+/** Left block of the offer card: red discount tag, big price with the old price struck through, GST note. */
+function PriceBlock({ offer, list, off }: { offer: number; list: number; off: number }) {
+  return (
+    <div className="shrink-0">
+      <span className="inline-block rounded-lg bg-gradient-to-r from-[#ff3b4f] to-[#ff2e7e] px-2.5 py-1 text-[12.5px] font-extrabold tracking-wide text-white shadow-[0_8px_16px_-8px_rgba(255,46,100,.7)]">
+        {off}% OFF
+      </span>
+      <div className="mt-1.5 flex items-baseline gap-2.5">
+        <span className="font-[family-name:var(--font-serif)] text-[34px] font-bold leading-none tracking-tight sm:text-[38px]">{inr(offer)}</span>
+        <span className="text-[15px] text-muted line-through decoration-[#c0392b]/60">{inr(list)}</span>
+      </div>
+      <p className="mt-1 text-[12.5px] text-muted">Incl. GST</p>
+    </div>
+  );
+}
+
+/** Countdown: four dark tiles with their unit labels underneath; the seconds tile drops in on every tick. */
+function TimerTiles({ left }: { left: ReturnType<typeof useCountdown> }) {
   const units = left
     ? [
-        { v: left.days, u: "days" },
-        { v: left.hours, u: "hrs" },
-        { v: left.minutes, u: "min" },
-        { v: left.seconds, u: "sec" },
+        { v: left.days, u: "Days" },
+        { v: left.hours, u: "Hours" },
+        { v: left.minutes, u: "Mins" },
+        { v: left.seconds, u: "Secs" },
       ]
     : [];
   return (
-    <motion.span
-      whileHover={{ y: -3 }}
-      transition={{ type: "spring", stiffness: 400, damping: 22 }}
-      className="flex h-[52px] items-center gap-2.5 rounded-xl border border-[#e3e6eb] bg-white pl-3 pr-3.5 shadow-[0_10px_24px_-16px_rgba(28,29,31,.5)]"
-      aria-label="Offer ends in"
-    >
-      <svg viewBox="0 0 20 20" className="h-[18px] w-[18px] shrink-0 text-accent" aria-hidden>
-        <circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <motion.g
-          animate={{ rotate: 360 }}
-          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-          style={{ transformBox: "fill-box", transformOrigin: "center" }}
-        >
-          <circle cx="10" cy="10" r="8.2" fill="none" />
-          <line x1="10" y1="10" x2="10" y2="4.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        </motion.g>
-        <circle cx="10" cy="10" r="1.3" fill="currentColor" />
-      </svg>
+    <div className="shrink-0" role="timer" aria-label="Offer ends in">
+      <p className="mb-2 flex items-center gap-2 text-[14px] font-medium text-[#33363b]">
+        {pillClock} Offer ends in
+      </p>
       {left ? (
-        <span className="flex items-start gap-1">
+        <div className="flex items-start gap-1.5">
           {units.map((x, i) => (
-            <span key={x.u} className="flex items-start gap-1">
-              <span className="flex flex-col items-center">
-                <span className="relative flex h-[24px] min-w-[26px] items-center justify-center overflow-hidden rounded-[6px] bg-[#1c1d1f] px-1 font-mono text-[13px] font-bold tabular-nums text-white shadow-[inset_0_-1px_0_rgba(255,255,255,.08)]">
-                  {x.u === "sec" ? (
-                    <motion.span key={x.v} initial={{ y: -10, opacity: 0.2 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28, ease: "easeOut" }}>
+            <div key={x.u} className="flex items-start gap-1.5">
+              <div className="flex flex-col items-center">
+                <span className="relative flex h-[42px] w-[44px] items-center justify-center overflow-hidden rounded-[10px] bg-[#16171a] font-mono text-[19px] font-bold tabular-nums text-white shadow-[inset_0_-1px_0_rgba(255,255,255,.08),0_8px_16px_-10px_rgba(0,0,0,.6)]">
+                  {x.u === "Secs" ? (
+                    <motion.span key={x.v} initial={{ y: -12, opacity: 0.2 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28, ease: "easeOut" }}>
                       {pad(x.v)}
                     </motion.span>
                   ) : (
                     pad(x.v)
                   )}
-                  <span aria-hidden className="absolute inset-x-0 top-1/2 h-px bg-black/40" />
                 </span>
-                <span className="mt-[1px] text-[8.5px] font-semibold uppercase tracking-wider text-muted">{x.u}</span>
-              </span>
-              {i < units.length - 1 && <span className="pt-[3px] font-mono text-[13px] font-bold text-muted">:</span>}
-            </span>
+                <span className="mt-1.5 text-[10.5px] font-medium uppercase tracking-wide text-muted">{x.u}</span>
+              </div>
+              {i < units.length - 1 && <span className="pt-2 font-mono text-[18px] font-bold text-[#8a8d96]">:</span>}
+            </div>
           ))}
-        </span>
+        </div>
       ) : (
         <span className="font-mono text-[13px] text-muted">--</span>
       )}
-    </motion.span>
+    </div>
   );
 }
-
 /** The one CTA: purple shimmer, a soft pulsing ring, and an arrow that keeps nudging forward. */
 function EnrollCta({ onClick, full = false }: { onClick: () => void; full?: boolean }) {
   return (
@@ -350,18 +360,13 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
             {/* Offer card: price, countdown and the CTA together, with the checkout line centred under the button. */}
             <motion.div
               {...rise(0.15)}
-              className="mt-6 rounded-[22px] border border-[#e6e4f3] bg-white/90 p-4 shadow-[0_24px_50px_-34px_rgba(60,40,160,.45)] sm:mt-7 sm:p-5"
+              className="mt-6 rounded-[22px] border border-[#e6e4f3] bg-[linear-gradient(180deg,#fbfaff,#f6f4fd)] p-4 shadow-[0_24px_50px_-34px_rgba(60,40,160,.45)] sm:mt-7 sm:p-5"
             >
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-4">
-                <div>
-                  <PriceTicket offer={pricing.offerPrice} list={pricing.listPrice} off={off} />
-                  <p className="mt-1.5 pl-1 text-[12px] text-muted">Incl. GST</p>
-                </div>
-                <div>
-                  <p className="mb-1.5 pl-1 text-[12px] font-medium text-muted">Offer ends in</p>
-                  <CountdownTiles left={left} />
-                </div>
-                <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:min-w-[190px] sm:flex-1">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-5 md:flex-nowrap md:gap-x-5">
+                <PriceBlock offer={pricing.offerPrice} list={pricing.listPrice} off={off} />
+                <span aria-hidden className="hidden h-[76px] w-px shrink-0 bg-[#e3e0f0] md:block" />
+                <TimerTiles left={left} />
+                <div className="flex w-full flex-col items-stretch gap-2 md:w-auto md:min-w-[176px] md:flex-1">
                   <EnrollCta onClick={onEnroll} full />
                   <p className="flex items-center justify-center gap-1.5 text-[12px] text-muted">
                     <ShieldCheck size={13} className="text-success" /> Secure checkout via Cashfree
@@ -438,7 +443,8 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
               />
 
               {hero.tags && <TagCards items={hero.tags} />}
-              <NameTag name={founder.name} />
+              <PhotoCaption name={founder.name} />
+              {content.audience === "corporate" && <TrustedCard />}
             </div>
           </motion.div>
         </div>

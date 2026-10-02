@@ -82,8 +82,8 @@ export const course = {
   ],
   // Trust markers shown right under the hero. Add "students taught" once there is a real number.
   credentials: [
-    { value: "IIT Kharagpur", label: "Engineering", logo: "IIT Kharagpur" },
-    { value: "London Business School", logo: "London Business School" },
+    { value: "IIT Kharagpur", label: "Engineering alumnus", logo: "IIT Kharagpur" },
+    { value: "London Business School", label: "Business school alumnus", logo: "London Business School" },
     { value: "OYO International", label: "Ex-President", logo: "OYO" },
     { value: "20+ years", label: "Corporate leadership", icon: "years" as const },
     { value: "13 countries", label: "Work experience, 4 continents", icon: "globe" as const },

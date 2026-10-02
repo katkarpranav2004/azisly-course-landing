@@ -162,5 +162,16 @@ export const reach = {
   corporate: "15k+ working professionals attended",
 } as const;
 
+/**
+ * "Trusted by professionals from" card on the corporate hero. Only keep this if learners from these
+ * companies have actually attended; logos belong to their owners (the note under the card says so).
+ */
+export const trustedBy = {
+  heading: "Trusted by professionals from",
+  logos: "/logos/trusted-by.png",
+  alt: "OYO, Amazon, Microsoft and Google",
+  note: "Company logos belong to their owners. No affiliation implied.",
+} as const;
+
 export const MODULE_COUNT = curriculum.length;
 export const BUILD_COUNT = curriculum.filter((m) => m.tag === "Build").length;
