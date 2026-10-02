@@ -19,14 +19,14 @@ export default function StickyEnroll({ pricing, onEnroll, hidden }: { pricing: P
 
   return (
     <div className="fixed inset-x-3 bottom-3 z-40 sm:inset-x-auto sm:bottom-6 sm:right-6">
-      <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/25 bg-[#1a0a2e]/95 py-2.5 pl-4 pr-2.5 shadow-[0_20px_50px_-12px_rgba(20,0,40,.75)] backdrop-blur-md sm:gap-4">
+      <div className="flex items-center justify-between gap-2 rounded-2xl border border-white/25 bg-[#1a0a2e]/95 py-2.5 pl-3 pr-2.5 min-[350px]:gap-3 min-[350px]:pl-4 shadow-[0_20px_50px_-12px_rgba(20,0,40,.75)] backdrop-blur-md sm:gap-4">
         <div className="min-w-0 leading-tight">
           <div className="flex items-center gap-x-2">
-            <span className="font-[family-name:var(--font-unbounded)] text-[18px] font-extrabold text-white">{inr(pricing.offerPrice)}</span>
+            <span className="whitespace-nowrap font-[family-name:var(--font-unbounded)] text-[17px] font-extrabold text-white min-[350px]:text-[18px]">{inr(pricing.offerPrice)}</span>
             <span className="hidden text-[12px] text-white/55 line-through min-[400px]:inline">{inr(pricing.listPrice)}</span>
-            <span className="rounded-md bg-[#ff2e63] px-1.5 py-0.5 text-[10.5px] font-extrabold text-white">{off}% OFF</span>
+            <span className="hidden whitespace-nowrap rounded-md bg-[#ff2e63] px-1.5 py-0.5 text-[10.5px] font-extrabold text-white min-[350px]:inline-block">{off}% OFF</span>
           </div>
-          <p className="mt-1 font-mono text-[11.5px] tabular-nums text-[#ffd23f]">
+          <p className="mt-1 whitespace-nowrap font-mono text-[10.5px] tabular-nums text-[#ffd23f] min-[350px]:text-[11.5px]">
             {left ? `Ends in ${left.days}d ${pad(left.hours)}:${pad(left.minutes)}:${pad(left.seconds)}` : "Ends soon"}
           </p>
         </div>
@@ -36,7 +36,7 @@ export default function StickyEnroll({ pricing, onEnroll, hidden }: { pricing: P
           <button
             type="button"
             onClick={onEnroll}
-            className="relative flex items-center gap-2 rounded-xl bg-gradient-to-b from-[#ffe066] to-[#ffc21a] px-4 py-3 font-[family-name:var(--font-unbounded)] text-[13px] font-extrabold text-[#1a0a2e] shadow-[inset_0_-2px_0_rgba(0,0,0,.18)] transition hover:brightness-105 active:scale-[0.97]"
+            className="relative flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-gradient-to-b from-[#ffe066] to-[#ffc21a] px-3 py-3 font-[family-name:var(--font-unbounded)] text-[12px] min-[350px]:gap-2 min-[350px]:px-4 min-[350px]:text-[13px] font-extrabold text-[#1a0a2e] shadow-[inset_0_-2px_0_rgba(0,0,0,.18)] transition hover:brightness-105 active:scale-[0.97]"
           >
             Grab my seat <ArrowRight size={15} />
           </button>
