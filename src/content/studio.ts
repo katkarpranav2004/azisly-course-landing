@@ -21,7 +21,21 @@ export interface StudioPainRow {
 }
 
 export interface StudioCopy {
-  hero: { eyebrow: string; title: string; tagline: string; body: string };
+  hero: {
+    eyebrow: string;
+    title: string;
+    /** substring of `title` that gets the hand-drawn underline */
+    titleAccent?: string;
+    /** optional second line under the title; leave empty to hide it */
+    tagline: string;
+    body: string;
+    /** small pills at the top right of the hero (desktop) */
+    pills?: string[];
+    /** four short selling points under the paragraph */
+    features?: { icon: "work" | "templates" | "build" | "certificate"; title: string }[];
+    /** floating topic cards beside the photo (desktop) */
+    tags?: { icon: "excel" | "reports" | "agents" | "dashboards"; title: string }[];
+  };
   /** `logo` names an entry in experts.founderLogos; `icon` is used where there is no logo */
   credentials: { value: string; label?: string; logo?: string; icon?: "years" | "globe" }[];
   founderHighlights: string[];
@@ -143,10 +157,24 @@ const collegeStudio: StudioCopy = {
 /** /corporate: working professionals, time and visibility at work. */
 const corporateStudio: StudioCopy = {
   hero: {
-    eyebrow: `For working professionals · ${LIVE}`,
-    title: "AI Corporate Analyst",
-    tagline: "Be the one your team turns to for AI",
-    body: "13 live classes with Prasun Choudhary. Win back the hours lost to reports, Excel and slides, and build agents, dashboards and a prototype you can demo at work. No coding needed.",
+    eyebrow: "AI Corporate Analyst Program",
+    title: "Turn AI into your unfair advantage.",
+    titleAccent: "unfair advantage",
+    tagline: "",
+    body: "13 live classes with Prasun Choudhary. Learn to use AI for real work, from reports, Excel and presentations to building agents, dashboards and prototypes. No coding needed.",
+    pills: [`${LIVE}`, "Cohort-based", "For Working Professionals"],
+    features: [
+      { icon: "work", title: "Real work use‑cases" },
+      { icon: "templates", title: "Templates & frameworks" },
+      { icon: "build", title: "Build & deploy AI projects" },
+      { icon: "certificate", title: "Certificate you can share" },
+    ],
+    tags: [
+      { icon: "excel", title: "Excel & Data Automation" },
+      { icon: "reports", title: "Reports & Presentations" },
+      { icon: "agents", title: "AI Agents & Workflows" },
+      { icon: "dashboards", title: "Dashboards & Prototypes" },
+    ],
   },
   credentials: course.credentials,
   founderHighlights: course.founderHighlights,

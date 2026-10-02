@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Flame, Users } from "lucide-react";
+import { ArrowRight, Award, BarChart3, Bot, Briefcase, FileSpreadsheet, FileText, Flame, Package, ShieldCheck, TrendingUp, Users, Video } from "lucide-react";
 import { useCountdown } from "@/lib/useCountdown";
 import { cohort, reach } from "@/content/shared";
 import { CTA } from "@/content/course";
@@ -135,9 +135,9 @@ function CountdownTiles({ left }: { left: ReturnType<typeof useCountdown> }) {
 }
 
 /** The one CTA: purple shimmer, a soft pulsing ring, and an arrow that keeps nudging forward. */
-function EnrollCta({ onClick }: { onClick: () => void }) {
+function EnrollCta({ onClick, full = false }: { onClick: () => void; full?: boolean }) {
   return (
-    <span className="relative flex w-full sm:inline-flex sm:w-auto">
+    <span className={`relative flex w-full ${full ? "" : "sm:inline-flex sm:w-auto"}`}>
       <motion.span
         aria-hidden
         className="pointer-events-none absolute -inset-1 rounded-[12px] border-2 border-[#7c4dff]"
@@ -149,7 +149,7 @@ function EnrollCta({ onClick }: { onClick: () => void }) {
         whileHover={{ y: -2, scale: 1.02 }}
         whileTap={{ scale: 0.97 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
-        className="btn-primary hero-cta group relative h-[52px] w-full overflow-hidden px-6 text-[15px] sm:w-auto"
+        className={`btn-primary hero-cta group relative h-[52px] w-full overflow-hidden px-6 text-[15px] ${full ? "" : "sm:w-auto"}`}
       >
         <span className="relative z-10">{CTA}</span>
         <motion.span
@@ -176,6 +176,95 @@ function CalendarPage({ label }: { label: string }) {
   );
 }
 
+const FEATURE_ICONS = {
+  work: { Icon: FileText, tint: "bg-[#f1ecff] text-[#5624d0]" },
+  templates: { Icon: TrendingUp, tint: "bg-[#e6f7f0] text-[#13805c]" },
+  build: { Icon: Package, tint: "bg-[#fff3dc] text-[#b86e00]" },
+  certificate: { Icon: Award, tint: "bg-[#e8f1ff] text-[#2563c9]" },
+} as const;
+
+const TAG_ICONS = {
+  excel: { Icon: FileSpreadsheet, tint: "bg-[#e3f5ea] text-[#1d7a45]" },
+  reports: { Icon: FileText, tint: "bg-[#f1ecff] text-[#5624d0]" },
+  agents: { Icon: Bot, tint: "bg-[#fff3dc] text-[#b86e00]" },
+  dashboards: { Icon: BarChart3, tint: "bg-[#e8f1ff] text-[#2563c9]" },
+} as const;
+
+const PILL_ICONS = [Video, Users, Briefcase];
+
+/** Hand-drawn underline that draws itself under the accented words of the headline. */
+function Headline({ text, accent }: { text: string; accent?: string }) {
+  const at = accent ? text.indexOf(accent) : -1;
+  if (!accent || at < 0) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, at)}
+      <span className="relative inline-block whitespace-nowrap">
+        {accent}
+        <svg aria-hidden viewBox="0 0 300 18" preserveAspectRatio="none" className="pointer-events-none absolute -bottom-[0.12em] left-0 h-[0.2em] w-full overflow-visible">
+          <motion.path
+            d="M3 11 C 70 3, 150 16, 297 5"
+            fill="none"
+            stroke="#5624d0"
+            strokeWidth="5"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.8, delay: 0.55, ease: "easeOut" }}
+          />
+        </svg>
+      </span>
+      {text.slice(at + accent.length)}
+    </>
+  );
+}
+
+/** Four short selling points with coloured icon tiles, separated by hairlines on desktop. */
+function FeatureRow({ items }: { items: NonNullable<ReturnType<typeof useStudio>["copy"]["hero"]["features"]> }) {
+  return (
+    <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3.5 sm:grid-cols-4 sm:gap-0 lg:max-w-[660px]">
+      {items.map((f) => {
+        const { Icon, tint } = FEATURE_ICONS[f.icon];
+        return (
+          <li key={f.title} className="flex items-center gap-2.5 sm:border-l sm:border-border sm:px-3 sm:first:border-l-0 sm:first:pl-0">
+            <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tint}`}>
+              <Icon size={19} strokeWidth={1.9} />
+            </span>
+            <span className="text-[13px] font-medium leading-snug">{f.title}</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Floating topic cards that sit beside the photo (wide screens only; narrower ones have no room for them). */
+function TagCards({ items }: { items: NonNullable<ReturnType<typeof useStudio>["copy"]["hero"]["tags"]> }) {
+  const tilt = [-1.5, 1, -1, 1.5];
+  return (
+    <ul className="absolute -left-[28%] top-[1%] z-10 hidden w-[162px] flex-col gap-2 xl:flex">
+      {items.map((t, i) => {
+        const { Icon, tint } = TAG_ICONS[t.icon];
+        return (
+          <motion.li
+            key={t.title}
+            initial={{ opacity: 0, x: -14 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.45 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ y: -3 }}
+            style={{ rotate: tilt[i % tilt.length] }}
+            className="flex items-center gap-2.5 rounded-2xl border border-[#ebe8f7] bg-white p-2.5 shadow-[0_14px_30px_-16px_rgba(60,40,160,.5)]"
+          >
+            <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${tint}`}>
+              <Icon size={18} strokeWidth={1.9} />
+            </span>
+            <span className="text-[12.5px] font-semibold leading-tight">{t.title}</span>
+          </motion.li>
+        );
+      })}
+    </ul>
+  );
+}
 export default function HeroStudio({ content, onEnroll }: { content: AudienceContent; onEnroll: () => void }) {
   const { pricing, faculty } = content;
   const { founder } = faculty;
@@ -202,18 +291,39 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
         </div>
       </nav>
 
-      <section className="overflow-hidden bg-white px-4 sm:px-5">
-        <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-12 lg:grid-cols-[1.3fr_.7fr] lg:gap-12 lg:py-16">
+      <section className="relative overflow-hidden bg-white px-4 sm:px-5">
+        {/* soft lavender glow behind the photo */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_70%_at_82%_38%,rgba(124,77,255,.11),transparent_70%)]" />
+
+        {hero.pills && (
+          <ul className="relative mx-auto hidden max-w-6xl justify-end gap-2 pt-5 md:flex">
+            {hero.pills.map((p, i) => {
+              const Icon = PILL_ICONS[i % PILL_ICONS.length];
+              return (
+                <li key={p} className="flex items-center gap-2 rounded-full border border-[#ebe8f7] bg-white/85 py-1.5 pl-2 pr-3.5 text-[13px] font-medium shadow-[0_8px_20px_-14px_rgba(60,40,160,.45)]">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f1ecff] text-accent">
+                    <Icon size={13} />
+                  </span>
+                  {p}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
+        <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-12 lg:py-12">
           <div className="px-1 sm:px-0">
             <motion.p {...rise(0)} className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-[13px]">
               {hero.eyebrow}
             </motion.p>
-            <motion.h1 {...rise(0.05)} className="display mt-2 text-[clamp(36px,5.4vw,68px)] leading-[1.02] sm:mt-3">
-              {hero.title}
+            <motion.h1 {...rise(0.05)} className="display mt-2 text-[clamp(36px,5.4vw,68px)] leading-[1.04] sm:mt-3">
+              <Headline text={hero.title} accent={hero.titleAccent} />
             </motion.h1>
-            <motion.p {...rise(0.08)} className="mt-2 font-[family-name:var(--font-serif)] text-[19px] font-semibold text-[#2d2f31] sm:mt-3 sm:text-[22px]">
-              {hero.tagline}
-            </motion.p>
+            {hero.tagline && (
+              <motion.p {...rise(0.08)} className="mt-2 font-[family-name:var(--font-serif)] text-[19px] font-semibold text-[#2d2f31] sm:mt-3 sm:text-[22px]">
+                {hero.tagline}
+              </motion.p>
+            )}
 
             {/* Trust marker on the first mobile screen; desktop shows the full photo alongside. */}
             <motion.div {...rise(0.09)} className="mt-4 flex items-center gap-3 lg:hidden">
@@ -227,16 +337,40 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
               </p>
             </motion.div>
 
-            <motion.p {...rise(0.1)} className="mt-4 max-w-[520px] text-[15.5px] leading-relaxed text-[#2d2f31] sm:mt-5 sm:text-[18px]">
+            <motion.p {...rise(0.1)} className="mt-4 max-w-[560px] text-[15.5px] leading-relaxed text-[#2d2f31] sm:mt-5 sm:text-[18px]">
               {hero.body}
             </motion.p>
 
-            <motion.div {...rise(0.15)} className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
-              <PriceTicket offer={pricing.offerPrice} list={pricing.listPrice} off={off} />
-              <CountdownTiles left={left} />
-              <EnrollCta onClick={onEnroll} />
+            {hero.features && (
+              <motion.div {...rise(0.12)}>
+                <FeatureRow items={hero.features} />
+              </motion.div>
+            )}
+
+            {/* Offer card: price, countdown and the CTA together, with the checkout line centred under the button. */}
+            <motion.div
+              {...rise(0.15)}
+              className="mt-6 rounded-[22px] border border-[#e6e4f3] bg-white/90 p-4 shadow-[0_24px_50px_-34px_rgba(60,40,160,.45)] sm:mt-7 sm:p-5"
+            >
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-4">
+                <div>
+                  <PriceTicket offer={pricing.offerPrice} list={pricing.listPrice} off={off} />
+                  <p className="mt-1.5 pl-1 text-[12px] text-muted">Incl. GST</p>
+                </div>
+                <div>
+                  <p className="mb-1.5 pl-1 text-[12px] font-medium text-muted">Offer ends in</p>
+                  <CountdownTiles left={left} />
+                </div>
+                <div className="flex w-full flex-col items-stretch gap-2 sm:w-auto sm:min-w-[190px] sm:flex-1">
+                  <EnrollCta onClick={onEnroll} full />
+                  <p className="flex items-center justify-center gap-1.5 text-[12px] text-muted">
+                    <ShieldCheck size={13} className="text-success" /> Secure checkout via Cashfree
+                  </p>
+                </div>
+              </div>
             </motion.div>
-            <motion.div {...rise(0.2)} className="mt-3.5 flex flex-wrap items-center gap-2">
+
+            <motion.div {...rise(0.2)} className="mt-4 flex flex-wrap items-center gap-2">
               <motion.span
                 whileHover={{ y: -2 }}
                 className="flex items-center gap-2 rounded-full border border-[#ffd0ee] bg-[#fff0f9] py-1.5 pl-2 pr-3 text-[13px] font-semibold text-[#b0127a]"
@@ -271,9 +405,6 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
                 </motion.span>
               )}
             </motion.div>
-            <motion.p {...rise(0.22)} className="mt-2.5 text-[12.5px] text-muted">
-              Incl. GST · Secure checkout via Cashfree
-            </motion.p>
           </div>
 
           <motion.div
@@ -306,8 +437,8 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
                 className="object-contain object-bottom drop-shadow-[0_20px_28px_rgba(28,29,31,.25)] [mask-image:linear-gradient(to_bottom,#000_88%,transparent_100%)]"
               />
 
+              {hero.tags && <TagCards items={hero.tags} />}
               <NameTag name={founder.name} />
-
             </div>
           </motion.div>
         </div>
