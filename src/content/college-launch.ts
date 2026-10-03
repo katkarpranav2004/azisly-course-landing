@@ -12,10 +12,16 @@ const SAMPLES_ON = process.env.SAMPLE_CONTENT === "on";
 
 export const hero = {
   eyebrow: "AI Corporate Analyst · for students & freshers",
-  headline: "Don't graduate without",
-  headlineAccent: "this AI skill.",
-  sub: "Recruiters are shortlisting freshers who can work with AI. 13 hands-on sessions, 4 real builds, one certificate. Any branch, zero coding.",
-};
+  headline: "Don’t graduate with a degree.",
+  headlineAccent: "Graduate with AI work to show.",
+  /** the four numbers under the headline */
+  stats: [
+    { value: "13", label: "Hands-on sessions", icon: "video" },
+    { value: "4", label: "Real-world builds", icon: "box" },
+    { value: "1", label: "Certificate", icon: "award" },
+    { value: "0", label: "Coding required", icon: "code" },
+  ],
+} as const;
 
 export const duo = {
   boyLabel: "🎓 Final-year · B.Com",

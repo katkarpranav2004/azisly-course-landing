@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Users } from "lucide-react";
-import GlassClock from "@/components/clocks/GlassClock";
-import MagneticButton from "@/components/launch/MagneticButton";
-import OfferPrice from "@/components/launch/OfferPrice";
+import { Award, Box, Code, Users, Video, type LucideIcon } from "lucide-react";
 import DuoComposition from "./DuoComposition";
+import OfferTrail from "./OfferTrail";
 import { hero } from "@/content/college-launch";
 import { reach } from "@/content/shared";
 import type { PricingConfig } from "@/content/types";
+
+const STAT_ICONS: Record<(typeof hero.stats)[number]["icon"], LucideIcon> = { video: Video, box: Box, award: Award, code: Code };
 
 const rise = (delay: number) => ({
   initial: { opacity: 0, y: 18 },
@@ -42,42 +42,34 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
           </motion.p>
           <motion.h1
             {...rise(0.05)}
-            className="display mt-3 text-[clamp(36px,4.6vw,62px)] leading-[1.02] [text-shadow:0_10px_40px_rgba(80,0,60,.25)]"
+            className="display mt-3 text-[clamp(32px,4.1vw,56px)] leading-[1.05] [text-shadow:0_10px_40px_rgba(80,0,60,.25)]"
           >
             {hero.headline} <span className="accent-text">{hero.headlineAccent}</span>
           </motion.h1>
-          <motion.p {...rise(0.1)} className="mt-4 max-w-[520px] text-[15.5px] leading-relaxed text-white/90 sm:text-[17px]">
-            {hero.sub}
-          </motion.p>
-          <motion.p {...rise(0.14)} className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold backdrop-blur-md">
+
+          {/* the four numbers: frosted round icons, no boxes */}
+          <motion.ul {...rise(0.1)} className="mt-6 grid max-w-[600px] grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
+            {hero.stats.map((st) => {
+              const Icon = STAT_ICONS[st.icon];
+              return (
+                <li key={st.label} className="flex items-center gap-2.5">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/45 bg-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,.5)] backdrop-blur-md">
+                    <Icon size={19} strokeWidth={1.8} />
+                  </span>
+                  <span className="min-w-0 leading-tight">
+                    <b className="block font-[family-name:var(--font-unbounded)] text-[20px]">{st.value}</b>
+                    <span className="block text-[11.5px] text-white/85">{st.label}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </motion.ul>
+
+          <motion.p {...rise(0.14)} className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold backdrop-blur-md">
             <Users size={14} /> {reach.college}
           </motion.p>
 
-          <motion.div {...rise(0.18)} className="card relative mt-6 max-w-[560px] rounded-[28px] p-5">
-            <OfferPrice pricing={pricing} size="lg" delay={0.5} variant="sunset" />
-            <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-white/90">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white [animation:soft-pulse_1s_infinite]" />
-                  Offer ends in
-                </p>
-                <GlassClock endsAt={pricing.offerEndsAt} size="sm" />
-              </div>
-              {/* One column, one width: the badge, the button and the checkout line all centre on the same axis. */}
-              <div className="flex flex-col items-stretch gap-2 sm:w-[250px]">
-                <span className="badge justify-center whitespace-nowrap px-3 py-1.5 text-[11.5px]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_#fff] [animation:soft-pulse_1.2s_infinite]" />
-                  Student launch offer · {pricing.seatsLeft} seats left
-                </span>
-                <MagneticButton onClick={onEnroll} className="w-full">
-                  Grab my seat <ArrowRight size={16} />
-                </MagneticButton>
-                <span className="flex items-center justify-center gap-1.5 text-[11px] text-white/80">
-                  <ShieldCheck size={12} /> Secure checkout · Cashfree
-                </span>
-              </div>
-            </div>
-          </motion.div>
+          <OfferTrail pricing={pricing} onEnroll={onEnroll} />
         </div>
 
         <motion.div
