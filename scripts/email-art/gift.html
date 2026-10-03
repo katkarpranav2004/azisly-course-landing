@@ -1,34 +1,23 @@
-﻿<!doctype html>
+<!doctype html>
 <meta charset="utf-8">
-<!-- Source for public/email/gift-art.png (the dark finale artwork). Render: msedge --headless=new --window-size=600,310 --force-device-scale-factor=2 --screenshot=gift.png gift.html -->
+<!-- Source for public/email/gift-mint.png (the gift artwork on the mint panel). Render: msedge --headless=new --window-size=220,220 --force-device-scale-factor=2 --screenshot=gift.png gift.html -->
 <style>
   html, body { margin: 0; }
-  body { width: 600px; height: 310px; overflow: hidden; position: relative; background: #16082f; font-family: Arial, Helvetica, sans-serif; }
-  .glow { position: absolute; border-radius: 50%; }
-  .g1 { left: -40px; top: 10px; width: 360px; height: 300px; background: radial-gradient(closest-side, rgba(255,210,63,.20), rgba(255,210,63,0)); }
-  .g2 { left: 250px; top: -10px; width: 380px; height: 330px; background: radial-gradient(closest-side, rgba(176,92,255,.55), rgba(176,92,255,0)); }
-  .g3 { left: 330px; top: 120px; width: 280px; height: 220px; background: radial-gradient(closest-side, rgba(255,79,216,.35), rgba(255,79,216,0)); }
-  .ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.07); }
-  .coin { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 26%, #fff2a8 0%, #ffd23f 34%, #f2a900 78%, #d98a00 100%);
-    box-shadow: 0 0 60px rgba(255,200,40,.45), 0 18px 30px -10px rgba(0,0,0,.6), inset 0 -8px 14px rgba(160,90,0,.45), inset 0 6px 10px rgba(255,255,255,.55); }
-  .coin:before { content: ""; position: absolute; inset: 10%; border-radius: 50%; border: 3px solid rgba(160,90,0,.38); box-shadow: inset 0 2px 3px rgba(255,255,255,.5); }
-  .big { left: 44px; top: 70px; width: 196px; height: 196px; }
-  .big b { position: absolute; left: 0; right: 0; top: 36px; text-align: center; font: bold 92px/92px Georgia, 'Times New Roman', serif; color: #3a1a00; text-shadow: 0 2px 0 rgba(255,255,255,.45); }
-  .big i { position: absolute; left: 0; right: 0; top: 134px; text-align: center; font: normal bold 11.5px Arial; letter-spacing: 3px; color: #7a4600; }
-  .s1 { left: 232px; top: 54px; width: 46px; height: 46px; transform: rotate(-12deg); }
-  .s2 { left: 24px; top: 238px; width: 34px; height: 34px; }
-  .s1:after, .s2:after { content: ""; position: absolute; left: 50%; top: 50%; width: 36%; height: 36%; transform: translate(-50%,-50%) rotate(45deg); background: rgba(160,90,0,.45); border-radius: 3px; }
-  .bubble { position: absolute; left: 410px; top: 26px; width: 172px; box-sizing: border-box; background: #ffffff; color: #1a0a2e; border-radius: 16px; border-bottom-left-radius: 4px; padding: 11px 14px; font-size: 13.5px; line-height: 18px; box-shadow: 0 16px 28px -14px rgba(0,0,0,.7); }
-  .bubble small { display: block; font-size: 9.5px; font-weight: bold; letter-spacing: 1.6px; color: #7c3aed; margin-bottom: 3px; }
+  body { width: 220px; height: 220px; overflow: hidden; position: relative; background: #bdfbba; font-family: Arial, Helvetica, sans-serif; }
+  .halo { position: absolute; left: 20px; top: 14px; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,255,255,.95), rgba(255,255,255,.55) 55%, rgba(255,255,255,0)); }
   svg { position: absolute; }
-  .robot { left: 270px; top: 28px; }
+  .robot { left: 40px; top: 6px; width: 170px; height: 178px; }
+  .coin { position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 26%, #fff2a8 0%, #ffd23f 34%, #f2a900 78%, #d98a00 100%);
+    box-shadow: 0 10px 18px -8px rgba(11,37,64,.5), inset 0 -5px 8px rgba(160,90,0,.45), inset 0 4px 6px rgba(255,255,255,.55); }
+  .coin:before { content: ""; position: absolute; inset: 10%; border-radius: 50%; border: 2.5px solid rgba(160,90,0,.38); }
+  .big { left: 6px; top: 118px; width: 92px; height: 92px; }
+  .big b { position: absolute; left: 0; right: 0; top: 19px; text-align: center; font: bold 40px/40px Georgia, 'Times New Roman', serif; color: #3a1a00; text-shadow: 0 1px 0 rgba(255,255,255,.45); }
+  .big i { position: absolute; left: 0; right: 0; top: 62px; text-align: center; font: normal bold 7.5px Arial; letter-spacing: 1.6px; color: #7a4600; }
+  .s1 { left: 168px; top: 150px; width: 34px; height: 34px; }
+  .s1:after { content: ""; position: absolute; left: 50%; top: 50%; width: 36%; height: 36%; transform: translate(-50%,-50%) rotate(45deg); background: rgba(160,90,0,.45); border-radius: 2px; }
 </style>
-<div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
-<div class="ring" style="left:222px;top:-60px;width:420px;height:420px"></div>
-<div class="ring" style="left:272px;top:-10px;width:320px;height:320px"></div>
-<div class="coin big"><b>50</b><i>CREDITS</i></div>
-<div class="coin s1"></div><div class="coin s2"></div>
-<svg class="robot" width="260" height="272" viewBox="0 0 260 272">
+<div class="halo"></div>
+<svg class="robot" viewBox="0 0 260 272" width="170" height="178">
   <defs>
     <linearGradient id="hd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ddd2fb"/></linearGradient>
     <linearGradient id="bd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#cdbff7"/></linearGradient>
@@ -69,9 +58,7 @@
   <path d="M22 150 C22.6 155 24.4 156.6 29 157 C24.4 157.4 22.6 159 22 164 C21.4 159 19.6 157.4 15 157 C19.6 156.6 21.4 155 22 150Z" fill="#a78bfa"/>
   <path d="M236 150 C236.6 154 238 155.4 242 156 C238 156.6 236.6 158 236 162 C235.4 158 234 156.6 230 156 C234 155.4 235.4 154 236 150Z" fill="#c4b0ff"/>
 </svg>
-
-<div class="bubble"><small>AI INTERVIEWER</small>Tell me about yourself.</div>
-<svg style="left:252px;top:20px" width="16" height="16" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#ffffff" opacity=".85"/></svg>
-<svg style="left:22px;top:44px" width="20" height="20" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#ffd23f"/></svg>
-<svg style="left:560px;top:250px" width="14" height="14" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#ff86e6"/></svg>
-
+<div class="coin big"><b>50</b><i>CREDITS</i></div>
+<div class="coin s1"></div>
+<svg style="left:14px;top:20px" width="16" height="16" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#0b2540" opacity=".85"/></svg>
+<svg style="left:196px;top:22px" width="12" height="12" viewBox="0 0 24 24"><path d="M12 0 C12.8 8 16 11.2 24 12 C16 12.8 12.8 16 12 24 C11.2 16 8 12.8 0 12 C8 11.2 11.2 8 12 0Z" fill="#ffffff"/></svg>

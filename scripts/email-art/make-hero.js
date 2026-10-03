@@ -1,47 +1,51 @@
-// Builds the small image assets of the welcome email into public/email:
-//   prasun-hero.png     Prasun cut-out on one tilted pink card, bottom-flush (right side of the hero)
-//   fade-to-dark.png    alpha strip that dissolves the purple link section into the dark finale
-//   notch-gift-*.png    punched half-circles for the yellow coupon ticket
+// Builds the hero photo of the welcome email -> public/email/hero-photo.png
+// Prasun's cut-out on a navy-to-teal card with a mint disc behind him, rounded corners and a white border,
+// like the framed photo in the mint header panel of the reference newsletter.
 // Run: node scripts/email-art/make-hero.js
 const sharp = require("sharp");
 const path = require("path");
 
-const OUT = path.join(__dirname, "..", "..", "public", "email");
+const OUT = path.join(__dirname, "..", "..", "public", "email", "hero-photo.png");
 const CUTOUT = path.join(__dirname, "..", "..", "public", "faculty", "prasun-cutout.webp");
-const DEEP = { r: 22, g: 8, b: 47 }; // #16082f, the dark finale
+
+const W = 1040, H = 640, R = 44, BORDER = 10; // 2x of a 520 x 320 image
+
+const star = (cx, cy, r, fill, o = 1) =>
+  `<path transform="translate(${cx} ${cy}) scale(${r / 12})" d="M0 -12 C.8 -4 4 -.8 12 0 C4 .8 .8 4 0 12 C-.8 4 -4 .8 -12 0 C-4 -.8 -.8 -4 0 -12Z" fill="${fill}" opacity="${o}"/>`;
 
 (async () => {
-  // hero: 520 x 640 (shown at 260 x 320)
-  const W = 520, H = 640;
-  const art = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+  const bg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
     <defs>
-      <radialGradient id="glow" cx="50%" cy="46%" r="50%"><stop offset="0" stop-color="#b79bff" stop-opacity=".55"/><stop offset="1" stop-color="#b79bff" stop-opacity="0"/></radialGradient>
-      <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8cec"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b2540"/><stop offset=".6" stop-color="#0f4a63"/><stop offset="1" stop-color="#17808a"/></linearGradient>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#bdfbba" stop-opacity=".35"/><stop offset="1" stop-color="#bdfbba" stop-opacity="0"/></radialGradient>
     </defs>
-    <ellipse cx="270" cy="300" rx="270" ry="300" fill="url(#glow)"/>
-    <g transform="rotate(9 360 240)"><rect x="196" y="82" width="312" height="312" rx="52" fill="url(#card)"/></g>
-    <path d="M446 40 C448 56 454 62 470 64 C454 66 448 72 446 88 C444 72 438 66 422 64 C438 62 444 56 446 40Z" fill="#ffd23f"/>
+    <rect width="${W}" height="${H}" fill="url(#g)"/>
+    <circle cx="520" cy="330" r="360" fill="url(#glow)"/>
+    <circle cx="520" cy="318" r="248" fill="#bdfbba"/>
+    <circle cx="520" cy="318" r="292" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="3"/>
+    <circle cx="520" cy="318" r="340" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="3"/>
+    ${star(168, 150, 26, "#ffffff", 0.9)}
+    ${star(884, 118, 20, "#bdfbba")}
+    ${star(900, 440, 14, "#ffffff", 0.7)}
+    ${star(120, 470, 12, "#bdfbba", 0.8)}
   </svg>`;
-  const person = await sharp(CUTOUT).resize({ width: 500 }).toBuffer();
+
+  const person = await sharp(CUTOUT).resize({ width: 600 }).toBuffer();
   const pm = await sharp(person).metadata();
-  const crop = await sharp(person).extract({ left: 0, top: 0, width: 500, height: Math.min(H, pm.height) }).toBuffer();
-  await sharp(Buffer.from(art)).composite([{ input: crop, left: 10, top: 0 }]).png({ compressionLevel: 9 }).toFile(path.join(OUT, "prasun-hero.png"));
+  const top = 52;
+  const crop = await sharp(person).extract({ left: 0, top: 0, width: 600, height: Math.min(pm.height, H - top) }).toBuffer();
 
-  // fade-to-dark: purple above, dark below (alpha 0 -> 1, eased)
-  const FW = 1200, FH = 150, px = Buffer.alloc(FW * FH * 4);
-  for (let y = 0; y < FH; y++) {
-    const t = y / (FH - 1), a = Math.round(255 * (t * t * (3 - 2 * t)));
-    for (let x = 0; x < FW; x++) {
-      const o = (y * FW + x) * 4;
-      px[o] = DEEP.r; px[o + 1] = DEEP.g; px[o + 2] = DEEP.b; px[o + 3] = a;
-    }
-  }
-  await sharp(px, { raw: { width: FW, height: FH, channels: 4 } }).png({ compressionLevel: 9 }).toFile(path.join(OUT, "fade-to-dark.png"));
+  const composed = await sharp(Buffer.from(bg)).composite([{ input: crop, left: 220, top }]).png().toBuffer();
 
-  // coupon notches (half circles in the finale colour), 14 x 28 shown at 2x
-  const fill = `rgb(${DEEP.r},${DEEP.g},${DEEP.b})`;
-  const half = (left) => Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="28" height="56"><circle cx="${left ? 0 : 28}" cy="28" r="26" fill="${fill}"/></svg>`);
-  await sharp(half(true)).png().toFile(path.join(OUT, "notch-gift-left.png"));
-  await sharp(half(false)).png().toFile(path.join(OUT, "notch-gift-right.png"));
-  console.log("done");
+  // rounded corners (transparent) and a white frame
+  const mask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="${W}" height="${H}" rx="${R}" fill="#fff"/></svg>`);
+  const frame = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect x="${BORDER / 2}" y="${BORDER / 2}" width="${W - BORDER}" height="${H - BORDER}" rx="${R - BORDER / 2}" fill="none" stroke="#ffffff" stroke-width="${BORDER}"/></svg>`
+  );
+  await sharp(composed)
+    .composite([{ input: mask, blend: "dest-in" }, { input: frame }])
+    .png({ compressionLevel: 9 })
+    .toFile(OUT);
+  const m = await sharp(OUT).metadata();
+  console.log("hero-photo.png", m.width + "x" + m.height);
 })();

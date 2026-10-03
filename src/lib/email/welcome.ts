@@ -3,23 +3,25 @@ import { cohort, curriculum, MODULE_COUNT } from "@/content/shared";
 import type { EmailAudience, EmailConfig } from "./config";
 
 /**
- * The post-payment welcome email: a hero that confirms the seat, then 1 thanks, 2 welcome, 3 schedule,
- * 4 link, and a dark finale with the Azisly gift of 50 free AI Interview practice credits.
+ * The post-payment welcome email, styled after a clean corporate newsletter: a mint header panel (logo,
+ * links, headline, framed photo, button), then a white body (greeting, a note from Prasun, three numbers,
+ * the schedule as soft grey cards, the class link) and a mint panel with the Azisly gift of 50 free
+ * AI Interview practice credits.
  *
  * Built from nested tables with inline styles because that is the only layout every mail app (Outlook
- * included) renders the same way. The eye-catching parts are pre-made images (Prasun in the hero and the
- * gift artwork, sources in scripts/email-art); everything that is personal or changes (name, order reference,
- * date, links, code, copy) is live text, so it still reads with images switched off.
+ * included) renders the same way. The pictures (hero photo, gift artwork; sources in scripts/email-art)
+ * are decoration; everything that is personal or changes (name, order reference, date, links, code,
+ * copy) is live text, so it still reads with images switched off.
  */
 
-const INK = "#1c1d1f";
-const MUTED = "#5e6266";
-const PURPLE = "#5624d0";
-const PINK = "#ff4fd8";
-const YELLOW = "#ffd23f";
-const DEEP = "#16082f";
+const NAVY = "#0b2540";
+const MINT = "#bdfbba";
+const SOFT = "#f6f6f6";
+const TEXT = "#26364a";
+const MUTED = "#5b6676";
+const LINE = "#e3e7ec";
 const SERIF = "Georgia,'Times New Roman',serif";
-const SANS = "Arial,Helvetica,sans-serif";
+const SANS = "Inter,'Segoe UI',Arial,Helvetica,sans-serif";
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -66,25 +68,16 @@ function classParts() {
 /** How many classes the email lists inline; the rest are one tap away on the schedule page. */
 const PREVIEW_CLASSES = 3;
 
-type Kind = "primary" | "yellow" | "white" | "outline" | "dark" | "pink";
+type Kind = "navy" | "outline";
 
 /** A button that survives Outlook: a coloured table cell with the link filling it. */
-function button(label: string, href: string, kind: Kind = "primary", full = false) {
-  const s = {
-    primary: { bg: PURPLE, fg: "#ffffff", border: PURPLE },
-    yellow: { bg: YELLOW, fg: "#1a0a2e", border: YELLOW },
-    white: { bg: "#ffffff", fg: PURPLE, border: "#ffffff" },
-    outline: { bg: "transparent", fg: "#ffffff", border: "#ffffff" },
-    dark: { bg: "#2a0f66", fg: "#ffffff", border: "#2a0f66" },
-    pink: { bg: PINK, fg: "#1a0a2e", border: PINK },
-  }[kind];
-  const radius = full ? 999 : 12;
-  return `<table role="presentation" ${full ? 'width="100%" ' : ""}cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${s.bg}" style="border-radius:${radius}px;border:2px solid ${s.border};"><a href="${esc(href)}" target="_blank" style="display:${full ? "block" : "inline-block"};padding:${full ? 16 : 14}px 26px;font-family:${SANS};font-size:15px;font-weight:bold;line-height:20px;color:${s.fg};text-decoration:none;border-radius:${radius}px;">${esc(label)}</a></td></tr></table>`;
+function button(label: string, href: string, kind: Kind = "navy", full = false, cls = "") {
+  const s = kind === "navy" ? { bg: NAVY, fg: "#ffffff" } : { bg: "#ffffff", fg: NAVY };
+  return `<table role="presentation" ${cls ? `class="${cls}" ` : ""}${full ? 'width="100%" ' : ""}cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${s.bg}" style="border-radius:10px;border:2px solid ${NAVY};"><a href="${esc(href)}" target="_blank" style="display:${full ? "block" : "inline-block"};padding:${full ? 15 : 13}px 26px;font-family:${SANS};font-size:15px;font-weight:bold;line-height:20px;color:${s.fg};text-decoration:none;border-radius:10px;">${esc(label)}</a></td></tr></table>`;
 }
-/** Small pill that numbers each section. */
-function pill(n: string, text: string, bg: string, fg: string) {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${bg}" style="border-radius:999px;padding:6px 14px;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:1.6px;text-transform:uppercase;color:${fg};">${n ? `${n} &nbsp;&middot;&nbsp; ` : ""}${esc(text)}</td></tr></table>`;
-}
+
+/** A thin divider line between sections of the body. */
+const rule = (margin = "28px 0") => `<div style="margin:${margin};border-top:1px solid ${LINE};font-size:0;line-height:0;">&nbsp;</div>`;
 
 export interface WelcomeInput {
   audience: EmailAudience;
@@ -100,41 +93,46 @@ export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeI
   const claimUrl = withUtm(config.azislyUrl, audience);
   const img = (file: string) => `${config.siteUrl}/${file}`;
   const cls = classParts();
-  const scheduleUrl = `${config.siteUrl}/schedule`;
   const monthName = cls.month.charAt(0) + cls.month.slice(1).toLowerCase();
-  const headline = first
-    ? `You&rsquo;re in,<br><span style="font-style:italic;color:${YELLOW};">${hello}.</span>`
-    : `You&rsquo;re <span style="font-style:italic;color:${YELLOW};">in.</span>`;
+  const scheduleUrl = `${config.siteUrl}/schedule`;
   const subject = "You're in! Welcome to the AI Corporate Analyst program";
   const preheader = `Your seat is confirmed. Class 1 is live on ${cohort.platform} on ${cohort.startsLabel}. Your links and 50 free interview-practice credits are inside.`;
+  const headline = first ? `You&rsquo;re in, ${hello}!` : `You&rsquo;re in!`;
 
-  const classRows = curriculum
+  const navLink = (label: string, href: string) =>
+    `<a href="${esc(href)}" target="_blank" style="font-family:${SANS};font-size:13.5px;line-height:20px;color:${NAVY};text-decoration:none;padding:0 11px;">${esc(label)}</a>`;
+  const nav = [navLink("Schedule", scheduleUrl), navLink("Support", `mailto:${config.supportEmail}`), navLink("Azisly.ai", config.azislyUrl)].join("");
+
+  const classCards = curriculum
     .slice(0, PREVIEW_CLASSES)
     .map((m, i) => {
       const when = config.classDates[i];
-      return `<tr><td width="42" valign="middle" style="padding:6px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="30" height="26" align="center" bgcolor="#2c1366" style="border-radius:8px;font-family:${SANS};font-size:12px;font-weight:bold;color:#ff9be9;">${String(m.index).padStart(2, "0")}</td></tr></table></td><td valign="middle" style="padding:6px 8px 6px 0;font-family:${SANS};font-size:14.5px;line-height:20px;color:#f1eaff;">${esc(m.title)}</td><td align="right" valign="middle" style="padding:6px 0;font-family:${SANS};font-size:12.5px;line-height:20px;color:#bda9ee;white-space:nowrap;">${when ? esc(when) : ""}</td></tr>`;
+      return `<tr><td style="padding:0 0 8px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${SOFT}" style="background:${SOFT};border-radius:12px;"><tr>
+        <td width="62" valign="middle" style="padding:12px 0 12px 14px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="38" height="38" align="center" bgcolor="${MINT}" style="border-radius:19px;font-family:${SANS};font-size:13px;font-weight:bold;color:${NAVY};">${String(m.index).padStart(2, "0")}</td></tr></table></td>
+        <td valign="middle" style="padding:12px 8px 12px 0;font-family:${SANS};font-size:15px;line-height:21px;font-weight:bold;color:${NAVY};">${esc(m.title)}</td>
+        ${when ? `<td align="right" valign="middle" style="padding:12px 16px 12px 0;font-family:${SANS};font-size:12.5px;line-height:18px;color:${MUTED};white-space:nowrap;">${esc(when)}</td>` : ""}
+      </tr></table></td></tr>`;
     })
     .join("");
 
-  const linkBlock = config.zoomUrl
-    ? `<p style="margin:0 0 18px 0;font-family:${SANS};font-size:15.5px;line-height:24px;color:#f4eeff;">One link for every live class. Save it, and join from your phone or laptop a few minutes early.</p>
-<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 12px 10px 0;">${button(`Join the live classes on ${cohort.platform}`, config.zoomUrl, "yellow")}</td>${config.whatsappUrl ? `<td style="padding:0 0 10px 0;">${button("Join the WhatsApp group", config.whatsappUrl, "outline")}</td>` : ""}</tr></table>
-<p style="margin:6px 0 0 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:#e6d9ff;">Button not working? Copy this link into your browser:<br><a href="${esc(config.zoomUrl)}" style="color:#ffffff;word-break:break-all;">${esc(config.zoomUrl)}</a></p>`
-    : `<p style="margin:0;font-family:${SANS};font-size:15.5px;line-height:24px;color:#f4eeff;">Your ${cohort.platform} link for the live classes is on its way. We will send it to this email and ${cohort.deliveredVia === "email and WhatsApp" ? "on WhatsApp" : "by message"} before Class 1.</p>${config.whatsappUrl ? `<div style="margin-top:16px;">${button("Join the WhatsApp group", config.whatsappUrl, "outline")}</div>` : ""}`;
+  const stat = (value: string, label: string) =>
+    `<td width="33%" valign="top" style="padding:0 6px 0 0;"><p style="margin:0;font-family:${SANS};font-size:36px;line-height:40px;font-weight:bold;color:${NAVY};">${value}</p><p style="margin:2px 0 0 0;font-family:${SANS};font-size:13px;line-height:18px;color:${MUTED};">${label}</p></td>`;
 
-  // A golden ticket with punched-out sides on the dark finale: "50 free credits" on the left, the code on the right.
-  const couponRight = config.creditCode
-    ? `<p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#8a5200;">Your code</p>
-<p style="margin:4px 0 0 0;font-family:${SANS};font-size:28px;line-height:32px;font-weight:bold;letter-spacing:4px;color:#1a0a2e;">${esc(config.creditCode)}</p>
-<p style="margin:5px 0 0 0;font-family:${SANS};font-size:12px;line-height:17px;color:#6b4300;">Enter it on Azisly to add your 50 credits</p>`
-    : `<p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#8a5200;">Claim yours</p>
-<p style="margin:4px 0 0 0;font-family:${SERIF};font-size:21px;line-height:27px;font-style:italic;font-weight:bold;color:#1a0a2e;">Tap the button below</p>`;
-  const coupon = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${YELLOW}" style="margin:0;border-radius:16px;background-color:${YELLOW};background-image:linear-gradient(135deg,#ffe27a 0%,#ffc21a 100%);"><tr>
-  <td width="14" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-gift-left.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
-  <td width="132" align="center" valign="middle" style="padding:18px 6px;"><p class="coupon50" style="margin:0;font-family:${SERIF};font-size:40px;line-height:44px;font-style:italic;font-weight:bold;color:#2a1500;">Gift</p><p style="margin:4px 0 0 0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:#7a4600;">Just for you</p></td>
-  <td valign="middle" style="padding:16px 14px 16px 20px;border-left:2px dashed #c98a00;">${couponRight}</td>
-  <td width="14" align="right" valign="middle" style="font-size:0;line-height:0;"><img src="${esc(img("email/notch-gift-right.png"))}" width="14" height="28" alt="" style="display:block;border:0;"></td>
-</tr></table>`;
+  const linkBlock = config.zoomUrl
+    ? `<p style="margin:0 0 16px 0;font-family:${SANS};font-size:15.5px;line-height:24px;color:${TEXT};">One link for every live class. Save it, and join from your phone or laptop a few minutes early.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td class="stack2" style="padding:0 10px 10px 0;">${button(`Join the live classes on ${cohort.platform}`, config.zoomUrl, "navy", false, "btnfull")}</td>${config.whatsappUrl ? `<td class="stack2" style="padding:0 0 10px 0;">${button("Join the WhatsApp group", config.whatsappUrl, "outline", false, "btnfull")}</td>` : ""}</tr></table>
+<p style="margin:4px 0 0 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:${MUTED};">Button not working? Copy this link into your browser:<br><a href="${esc(config.zoomUrl)}" style="color:${NAVY};word-break:break-all;">${esc(config.zoomUrl)}</a></p>`
+    : `<p style="margin:0;font-family:${SANS};font-size:15.5px;line-height:24px;color:${TEXT};">Your ${cohort.platform} link for the live classes is on its way. We will send it to this email and ${cohort.deliveredVia === "email and WhatsApp" ? "on WhatsApp" : "by message"} before Class 1.</p>${config.whatsappUrl ? `<div style="margin-top:16px;">${button("Join the WhatsApp group", config.whatsappUrl, "outline")}</div>` : ""}`;
+
+  // The code on a white ticket with a dashed edge, on the mint gift panel.
+  const codeBox = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="background:#ffffff;border:2px dashed ${NAVY};border-radius:12px;"><tr><td align="center" style="padding:11px 12px;">
+    ${
+      config.creditCode
+        ? `<p style="margin:0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:${MUTED};">Your code</p><p style="margin:3px 0 0 0;font-family:${SANS};font-size:25px;line-height:30px;font-weight:bold;letter-spacing:4px;color:${NAVY};">${esc(config.creditCode)}</p>`
+        : `<p style="margin:0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:${MUTED};">Claim yours</p><p style="margin:3px 0 0 0;font-family:${SANS};font-size:17px;line-height:24px;font-weight:bold;color:${NAVY};">Tap the button below</p>`
+    }
+  </td></tr></table>`;
+
   const sampleNotice = config.sample
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background:#fff3cd;padding:8px 12px;font-family:${SANS};font-size:12px;color:#664d03;">DESIGN PREVIEW: the Zoom link, WhatsApp link and credit code below are sample values and are not used in real emails.</td></tr></table>`
     : "";
@@ -151,116 +149,116 @@ export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeI
 <style>
   @media only screen and (max-width:480px){
     .pad{padding-left:20px !important;padding-right:20px !important;}
-    .h1{font-size:44px !important;line-height:48px !important;}
-    .herophoto{text-align:center !important;}
-    .herophoto img{margin:0 auto !important;}
-    .bigday{font-size:62px !important;line-height:62px !important;}
-    .coupon50{font-size:34px !important;line-height:38px !important;}
-    .stack{display:block !important;width:100% !important;box-sizing:border-box !important;}
+    .h1{font-size:28px !important;line-height:36px !important;}
+    .heroimg{width:100% !important;height:auto !important;}
+    .stack{display:block !important;width:100% !important;box-sizing:border-box !important;text-align:center !important;}
+    .giftimg{margin:0 auto !important;}
+    .stack2{display:block !important;width:100% !important;padding-right:0 !important;box-sizing:border-box !important;}
+    .btnfull{width:100% !important;}
+    .bigday{font-size:50px !important;line-height:50px !important;}
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background:#120728;-webkit-text-size-adjust:100%;">
+<body style="margin:0;padding:0;background:#eef1f4;-webkit-text-size-adjust:100%;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;font-size:1px;line-height:1px;">${esc(preheader)}&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
 ${sampleNotice}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#120728" style="background:#120728;">
-<tr><td align="center" style="padding:22px 12px 28px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#eef1f4" style="background:#eef1f4;">
+<tr><td align="center" style="padding:24px 12px 32px 12px;">
 
-  <!-- top bar on the dark canvas -->
-  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">
-    <tr>
-      <td align="left" style="padding:0 6px 16px 6px;"><img src="${esc(img("logos/azisly-white.png"))}" width="124" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:124px;"></td>
-      <td align="right" style="padding:0 6px 16px 6px;font-family:${SANS};font-size:12px;letter-spacing:.6px;color:#a995d8;">${orderId ? `Order ${esc(orderId)}` : ""}</td>
-    </tr>
-  </table>
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;border-radius:20px;">
 
-  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:24px;overflow:hidden;">
-
-    <!-- hero: one message, one photo -->
-    <tr><td bgcolor="#34108a" style="background-color:#34108a;background-image:linear-gradient(180deg,#2b0e72 0%,#5320c4 100%);">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-        <td class="stack pad" valign="middle" style="padding:40px 8px 36px 36px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${YELLOW}" style="border-radius:999px;padding:7px 15px;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:#1a0a2e;">Seat confirmed</td></tr></table>
-          <h1 class="h1" style="margin:20px 0 0 0;font-family:${SERIF};font-size:50px;line-height:54px;font-weight:bold;color:#ffffff;">${headline}</h1>
-          <p style="margin:18px 0 0 0;font-family:${SANS};font-size:16px;line-height:25px;color:#e4d8ff;">Welcome to the AI Corporate Analyst program. Your first live class is <b style="color:#ffffff;">${esc(cls.weekday)}, ${esc(cls.day)} ${esc(monthName)}</b> at ${esc(cls.time)} IST.</p>
-        </td>
-        <td class="stack herophoto" width="260" valign="bottom" align="right" style="font-size:0;line-height:0;"><img src="${esc(img("email/prasun-hero.png"))}" width="260" alt="Prasun Choudhary, your instructor" style="display:block;width:260px;max-width:100%;height:auto;border:0;"></td>
-      </tr></table>
-    </td></tr>
-
-    <tr><td bgcolor="#5320c4" style="background:#5320c4;font-size:0;line-height:0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="pad" bgcolor="#ffffff" style="background:#ffffff;border-radius:24px 24px 0 0;padding:30px 36px 8px 36px;font-size:16px;line-height:normal;">
-        ${pill("1", "Thank you", "#ffe3f8", "#b0127a")}
-        <p style="margin:16px 0 0 0;font-family:${SANS};font-size:17px;line-height:27px;color:${INK};"><b>${hello}</b>, thank you for joining <b>AI Corporate Analyst</b>. Your payment went through and your seat is locked in for all ${MODULE_COUNT} live classes.</p>
-        <p style="margin:12px 0 0 0;font-family:${SANS};font-size:15px;line-height:24px;color:${MUTED};">Here is everything you need, in four quick steps.${orderId ? ` Your order reference is <b style="color:${INK};">${esc(orderId)}</b>.` : ""}</p>
-      </td></tr></table>
-    </td></tr>
-    <!-- 2 welcome: a note from Prasun -->
-    <tr><td bgcolor="${DEEP}" style="background:${DEEP};font-size:0;line-height:0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="pad" bgcolor="#ffffff" style="background:#ffffff;border-radius:0 0 26px 26px;padding:26px 36px 36px 36px;font-size:16px;line-height:normal;">
-      ${pill("2", "Welcome", "#e9e1ff", PURPLE)}
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;border-radius:20px;background-color:#f6f2ff;border:2px solid #e3d8ff;"><tr><td style="padding:26px 26px 24px 26px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-          <td width="72" valign="middle"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${PINK}" style="border-radius:34px;padding:3px;"><img src="${esc(img("email/prasun.png"))}" width="60" height="60" alt="Prasun Choudhary" style="display:block;border:0;border-radius:30px;"></td></tr></table></td>
-          <td valign="middle"><p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:${PURPLE};">A note from your instructor</p><p style="margin:3px 0 0 0;font-family:${SERIF};font-size:20px;line-height:26px;font-weight:bold;color:${INK};">Prasun Choudhary</p></td>
-        </tr></table>
-        <p style="margin:18px 0 0 0;font-family:${SERIF};font-size:20px;line-height:32px;font-style:italic;color:${INK};"><span style="font-size:44px;line-height:20px;color:${PINK};font-style:normal;vertical-align:-14px;">&ldquo;</span>Welcome aboard! Over ${MODULE_COUNT} live sessions you will go from using AI for quick answers to building your own <b style="background:#fff0a8;padding:0 4px;">agents</b>, <b style="background:#fff0a8;padding:0 4px;">dashboards</b> and a working <b style="background:#fff0a8;padding:0 4px;">prototype</b>. No coding needed. Come curious, and bring a real task from your day.<span style="font-size:44px;line-height:20px;color:${PINK};font-style:normal;vertical-align:-14px;">&rdquo;</span></p>
-        <p style="margin:16px 0 0 0;font-family:${SERIF};font-size:30px;line-height:34px;font-style:italic;color:${PURPLE};">Prasun</p>
-        <p style="margin:0;font-family:${SANS};font-size:12.5px;line-height:18px;color:${MUTED};">Founder, Azisly.ai</p>
-      </td></tr></table>
-    </td></tr></table></td></tr>
-
-    <!-- 3 schedule (dark) -->
-    <tr><td class="pad" bgcolor="${DEEP}" style="background:${DEEP};padding:34px 36px 26px 36px;">
-      ${pill("3", "Schedule", YELLOW, "#1a0a2e")}
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:18px;background:#2a1260;border-radius:18px;"><tr>
-        <td width="128" align="center" valign="middle" style="padding:20px 8px 20px 20px;border-right:2px dashed #5a3aa8;">
-          <p class="bigday" style="margin:0;font-family:${SERIF};font-size:74px;line-height:70px;font-weight:bold;color:${YELLOW};">${esc(cls.day)}</p>
-          <p style="margin:6px 0 0 0;font-family:${SANS};font-size:15px;font-weight:bold;letter-spacing:4px;color:#ffffff;">${esc(cls.month)}</p>
-        </td>
-        <td valign="middle" style="padding:20px 20px 20px 22px;">
-          <p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:1.8px;text-transform:uppercase;color:#ff9be9;">Class 1 starts</p>
-          <p style="margin:5px 0 0 0;font-family:${SERIF};font-size:21px;line-height:27px;color:#ffffff;">${esc(cls.weekday)}, ${esc(cls.time)} IST</p>
-          <p style="margin:4px 0 0 0;font-family:${SANS};font-size:13px;line-height:19px;color:#cdbbff;">Live on ${cohort.platform}, taught by Prasun himself</p>
-        </td>
-      </tr></table>
-      <p style="margin:22px 0 6px 0;font-family:${SANS};font-size:13px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;color:#ffffff;">${MODULE_COUNT} classes, 4 real builds</p>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${classRows}
-        <tr><td colspan="3" style="padding:8px 0 4px 0;font-family:${SANS};font-size:13px;line-height:19px;color:#bda9ee;">+ ${MODULE_COUNT - PREVIEW_CLASSES} more classes, from AI Excel to your own prototype</td></tr>
+    <!-- header panel: logo, links, headline, framed photo, button -->
+    <tr><td style="padding:10px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${MINT}" style="background:${MINT};border-radius:16px;">
+        <tr><td align="center" style="padding:30px 20px 4px 20px;"><img src="${esc(img("logos/azisly-brand.png"))}" width="124" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:124px;"></td></tr>
+        <tr><td align="center" style="padding:12px 10px 0 10px;">${nav}</td></tr>
+        <tr><td class="pad" align="center" style="padding:30px 30px 0 30px;">
+          <h1 class="h1" style="margin:0;font-family:${SANS};font-size:36px;line-height:44px;font-weight:bold;color:${NAVY};">${headline}<br>Your seat is confirmed.</h1>
+        </td></tr>
+        <tr><td align="center" style="padding:24px 24px 0 24px;"><img class="heroimg" src="${esc(img("email/hero-photo.png"))}" width="520" alt="Prasun Choudhary, your instructor" style="display:block;width:100%;max-width:520px;height:auto;border:0;"></td></tr>
+        <tr><td class="pad" align="center" style="padding:26px 44px 0 44px;">
+          <p style="margin:0;font-family:${SANS};font-size:16px;line-height:25px;color:${NAVY};">Welcome to the AI Corporate Analyst program. Your first live class is <b>${esc(cls.weekday)}, ${esc(cls.day)} ${esc(monthName)}</b> at ${esc(cls.time)} IST.</p>
+        </td></tr>
+        <tr><td align="center" style="padding:22px 20px 38px 20px;">${button("View your schedule", scheduleUrl, "navy")}</td></tr>
       </table>
-      <div style="margin-top:14px;">${button(`View all ${MODULE_COUNT} classes`, scheduleUrl, "outline")}</div>
-    
     </td></tr>
 
-    <!-- 4 link (gradient): dissolves in from the dark section above and out into the dark finale below -->
-    <tr><td bgcolor="#6a2bd9" style="background-color:#6a2bd9;background-image:linear-gradient(135deg,#4b1fb8 0%,#8a2fe0 55%,#d02fc4 100%);">
-      <img src="${esc(img("email/fade-from-dark.png"))}" width="600" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="pad" style="padding:4px 36px 6px 36px;">
-        ${pill("4", "Your link", "#ffffff", PURPLE)}
-        <h2 style="margin:16px 0 10px 0;font-family:${SERIF};font-size:30px;line-height:36px;color:#ffffff;">Your seat is one tap away.</h2>
+    <!-- body -->
+    <tr><td class="pad" style="padding:34px 36px 6px 36px;">
+      <p style="margin:0 0 12px 0;font-family:${SANS};font-size:19px;line-height:26px;font-weight:600;color:${NAVY};">Hi <b>${hello}</b> &#128075;</p>
+      <p style="margin:0;font-family:${SANS};font-size:16px;line-height:26px;color:${TEXT};">Thank you for joining <b>AI Corporate Analyst</b>. Your payment went through and your seat is locked in for all ${MODULE_COUNT} live classes. Here is everything you need, in one place.${orderId ? ` Your order reference is <b style="color:${NAVY};">${esc(orderId)}</b>.` : ""}</p>
+
+      ${rule("28px 0 26px 0")}
+
+      <!-- welcome: a note from Prasun -->
+      <h2 style="margin:0 0 16px 0;font-family:${SANS};font-size:25px;line-height:32px;font-weight:bold;color:${NAVY};">A note from Prasun</h2>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 16px 0;"><tr>
+        <td width="64" valign="middle"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${MINT}" style="border-radius:30px;padding:3px;"><img src="${esc(img("email/prasun.png"))}" width="54" height="54" alt="Prasun Choudhary" style="display:block;border:0;border-radius:27px;"></td></tr></table></td>
+        <td valign="middle"><p style="margin:0;font-family:${SANS};font-size:16px;line-height:22px;font-weight:bold;color:${NAVY};">Prasun Choudhary</p><p style="margin:1px 0 0 0;font-family:${SANS};font-size:13px;line-height:18px;color:${MUTED};">Your instructor, Founder of Azisly.ai</p></td>
+      </tr></table>
+      <p style="margin:0;font-family:${SANS};font-size:16px;line-height:27px;color:${TEXT};">Welcome aboard! Over ${MODULE_COUNT} live sessions you will go from using AI for quick answers to building your own <b style="background:${MINT};padding:0 4px;color:${NAVY};">agents</b>, <b style="background:${MINT};padding:0 4px;color:${NAVY};">dashboards</b> and a working <b style="background:${MINT};padding:0 4px;color:${NAVY};">prototype</b>. No coding needed. Come curious, and bring a real task from your day.</p>
+      <p style="margin:12px 0 0 0;font-family:${SERIF};font-size:28px;line-height:32px;font-style:italic;color:${NAVY};">Prasun</p>
+
+      ${rule("28px 0 24px 0")}
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+        ${stat(String(MODULE_COUNT), "Live classes")}${stat("4", "Real builds")}${stat("0", "Coding needed")}
+      </tr></table>
+
+      ${rule("26px 0 28px 0")}
+
+      <!-- schedule -->
+      <h2 style="margin:0 0 16px 0;font-family:${SANS};font-size:25px;line-height:32px;font-weight:bold;color:${NAVY};">Your schedule</h2>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${MINT}" style="background:${MINT};border-radius:14px;"><tr>
+        <td width="124" align="center" valign="middle" style="padding:18px 6px 18px 14px;border-right:2px dashed ${NAVY};">
+          <p class="bigday" style="margin:0;font-family:${SANS};font-size:56px;line-height:56px;font-weight:bold;color:${NAVY};">${esc(cls.day)}</p>
+          <p style="margin:4px 0 0 0;font-family:${SANS};font-size:14px;font-weight:bold;letter-spacing:4px;color:${NAVY};">${esc(cls.month)}</p>
+        </td>
+        <td valign="middle" style="padding:18px 18px 18px 22px;">
+          <p style="margin:0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:1.8px;text-transform:uppercase;color:#2f6b3a;">Class 1 starts</p>
+          <p style="margin:4px 0 0 0;font-family:${SANS};font-size:20px;line-height:26px;font-weight:bold;color:${NAVY};">${esc(cls.weekday)}, ${esc(cls.time)} IST</p>
+          <p style="margin:3px 0 0 0;font-family:${SANS};font-size:13px;line-height:19px;color:${NAVY};">Live on ${cohort.platform}, taught by Prasun himself</p>
+        </td>
+      </tr></table>
+      <p style="margin:22px 0 10px 0;font-family:${SANS};font-size:13px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;color:${MUTED};">${MODULE_COUNT} classes, 4 real builds</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${classCards}</table>
+      <p style="margin:6px 0 16px 0;font-family:${SANS};font-size:13.5px;line-height:20px;color:${MUTED};">+ ${MODULE_COUNT - PREVIEW_CLASSES} more classes, from AI Excel to your own prototype</p>
+      ${button(`View all ${MODULE_COUNT} classes`, scheduleUrl, "navy")}
+
+      ${rule("30px 0 28px 0")}
+
+      <!-- link -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${SOFT}" style="background:${SOFT};border-radius:16px;"><tr><td class="pad" style="padding:26px 26px 20px 26px;">
+        <p style="margin:0 0 8px 0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:${MUTED};">Your class link</p>
+        <h2 style="margin:0 0 10px 0;font-family:${SANS};font-size:24px;line-height:30px;font-weight:bold;color:${NAVY};">Your seat is one tap away.</h2>
         ${linkBlock}
       </td></tr></table>
-      <img src="${esc(img("email/fade-to-dark.png"))}" width="600" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0;margin-top:14px;">
     </td></tr>
 
-    <!-- Azisly gift: a dark, glowing finale -->
-    <tr><td class="pad" bgcolor="${DEEP}" style="background:${DEEP};padding:2px 36px 4px 36px;">
-      ${pill("", `Bonus gift for ${banner.audience.toLowerCase()}`, PINK, "#1a0a2e")}
-      <h2 style="margin:16px 0 8px 0;font-family:${SERIF};font-size:34px;line-height:40px;color:#ffffff;">50 free credits<br><span style="font-style:italic;color:${YELLOW};">for AI Interview practice</span></h2>
-      <p style="margin:0;font-family:${SANS};font-size:16px;line-height:25px;color:#d8c9ff;">${esc(banner.body)}</p>
+    <!-- Azisly gift: a mint panel with the artwork on the left, like the call-to-action card in the reference -->
+    <tr><td style="padding:26px 10px 10px 10px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${MINT}" style="background:${MINT};border-radius:16px;"><tr>
+        <td class="stack" width="236" align="center" valign="middle" style="padding:18px 0 18px 14px;font-size:0;line-height:0;"><img class="giftimg" src="${esc(img("email/gift-mint.png"))}" width="220" alt="A friendly robot interviewer and a gold coin worth 50 credits." style="display:block;border:0;width:220px;max-width:100%;height:auto;"></td>
+        <td class="stack pad" valign="middle" style="padding:26px 28px 26px 10px;">
+          <p style="margin:0 0 8px 0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#2f6b3a;">A bonus gift for ${esc(banner.audience.toLowerCase())}</p>
+          <h2 style="margin:0 0 8px 0;font-family:${SANS};font-size:25px;line-height:31px;font-weight:bold;color:${NAVY};">50 free credits for AI Interview practice</h2>
+          <p style="margin:0 0 16px 0;font-family:${SANS};font-size:14.5px;line-height:22px;color:${NAVY};">${esc(banner.body)}</p>
+          ${codeBox}
+          <div style="margin-top:14px;">${button(banner.cta, claimUrl, "navy", true)}</div>
+        </td>
+      </tr></table>
     </td></tr>
-    <tr><td bgcolor="${DEEP}" style="background:${DEEP};font-size:0;line-height:0;"><img src="${esc(img("email/gift-art.png"))}" width="600" alt="A gold coin worth 50 credits next to a friendly robot interviewer asking &quot;Tell me about yourself&quot;." style="display:block;width:100%;max-width:600px;height:auto;border:0;"></td></tr>
-    <tr><td class="pad" bgcolor="${DEEP}" style="background:${DEEP};padding:4px 36px 8px 36px;">
-      ${coupon}
-      <div style="margin-top:22px;">${button(`${banner.cta}  →`, claimUrl, "pink", true)}</div>
-      <p style="margin:26px 0 0 0;"><img src="${esc(img("logos/azisly-white.png"))}" width="104" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:104px;"></p>
-    </td></tr>
+
     <!-- footer -->
-    <tr><td class="pad" bgcolor="${DEEP}" style="padding:22px 36px 28px 36px;background:${DEEP};">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border-top:1px solid #35205f;padding-top:18px;">
-        <p style="margin:0 0 6px 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:#b8a6e6;">Questions? Just reply to this email or write to <a href="mailto:${esc(config.supportEmail)}" style="color:#ffb3ee;">${esc(config.supportEmail)}</a>.</p>
-        <p style="margin:0;font-family:${SANS};font-size:11.5px;line-height:18px;color:#8f7fbf;">You are receiving this because you enrolled in AI Corporate Analyst. Azisly Technologies Private Limited.</p>
-      </td></tr></table>
+    <tr><td class="pad" align="center" style="padding:30px 36px 8px 36px;">
+      <img src="${esc(img("logos/azisly-brand.png"))}" width="112" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:112px;margin:0 auto;">
+      ${rule("22px 0 12px 0")}
+      <div>${nav}</div>
+      ${rule("12px 0 18px 0")}
+      <p style="margin:0 0 8px 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:${MUTED};">Questions? Just reply to this email or write to <a href="mailto:${esc(config.supportEmail)}" style="color:${NAVY};text-decoration:underline;">${esc(config.supportEmail)}</a>.</p>
+      <p style="margin:0;font-family:${SANS};font-size:11.5px;line-height:18px;color:#8a93a1;">You are receiving this because you enrolled in AI Corporate Analyst. Azisly Technologies Private Limited.</p>
     </td></tr>
+    <tr><td style="font-size:0;line-height:0;height:26px;">&nbsp;</td></tr>
 
   </table>
 </td></tr>
