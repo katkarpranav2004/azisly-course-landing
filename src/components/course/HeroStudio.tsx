@@ -251,7 +251,7 @@ function FeatureRow({ items }: { items: NonNullable<ReturnType<typeof useStudio>
 function TagCards({ items }: { items: NonNullable<ReturnType<typeof useStudio>["copy"]["hero"]["tags"]> }) {
   const tilt = [-1.5, 1, -1, 1.5];
   return (
-    <ul className="tag-cards absolute -left-[28%] top-[1%] z-10 hidden w-[162px] flex-col gap-1.5 xl:flex">
+    <ul className="absolute -left-[106px] top-[1%] z-10 hidden w-[162px] flex-col gap-1.5 xl:flex">
       {items.map((t, i) => {
         const { Icon, tint } = TAG_ICONS[t.icon];
         return (

@@ -565,10 +565,3 @@ body {
     transition: none !important;
   }
 }
-
-/* Very short desktop windows have no room for the floating topic cards beside the photo, so they step aside. */
-@media (max-height: 839px) {
-  .tag-cards {
-    display: none !important;
-  }
-}
