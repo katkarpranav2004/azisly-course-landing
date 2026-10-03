@@ -232,7 +232,7 @@ function Headline({ text, accent }: { text: string; accent?: string }) {
 /** Four short selling points with coloured icon tiles, separated by hairlines on desktop. */
 function FeatureRow({ items }: { items: NonNullable<ReturnType<typeof useStudio>["copy"]["hero"]["features"]> }) {
   return (
-    <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3.5 sm:grid-cols-4 sm:gap-0 lg:max-w-[660px]">
+    <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-3.5 sm:grid-cols-4 sm:gap-0 lg:mt-[clamp(12px,2.2vh,24px)] lg:max-w-[660px]">
       {items.map((f) => {
         const { Icon, tint } = FEATURE_ICONS[f.icon];
         return (
@@ -252,7 +252,7 @@ function FeatureRow({ items }: { items: NonNullable<ReturnType<typeof useStudio>
 function TagCards({ items }: { items: NonNullable<ReturnType<typeof useStudio>["copy"]["hero"]["tags"]> }) {
   const tilt = [-1.5, 1, -1, 1.5];
   return (
-    <ul className="absolute -left-[28%] top-[1%] z-10 hidden w-[162px] flex-col gap-2 xl:flex">
+    <ul className="tag-cards absolute -left-[28%] top-[1%] z-10 hidden w-[162px] flex-col gap-1.5 xl:flex">
       {items.map((t, i) => {
         const { Icon, tint } = TAG_ICONS[t.icon];
         return (
@@ -263,10 +263,10 @@ function TagCards({ items }: { items: NonNullable<ReturnType<typeof useStudio>["
             transition={{ duration: 0.5, delay: 0.45 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ y: -3 }}
             style={{ rotate: tilt[i % tilt.length] }}
-            className="flex items-center gap-2.5 rounded-2xl border border-[#ebe8f7] bg-white p-2.5 shadow-[0_14px_30px_-16px_rgba(60,40,160,.5)]"
+            className="flex items-center gap-2.5 rounded-2xl border border-[#ebe8f7] bg-white p-2 shadow-[0_14px_30px_-16px_rgba(60,40,160,.5)]"
           >
-            <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${tint}`}>
-              <Icon size={18} strokeWidth={1.9} />
+            <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${tint}`}>
+              <Icon size={17} strokeWidth={1.9} />
             </span>
             <span className="text-[12.5px] font-semibold leading-tight">{t.title}</span>
           </motion.li>
@@ -306,7 +306,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_70%_at_82%_38%,rgba(124,77,255,.11),transparent_70%)]" />
 
         {hero.pills && (
-          <ul className="relative mx-auto hidden max-w-6xl justify-end gap-2 pt-5 md:flex">
+          <ul className="relative mx-auto hidden max-w-6xl justify-end gap-2 pt-5 md:flex lg:pt-[clamp(8px,1.5vh,20px)]">
             {hero.pills.map((p, i) => {
               const Icon = PILL_ICONS[i % PILL_ICONS.length];
               return (
@@ -321,12 +321,12 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
           </ul>
         )}
 
-        <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-12 lg:py-12">
+        <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-10 lg:pb-[clamp(22px,3.8vh,46px)] lg:pt-[clamp(8px,1.8vh,26px)]">
           <div className="px-1 sm:px-0">
             <motion.p {...rise(0)} className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-[13px]">
               {hero.eyebrow}
             </motion.p>
-            <motion.h1 {...rise(0.05)} className="display mt-2 text-[clamp(36px,5.4vw,68px)] leading-[1.04] sm:mt-3">
+            <motion.h1 {...rise(0.05)} className="display mt-2 text-[clamp(36px,min(5.4vw,6.9vh),68px)] leading-[1.04] sm:mt-3">
               <Headline text={hero.title} accent={hero.titleAccent} />
             </motion.h1>
             {hero.tagline && (
@@ -347,7 +347,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
               </p>
             </motion.div>
 
-            <motion.p {...rise(0.1)} className="mt-4 max-w-[560px] text-[15.5px] leading-relaxed text-[#2d2f31] sm:mt-5 sm:text-[18px]">
+            <motion.p {...rise(0.1)} className="mt-4 max-w-[560px] text-[15.5px] leading-relaxed text-[#2d2f31] sm:mt-5 sm:text-[18px] lg:mt-4 lg:max-w-[700px] lg:text-[17px] lg:leading-[1.5]">
               {hero.body}
             </motion.p>
 
@@ -360,7 +360,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
             {/* Offer card: price, countdown and the CTA together, with the checkout line centred under the button. */}
             <motion.div
               {...rise(0.15)}
-              className="mt-6 rounded-[22px] border border-[#e6e4f3] bg-[linear-gradient(180deg,#fbfaff,#f6f4fd)] p-4 shadow-[0_24px_50px_-34px_rgba(60,40,160,.45)] sm:mt-7 sm:p-5"
+              className="mt-6 rounded-[22px] border border-[#e6e4f3] bg-[linear-gradient(180deg,#fbfaff,#f6f4fd)] p-4 shadow-[0_24px_50px_-34px_rgba(60,40,160,.45)] sm:mt-7 sm:p-5 lg:mt-[clamp(12px,2.2vh,24px)] lg:p-[clamp(12px,1.8vh,20px)]"
             >
               <div className="flex flex-wrap items-center gap-x-5 gap-y-5 md:flex-nowrap md:gap-x-5">
                 <PriceBlock offer={pricing.offerPrice} list={pricing.listPrice} off={off} />
@@ -375,7 +375,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
               </div>
             </motion.div>
 
-            <motion.div {...rise(0.2)} className="mt-4 flex flex-wrap items-center gap-2">
+            <motion.div {...rise(0.2)} className="mt-4 flex flex-wrap items-center gap-2 lg:mt-[clamp(8px,1.5vh,16px)]">
               <motion.span
                 whileHover={{ y: -2 }}
                 className="flex items-center gap-2 rounded-full border border-[#ffd0ee] bg-[#fff0f9] py-1.5 pl-2 pr-3 text-[13px] font-semibold text-[#b0127a]"
@@ -417,7 +417,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto w-full max-w-[380px]"
+            className="relative mx-auto w-full max-w-[380px] lg:max-w-[min(380px,38vh)] lg:translate-y-[clamp(20px,5vh,52px)]"
           >
             <div className="relative aspect-[4/5]">
               {/* Two squares tucked behind Prasun: purple behind his head (top right), pink behind his arms (bottom left). */}
