@@ -6,6 +6,8 @@ import { renderWelcomeEmail } from "@/lib/email/welcome";
  * Design preview of the welcome email, as a normal web page.
  *   /emails/welcome?audience=college|corporate&name=Riya        the HTML email
  *   /emails/welcome?audience=corporate&format=text              the plain-text version
+ *   /emails/welcome?audience=college&gif=1                      the gift as the animated GIF that Gmail and most other apps get
+ * The tap-to-open gift box is on here for every browser; in real mail only Apple Mail gets it.
  * Missing links and the credit code are shown as clearly marked samples here, never in real sends.
  */
 export function GET(request: NextRequest) {
@@ -15,6 +17,7 @@ export function GET(request: NextRequest) {
     audience,
     name: q.get("name") || "Riya Sharma",
     orderId: "AZ-SAMPLE-1042",
+    interactive: q.get("gif") !== "1",
     // images load from whichever server is showing the preview, so it works before anything is deployed
     config: { ...getEmailConfig(audience, true), siteUrl: request.nextUrl.origin },
   });

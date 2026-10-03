@@ -80,13 +80,15 @@ function button(label: string, href: string, kind: Kind = "navy", full = false, 
 const rule = (margin = "28px 0") => `<div style="margin:${margin};border-top:1px solid ${LINE};font-size:0;line-height:0;">&nbsp;</div>`;
 
 export interface WelcomeInput {
+  /** Switch the tap-to-open gift on for every viewer (the browser preview). In mail it is limited to Apple Mail. */
+  interactive?: boolean;
   audience: EmailAudience;
   name?: string;
   orderId?: string;
   config: EmailConfig;
 }
 
-export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeInput) {
+export function renderWelcomeEmail({ audience, name, orderId, config, interactive = false }: WelcomeInput) {
   const first = (name || "").trim().split(/\s+/)[0];
   const hello = first ? esc(first.charAt(0).toUpperCase() + first.slice(1)) : "there";
   const banner = BANNER[audience];
@@ -137,6 +139,29 @@ export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeI
     ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background:#fff3cd;padding:8px 12px;font-family:${SANS};font-size:12px;color:#664d03;">DESIGN PREVIEW: the Zoom link, WhatsApp link and credit code below are sample values and are not used in real emails.</td></tr></table>`
     : "";
 
+  // Tap-to-open gift. Mail apps cannot run scripts, so a hidden checkbox plus CSS does the opening.
+  // Only apps that honour it get it (Apple Mail / iOS Mail, detected by a Safari-only @supports test, and the
+  // browser preview); everyone else sees the animated GIF of the same box and the card straight away.
+  const ixRules = `
+    .ixonly{display:block !important;max-height:none !important;overflow:visible !important;position:static !important;opacity:1 !important;}
+    .gifonly{display:none !important;max-height:0 !important;}
+    .stage{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .boxgrp{transform-origin:50% 87%;animation:wiggle 2.8s ease-in-out infinite;}
+    .lid{transform-origin:50% 72%;transition:transform .85s cubic-bezier(.2,.9,.3,1.25);}
+    .tapcap{animation:tapin 1.6s ease-in-out infinite;}
+    .cardwrap{max-height:0;overflow:hidden;opacity:0;transform:translateY(-90px) scale(.88);transform-origin:50% 0;}
+    #gift:checked ~ .stage .boxgrp{animation:none;}
+    #gift:checked ~ .stage .lid{transform:translate(-23.1%,-46%) rotate(-24deg);}
+    #gift:checked ~ .stage .conf{animation:burst 1.7s ease-out forwards;}
+    #gift:checked ~ .stage .light{animation:lightin .9s ease-out forwards;}
+    #gift:checked ~ .stage .tapcap{animation:none;opacity:0;}
+    #gift:checked ~ .cardwrap{max-height:1400px;opacity:1;transform:none;transition:max-height 1s ease .55s,opacity .7s ease .65s,transform .9s cubic-bezier(.2,.9,.3,1.15) .55s;}
+    @keyframes wiggle{0%,60%,100%{transform:rotate(0)}66%{transform:rotate(-3.5deg)}72%{transform:rotate(3.5deg)}78%{transform:rotate(-3deg)}84%{transform:rotate(2.5deg)}90%{transform:rotate(0)}}
+    @keyframes tapin{0%,100%{opacity:.6;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+    @keyframes burst{0%{opacity:0;transform:scale(.3)}22%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+    @keyframes lightin{0%{opacity:0;transform:scale(.45)}100%{opacity:1;transform:scale(1)}}`;
+  const ixCss = interactive ? ixRules : `@supports (-webkit-appearance:none) and (stroke-color:transparent){${ixRules}}`;
+
   const html = `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -156,7 +181,9 @@ export function renderWelcomeEmail({ audience, name, orderId, config }: WelcomeI
     .stack2{display:block !important;width:100% !important;padding-right:0 !important;box-sizing:border-box !important;}
     .btnfull{width:100% !important;}
     .bigday{font-size:50px !important;line-height:50px !important;}
+    .h2s{font-size:22px !important;line-height:29px !important;}
   }
+  ${ixCss}
 </style>
 </head>
 <body style="margin:0;padding:0;background:#eef1f4;-webkit-text-size-adjust:100%;">
@@ -170,8 +197,9 @@ ${sampleNotice}
     <!-- header panel: logo, links, headline, framed photo, button -->
     <tr><td style="padding:10px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${MINT}" style="background:${MINT};border-radius:16px;">
-        <tr><td align="center" style="padding:30px 20px 4px 20px;"><img src="${esc(img("logos/azisly-brand.png"))}" width="124" alt="Azisly.ai" style="display:block;border:0;height:auto;max-width:124px;"></td></tr>
-        <tr><td align="center" style="padding:12px 10px 0 10px;">${nav}</td></tr>
+        <!-- opening: two party poppers pop in the top corners and shower confetti, once, then settle on the logo -->
+        <tr><td style="font-size:0;line-height:0;"><img src="${esc(img("email/popper-top.gif"))}" width="580" alt="Azisly.ai" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:16px 16px 0 0;"></td></tr>
+        <tr><td align="center" style="padding:4px 10px 0 10px;">${nav}</td></tr>
         <tr><td class="pad" align="center" style="padding:30px 30px 0 30px;">
           <h1 class="h1" style="margin:0;font-family:${SANS};font-size:36px;line-height:44px;font-weight:bold;color:${NAVY};">${headline}<br>Your seat is confirmed.</h1>
         </td></tr>
@@ -235,8 +263,31 @@ ${sampleNotice}
       </td></tr></table>
     </td></tr>
 
-    <!-- Azisly gift: a mint panel with the artwork on the left, like the call-to-action card in the reference -->
-    <tr><td style="padding:26px 10px 10px 10px;">
+    <!-- Azisly gift: a wrapped surprise. Tap the box (Apple Mail, browser preview) or watch it open (GIF everywhere else), then the card comes out -->
+    <tr><td align="center" style="padding:34px 10px 10px 10px;">
+      <p style="margin:0 0 8px 0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2.4px;text-transform:uppercase;color:#2f6b3a;">One more thing</p>
+      <h2 class="h2s" style="margin:0 0 4px 0;font-family:${SANS};font-size:26px;line-height:33px;font-weight:bold;color:${NAVY};">A surprise is waiting for you</h2>
+
+      <!--[if !mso]><!-->
+      <input type="checkbox" id="gift" class="ixinput" style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+      <!--<![endif]-->
+      <img class="gifonly" src="${esc(img("email/gift-box.gif"))}" width="580" alt="A gift box shakes and pops open with a burst of confetti." style="display:block;width:100%;max-width:580px;height:auto;border:0;margin:0 auto;">
+      <!--[if !mso]><!-->
+      <label for="gift" class="ixonly stage" style="display:none;max-height:0;overflow:hidden;mso-hide:all;width:100%;max-width:580px;margin:0 auto;">
+        <span style="display:block;position:relative;width:100%;height:0;padding-bottom:50%;">
+          <img class="glow" src="${esc(img("email/gift-glow.png"))}" alt="" style="position:absolute;left:0%;top:0%;width:100%;height:100%;border:0;">
+          <img class="light" src="${esc(img("email/gift-light.png"))}" alt="" style="position:absolute;left:0%;top:0%;width:100%;height:100%;border:0;opacity:0;">
+          <span class="boxgrp" style="display:block;position:absolute;left:0;top:0;width:100%;height:100%;">
+            <img class="base" src="${esc(img("email/gift-base.png"))}" alt="" style="position:absolute;left:28.333%;top:49.333%;width:43.333%;height:47.333%;border:0;">
+            <img class="lid" src="${esc(img("email/gift-lid.png"))}" alt="" style="position:absolute;left:28.333%;top:22%;width:43.333%;height:33.333%;border:0;">
+          </span>
+          <img class="conf" src="${esc(img("email/gift-burst.png"))}" alt="" style="position:absolute;left:0%;top:0%;width:100%;height:100%;border:0;opacity:0;">
+        </span>
+        <span class="tapcap" style="display:block;margin:2px 0 8px 0;font-family:${SANS};font-size:15px;line-height:22px;font-weight:bold;color:${NAVY};text-align:center;">Tap the gift to open it</span>
+      </label>
+      <!--<![endif]-->
+
+      <div class="cardwrap" style="text-align:left;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${MINT}" style="background:${MINT};border-radius:16px;"><tr>
         <td class="stack" width="236" align="center" valign="middle" style="padding:18px 0 18px 14px;font-size:0;line-height:0;"><img class="giftimg" src="${esc(img("email/gift-mint.png"))}" width="220" alt="A friendly robot interviewer and a gold coin worth 50 credits." style="display:block;border:0;width:220px;max-width:100%;height:auto;"></td>
         <td class="stack pad" valign="middle" style="padding:26px 28px 26px 10px;">
@@ -247,6 +298,7 @@ ${sampleNotice}
           <div style="margin-top:14px;">${button(banner.cta, claimUrl, "navy", true)}</div>
         </td>
       </tr></table>
+      </div>
     </td></tr>
 
     <!-- footer -->
