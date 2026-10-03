@@ -8,7 +8,6 @@ import { useCountdown } from "@/lib/useCountdown";
 import { cohort, reach, trustedBy } from "@/content/shared";
 import { CTA } from "@/content/course";
 import { useStudio } from "./StudioContext";
-import IntroVideo from "./IntroVideo";
 import type { AudienceContent } from "@/content/types";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -321,7 +320,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
           </ul>
         )}
 
-        <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-10 lg:pb-[clamp(22px,3.8vh,46px)] lg:pt-[clamp(8px,1.8vh,26px)]">
+        <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-10 lg:pb-[clamp(28px,4.6vh,52px)] lg:pt-[clamp(8px,1.8vh,26px)]">
           <div className="px-1 sm:px-0">
             <motion.p {...rise(0)} className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-[13px]">
               {hero.eyebrow}
@@ -417,7 +416,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative mx-auto w-full max-w-[380px] lg:max-w-[min(380px,38vh)] lg:translate-y-[clamp(20px,5vh,52px)]"
+            className="relative mx-auto w-full max-w-[380px] lg:max-w-[min(380px,39vh)] lg:translate-y-[clamp(20px,5vh,52px)]"
           >
             <div className="relative aspect-[4/5]">
               {/* Two squares tucked behind Prasun: purple behind his head (top right), pink behind his arms (bottom left). */}
@@ -447,7 +446,6 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
               <PhotoCaption name={founder.name} />
               <div className="absolute -bottom-[3%] right-0 z-10 flex w-[min(100%,21rem)] flex-col gap-2.5 sm:-right-[6%]">
                 {content.audience === "corporate" && <TrustedCard />}
-                <IntroVideo onEnroll={onEnroll} />
               </div>
             </div>
           </motion.div>
