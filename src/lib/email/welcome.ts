@@ -32,13 +32,13 @@ const BANNER = {
     audience: "Freshers",
     headline: "50 free credits for AI Interview practice",
     body: "Rehearse your first interviews with AI before the real ones.",
-    cta: "Claim my 50 free credits",
+    cta: "Sign up and claim 50 credits",
   },
   corporate: {
     audience: "Working professionals",
     headline: "50 free credits for AI Interview practice",
     body: "Rehearse your next interview with AI before the real one.",
-    cta: "Claim my 50 free credits",
+    cta: "Sign up and claim 50 credits",
   },
 } as const;
 
@@ -168,17 +168,8 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
 <p style="margin:4px 0 0 0;font-family:${SANS};font-size:12.5px;line-height:19px;color:${MUTED};">Button not working? Copy this link into your browser:<br><a href="${esc(config.zoomUrl)}" style="color:${NAVY};word-break:break-all;">${esc(config.zoomUrl)}</a></p>`
     : `<p style="margin:0;font-family:${SANS};font-size:15.5px;line-height:24px;color:${TEXT};">Your ${cohort.platform} link for the live classes is on its way. We will send it to this email and ${cohort.deliveredVia === "email and WhatsApp" ? "on WhatsApp" : "by message"} before Class 1.</p>${config.whatsappUrl ? `<div style="margin-top:16px;">${button("Join the WhatsApp group", config.whatsappUrl, "outline")}</div>` : ""}`;
 
-  // The code on a white ticket with a dashed edge, on the mint gift panel.
-  const codeBox = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="background:#ffffff;border:2px dashed ${NAVY};border-radius:12px;"><tr><td align="center" style="padding:11px 12px;">
-    ${
-      config.creditCode
-        ? `<p style="margin:0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:${MUTED};">Your code</p><p style="margin:3px 0 0 0;font-family:${SANS};font-size:25px;line-height:30px;font-weight:bold;letter-spacing:4px;color:${NAVY};">${esc(config.creditCode)}</p>`
-        : `<p style="margin:0;font-family:${SANS};font-size:10.5px;font-weight:bold;letter-spacing:2.2px;text-transform:uppercase;color:${MUTED};">Claim yours</p><p style="margin:3px 0 0 0;font-family:${SANS};font-size:17px;line-height:24px;font-weight:bold;color:${NAVY};">Tap the button below</p>`
-    }
-  </td></tr></table>`;
-
   const sampleNotice = config.sample
-    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background:#fff3cd;padding:8px 12px;font-family:${SANS};font-size:12px;color:#664d03;">DESIGN PREVIEW: the Zoom link, WhatsApp link and credit code below are sample values and are not used in real emails.</td></tr></table>`
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background:#fff3cd;padding:8px 12px;font-family:${SANS};font-size:12px;color:#664d03;">DESIGN PREVIEW: the Zoom link and WhatsApp link below are sample values and are not used in real emails.</td></tr></table>`
     : "";
 
   // Tap-to-open gift. Mail apps cannot run scripts, so a hidden checkbox plus CSS does the opening.
@@ -334,8 +325,7 @@ ${sampleNotice}
           <p style="margin:0 0 8px 0;font-family:${SANS};font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#2f6b3a;">A bonus gift for ${esc(banner.audience.toLowerCase())}</p>
           <h2 style="margin:0 0 8px 0;font-family:${SANS};font-size:25px;line-height:31px;font-weight:bold;color:${NAVY};">50 free credits for AI Interview practice</h2>
           <p style="margin:0 0 16px 0;font-family:${SANS};font-size:14.5px;line-height:22px;color:${NAVY};">${esc(banner.body)}</p>
-          ${codeBox}
-          <div style="margin-top:14px;">${button(banner.cta, claimUrl, "navy", true)}</div>
+          <div>${button(banner.cta, claimUrl, "navy", true)}</div>
         </td>
       </tr></table>
       </div>
@@ -377,7 +367,6 @@ ${sampleNotice}
     "",
     `${banner.headline.toUpperCase()} (${banner.audience})`,
     banner.body,
-    config.creditCode ? `Your code: ${config.creditCode}` : "",
     `${banner.cta}: ${claimUrl}`,
     "",
     `Questions? Reply to this email or write to ${config.supportEmail}.`,
