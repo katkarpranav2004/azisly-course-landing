@@ -3,13 +3,14 @@ import { cohort, curriculum, MODULE_COUNT } from "@/content/shared";
 import type { EmailAudience, EmailConfig } from "./config";
 
 /**
- * The post-payment welcome email, styled after a clean corporate newsletter: a mint header panel (logo,
- * links, headline, framed photo, button), then a white body (greeting, a note from Prasun, three numbers,
+ * The post-payment welcome email, styled after a clean corporate newsletter: a header panel in the landing
+ * page's own theme (sunset for students, studio for working professionals; logo, links, headline, button),
+ * then a white body (greeting, a note from Prasun, three numbers,
  * the schedule as soft grey cards, the class link) and a mint panel with the Azisly gift of 50 free
  * AI Interview practice credits.
  *
  * Built from nested tables with inline styles because that is the only layout every mail app (Outlook
- * included) renders the same way. The pictures (hero photo, gift artwork; sources in scripts/email-art)
+ * included) renders the same way. The pictures (opening animation, gift artwork; sources in scripts/email-art)
  * are decoration; everything that is personal or changes (name, order reference, date, links, code,
  * copy) is live text, so it still reads with images switched off.
  */
@@ -38,6 +39,39 @@ const BANNER = {
     headline: "50 free credits for AI Interview practice",
     body: "Rehearse your next interview with AI before the real one.",
     cta: "Claim my 50 free credits",
+  },
+} as const;
+
+/** The first card wears the landing page's own theme: sunset for students, studio for working professionals. */
+const HERO = {
+  college: {
+    css: "linear-gradient(180deg,#e0338f 0,#e0338f 112px,#a43bd8 58%,#5a6bff 100%)",
+    bg: "#e0338f",
+    border: "",
+    nav: "#ffffff",
+    sub: "#ffffff",
+    head: "'Arial Black','Helvetica Neue',Arial,sans-serif",
+    headWeight: "900",
+    headColor: "#ffffff",
+    // the white highlighter bar the student page puts under its accent words
+    accent: "background:linear-gradient(transparent 62%,rgba(255,255,255,.34) 62%,rgba(255,255,255,.34) 92%,transparent 92%);padding:0 4px;color:#ffffff;",
+    btnBg: "#ffffff",
+    btnFg: "#7a1d6b",
+    btnRadius: 18,
+  },
+  corporate: {
+    css: "linear-gradient(180deg,#f3efff 0,#f3efff 112px,#ebe5ff 100%)",
+    bg: "#f3efff",
+    border: "border:1px solid #e0daf5;",
+    nav: "#1c1d1f",
+    sub: "#33363b",
+    head: SERIF,
+    headWeight: "bold",
+    headColor: "#1c1d1f",
+    accent: "color:#5624d0;",
+    btnBg: "#5624d0",
+    btnFg: "#ffffff",
+    btnRadius: 12,
   },
 } as const;
 
@@ -76,6 +110,11 @@ function button(label: string, href: string, kind: Kind = "navy", full = false, 
   return `<table role="presentation" ${cls ? `class="${cls}" ` : ""}${full ? 'width="100%" ' : ""}cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${s.bg}" style="border-radius:10px;border:2px solid ${NAVY};"><a href="${esc(href)}" target="_blank" style="display:${full ? "block" : "inline-block"};padding:${full ? 15 : 13}px 26px;font-family:${SANS};font-size:15px;font-weight:bold;line-height:20px;color:${s.fg};text-decoration:none;border-radius:10px;">${esc(label)}</a></td></tr></table>`;
 }
 
+/** The header's button, in the landing page's own style (white pill on the student page, purple on the pro page). */
+function heroButton(label: string, href: string, t: (typeof HERO)[EmailAudience]) {
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${t.btnBg}" style="border-radius:${t.btnRadius}px;"><a href="${esc(href)}" target="_blank" style="display:inline-block;padding:16px 30px;font-family:${t.head};font-size:15px;font-weight:bold;line-height:20px;color:${t.btnFg};text-decoration:none;border-radius:${t.btnRadius}px;">${esc(label)}</a></td></tr></table>`;
+}
+
 /** A thin divider line between sections of the body. */
 const rule = (margin = "28px 0") => `<div style="margin:${margin};border-top:1px solid ${LINE};font-size:0;line-height:0;">&nbsp;</div>`;
 
@@ -101,9 +140,12 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
   const preheader = `Your seat is confirmed. Class 1 is live on ${cohort.platform} on ${cohort.startsLabel}. Your links and 50 free interview-practice credits are inside.`;
   const headline = first ? `You&rsquo;re in, ${hello}!` : `You&rsquo;re in!`;
 
-  const navLink = (label: string, href: string) =>
-    `<a href="${esc(href)}" target="_blank" style="font-family:${SANS};font-size:13.5px;line-height:20px;color:${NAVY};text-decoration:none;padding:0 11px;">${esc(label)}</a>`;
-  const nav = [navLink("Schedule", scheduleUrl), navLink("Support", `mailto:${config.supportEmail}`), navLink("Azisly.ai", config.azislyUrl)].join("");
+  const theme = HERO[audience];
+  const navLink = (label: string, href: string, color: string) =>
+    `<a href="${esc(href)}" target="_blank" style="font-family:${SANS};font-size:13.5px;line-height:20px;color:${color};text-decoration:none;padding:0 11px;">${esc(label)}</a>`;
+  const navWith = (color: string) => [navLink("Schedule", scheduleUrl, color), navLink("Support", `mailto:${config.supportEmail}`, color), navLink("Azisly.ai", config.azislyUrl, color)].join("");
+  const nav = navWith(NAVY); // footer
+  const heroNav = navWith(theme.nav);
 
   const classCards = curriculum
     .slice(0, PREVIEW_CLASSES)
@@ -175,7 +217,6 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
   @media only screen and (max-width:480px){
     .pad{padding-left:20px !important;padding-right:20px !important;}
     .h1{font-size:28px !important;line-height:36px !important;}
-    .heroimg{width:100% !important;height:auto !important;}
     .stack{display:block !important;width:100% !important;box-sizing:border-box !important;text-align:center !important;}
     .giftimg{margin:0 auto !important;}
     .stack2{display:block !important;width:100% !important;padding-right:0 !important;box-sizing:border-box !important;}
@@ -194,20 +235,19 @@ ${sampleNotice}
 
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:600px;background:#ffffff;border-radius:20px;">
 
-    <!-- header panel: logo, links, headline, framed photo, button -->
+    <!-- header panel, in the landing page's own theme: opening animation with the logo, links, headline, button -->
     <tr><td style="padding:10px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${MINT}" style="background:${MINT};border-radius:16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${theme.bg}" style="background-color:${theme.bg};background-image:${theme.css};border-radius:16px;${theme.border}">
         <!-- opening: two party poppers pop in the top corners and shower confetti, once, then settle on the logo -->
-        <tr><td style="font-size:0;line-height:0;"><img src="${esc(img("email/popper-top.gif"))}" width="580" alt="Azisly.ai" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:16px 16px 0 0;"></td></tr>
-        <tr><td align="center" style="padding:4px 10px 0 10px;">${nav}</td></tr>
+        <tr><td style="font-size:0;line-height:0;"><img src="${esc(img(`email/popper-top-${audience}.gif`))}" width="580" alt="Azisly.ai" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:16px 16px 0 0;"></td></tr>
+        <tr><td align="center" style="padding:4px 10px 0 10px;">${heroNav}</td></tr>
         <tr><td class="pad" align="center" style="padding:30px 30px 0 30px;">
-          <h1 class="h1" style="margin:0;font-family:${SANS};font-size:36px;line-height:44px;font-weight:bold;color:${NAVY};">${headline}<br>Your seat is confirmed.</h1>
+          <h1 class="h1" style="margin:0;font-family:${theme.head};font-size:36px;line-height:46px;font-weight:${theme.headWeight};color:${theme.headColor};">${headline}<br><span style="${theme.accent}">Your seat is confirmed.</span></h1>
         </td></tr>
-        <tr><td align="center" style="padding:24px 24px 0 24px;"><img class="heroimg" src="${esc(img("email/hero-photo.png"))}" width="520" alt="Prasun Choudhary, your instructor" style="display:block;width:100%;max-width:520px;height:auto;border:0;"></td></tr>
-        <tr><td class="pad" align="center" style="padding:26px 44px 0 44px;">
-          <p style="margin:0;font-family:${SANS};font-size:16px;line-height:25px;color:${NAVY};">Welcome to the AI Corporate Analyst program. Your first live class is <b>${esc(cls.weekday)}, ${esc(cls.day)} ${esc(monthName)}</b> at ${esc(cls.time)} IST.</p>
+        <tr><td class="pad" align="center" style="padding:20px 44px 0 44px;">
+          <p style="margin:0;font-family:${SANS};font-size:16px;line-height:25px;color:${theme.sub};">Welcome to the AI Corporate Analyst program. Your first live class is <b>${esc(cls.weekday)}, ${esc(cls.day)} ${esc(monthName)}</b> at ${esc(cls.time)} IST.</p>
         </td></tr>
-        <tr><td align="center" style="padding:22px 20px 38px 20px;">${button("View your schedule", scheduleUrl, "navy")}</td></tr>
+        <tr><td align="center" style="padding:24px 20px 40px 20px;">${heroButton("View your schedule", scheduleUrl, theme)}</td></tr>
       </table>
     </td></tr>
 
