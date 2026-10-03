@@ -168,7 +168,7 @@ export const reach = {
  */
 export const trustedBy = {
   heading: "Trusted by professionals from",
-  logos: "/logos/trusted-by.png",
+  logos: "/logos/trusted-by.svg",
   alt: "OYO, Amazon, Microsoft and Google",
 } as const;
 

@@ -21,7 +21,7 @@ export default function SchedulePage() {
   return (
     <main className="min-h-screen bg-[#120728] px-4 py-8 text-white sm:px-6 sm:py-12">
       <div className="mx-auto max-w-[640px]">
-        <Image src="/logos/azisly-white.png" alt="Azisly.ai" width={692} height={233} className="h-[34px] w-auto" priority />
+        <Image src="/logos/azisly-white.svg" alt="Azisly.ai" width={2788} height={937} unoptimized className="h-[34px] w-auto" priority />
 
         <section className="mt-7 overflow-hidden rounded-3xl bg-gradient-to-br from-[#ffe066] to-[#ffc21a] px-6 py-8 text-center text-[#1a0a2e]">
           <p className="text-[12px] font-bold uppercase tracking-[0.35em] text-[#6b3f00]">Your schedule</p>

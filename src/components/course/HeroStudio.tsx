@@ -67,7 +67,7 @@ function TrustedCard() {
   return (
     <div className="rounded-[18px] border border-[#e6e4f0] bg-white px-4 pb-3.5 pt-3 shadow-[0_18px_40px_-20px_rgba(60,40,160,.5)]">
       <p className="text-[13px] font-medium text-[#33363b]">{trustedBy.heading}</p>
-      <Image src={trustedBy.logos} alt={trustedBy.alt} width={284} height={32} sizes="280px" className="mt-2 h-auto w-full max-w-[272px] mix-blend-multiply" />
+      <Image src={trustedBy.logos} alt={trustedBy.alt} width={480} height={44} unoptimized className="mt-2.5 h-auto w-full max-w-[300px]" />
     </div>
   );
 }
@@ -287,7 +287,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
       {/* Sticky, single-CTA bar. No menu and no outbound links (CRO brief: no exits). */}
       <nav className="sticky top-0 z-40 border-b border-border bg-white/90 px-5 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 py-3">
-          <Image src="/logos/azisly-brand.png" alt="Azisly.ai" width={692} height={233} sizes="120px" className="h-[30px] w-auto sm:h-[36px]" priority />
+          <Image src="/logos/azisly-brand.svg" alt="Azisly.ai" width={2788} height={937} unoptimized className="h-[30px] w-auto sm:h-[36px]" priority />
           <div className="flex items-center gap-3">
             <span className="hidden text-right text-[12.5px] leading-tight text-muted sm:block">
               <b className="text-[15px] text-foreground">{inr(pricing.offerPrice)}</b> incl. GST

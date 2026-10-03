@@ -156,14 +156,14 @@ export const experts = {
   founderCutout: "/faculty/prasun-cutout.webp",
   founderProof: "Two decades of corporate leadership across 4 continents and 13 countries.",
   founderLogos: [
-    { name: "Sapient", src: "/logos/sapient.png", w: 120, h: 46 },
-    { name: "Infosys", src: "/logos/infosys.png", w: 126, h: 54 },
-    { name: "ICICI Bank", src: "/logos/icici.png", w: 44, h: 40 },
-    { name: "OYO", src: "/logos/oyo.png", w: 42, h: 38 },
-    { name: "London Business School", src: "/logos/lbs.png", w: 40, h: 42 },
-    { name: "IIT Kharagpur", src: "/logos/iit-kgp.png", w: 45, h: 49 },
+    { name: "Sapient", src: "/logos/sapient.svg", w: 1789, h: 655 },
+    { name: "Infosys", src: "/logos/infosys.svg", w: 244, h: 93 },
+    { name: "ICICI Bank", src: "/logos/icici.svg", w: 593, h: 423 },
+    { name: "OYO", src: "/logos/oyo.svg", w: 514, h: 514 },
+    { name: "London Business School", src: "/logos/lbs.svg", w: 140, h: 140 },
+    { name: "IIT Kharagpur", src: "/logos/iit-kgp.svg", w: 612, h: 676 },
   ],
-  azislyLogo: { name: "Azisly.ai", src: "/logos/azisly.png", w: 130, h: 38 },
+  azislyLogo: { name: "Azisly.ai", src: "/logos/azisly-brand.svg", w: 2788, h: 937 },
 };
 
 export const final = {

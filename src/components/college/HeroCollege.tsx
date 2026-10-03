@@ -25,11 +25,11 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between py-4">
         {/* White logo on a transparent background, made for the coloured hero. */}
         <Image
-          src="/logos/azisly-white.png"
+          src="/logos/azisly-white.svg"
           alt="Azisly.ai"
-          width={692}
-          height={233}
-          sizes="140px"
+          width={2788}
+          height={937}
+          unoptimized
           priority
           className="h-[34px] w-auto drop-shadow-[0_4px_14px_rgba(60,0,60,.35)] sm:h-[40px]"
         />
