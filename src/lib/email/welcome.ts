@@ -6,7 +6,7 @@ import type { EmailAudience, EmailConfig } from "./config";
  * The post-payment welcome email, styled after a clean corporate newsletter: a header panel in the landing
  * page's own theme (sunset for students, studio for working professionals; logo, links, headline, button),
  * then a white body (greeting, a note from Prasun, three numbers,
- * the schedule as soft grey cards, the class link) and a mint panel with the Azisly gift of 50 free
+ * the schedule as soft grey cards with a dropdown for the full list, the class link) and a mint panel with the Azisly gift of 50 free
  * AI Interview practice credits.
  *
  * Built from nested tables with inline styles because that is the only layout every mail app (Outlook
@@ -110,11 +110,6 @@ function button(label: string, href: string, kind: Kind = "navy", full = false, 
   return `<table role="presentation" ${cls ? `class="${cls}" ` : ""}${full ? 'width="100%" ' : ""}cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${s.bg}" style="border-radius:10px;border:2px solid ${NAVY};"><a href="${esc(href)}" target="_blank" style="display:${full ? "block" : "inline-block"};padding:${full ? 15 : 13}px 26px;font-family:${SANS};font-size:15px;font-weight:bold;line-height:20px;color:${s.fg};text-decoration:none;border-radius:10px;">${esc(label)}</a></td></tr></table>`;
 }
 
-/** The header's button, in the landing page's own style (white pill on the student page, purple on the pro page). */
-function heroButton(label: string, href: string, t: (typeof HERO)[EmailAudience]) {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" bgcolor="${t.btnBg}" style="border-radius:${t.btnRadius}px;"><a href="${esc(href)}" target="_blank" style="display:inline-block;padding:16px 30px;font-family:${t.head};font-size:15px;font-weight:bold;line-height:20px;color:${t.btnFg};text-decoration:none;border-radius:${t.btnRadius}px;">${esc(label)}</a></td></tr></table>`;
-}
-
 /** A thin divider line between sections of the body. */
 const rule = (margin = "28px 0") => `<div style="margin:${margin};border-top:1px solid ${LINE};font-size:0;line-height:0;">&nbsp;</div>`;
 
@@ -135,7 +130,6 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
   const img = (file: string) => `${config.siteUrl}/${file}`;
   const cls = classParts();
   const monthName = cls.month.charAt(0) + cls.month.slice(1).toLowerCase();
-  const scheduleUrl = `${config.siteUrl}/schedule`;
   const subject = "You're in! Welcome to the AI Corporate Analyst program";
   const preheader = `Your seat is confirmed. Class 1 is live on ${cohort.platform} on ${cohort.startsLabel}. Your links and 50 free interview-practice credits are inside.`;
   const headline = first ? `You&rsquo;re in, ${hello}!` : `You&rsquo;re in!`;
@@ -143,21 +137,24 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
   const theme = HERO[audience];
   const navLink = (label: string, href: string, color: string) =>
     `<a href="${esc(href)}" target="_blank" style="font-family:${SANS};font-size:13.5px;line-height:20px;color:${color};text-decoration:none;padding:0 11px;">${esc(label)}</a>`;
-  const navWith = (color: string) => [navLink("Schedule", scheduleUrl, color), navLink("Support", `mailto:${config.supportEmail}`, color), navLink("Azisly.ai", config.azislyUrl, color)].join("");
+  const navWith = (color: string) => [navLink("Support", `mailto:${config.supportEmail}`, color), navLink("Azisly.ai", config.azislyUrl, color)].join("");
   const nav = navWith(NAVY); // footer
   const heroNav = navWith(theme.nav);
 
-  const classCards = curriculum
-    .slice(0, PREVIEW_CLASSES)
-    .map((m, i) => {
-      const when = config.classDates[i];
-      return `<tr><td style="padding:0 0 8px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${SOFT}" style="background:${SOFT};border-radius:12px;"><tr>
+  const classRows = (from: number, to: number) =>
+    curriculum
+      .slice(from, to)
+      .map((m, k) => {
+        const when = config.classDates[from + k];
+        return `<tr><td style="padding:0 0 8px 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${SOFT}" style="background:${SOFT};border-radius:12px;"><tr>
         <td width="62" valign="middle" style="padding:12px 0 12px 14px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="38" height="38" align="center" bgcolor="${MINT}" style="border-radius:19px;font-family:${SANS};font-size:13px;font-weight:bold;color:${NAVY};">${String(m.index).padStart(2, "0")}</td></tr></table></td>
         <td valign="middle" style="padding:12px 8px 12px 0;font-family:${SANS};font-size:15px;line-height:21px;font-weight:bold;color:${NAVY};">${esc(m.title)}</td>
         ${when ? `<td align="right" valign="middle" style="padding:12px 16px 12px 0;font-family:${SANS};font-size:12.5px;line-height:18px;color:${MUTED};white-space:nowrap;">${esc(when)}</td>` : ""}
       </tr></table></td></tr>`;
-    })
-    .join("");
+      })
+      .join("");
+  const firstClasses = classRows(0, PREVIEW_CLASSES);
+  const moreClasses = classRows(PREVIEW_CLASSES, curriculum.length);
 
   const stat = (value: string, label: string) =>
     `<td width="33%" valign="top" style="padding:0 6px 0 0;"><p style="margin:0;font-family:${SANS};font-size:36px;line-height:40px;font-weight:bold;color:${NAVY};">${value}</p><p style="margin:2px 0 0 0;font-family:${SANS};font-size:13px;line-height:18px;color:${MUTED};">${label}</p></td>`;
@@ -188,6 +185,13 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
     #gift:checked ~ .stage .conf{animation:burst 1.7s ease-out forwards;}
     #gift:checked ~ .stage .light{animation:lightin .9s ease-out forwards;}
     #gift:checked ~ .stage .tapcap{animation:none;opacity:0;}
+    .moreclasses{max-height:0;overflow:hidden;opacity:0;transition:max-height .9s ease,opacity .6s ease;}
+    #sch:checked ~ .moreclasses{max-height:1600px;opacity:1;}
+    .t-close{display:none;}
+    #sch:checked ~ label .t-open{display:none;}
+    #sch:checked ~ label .t-close{display:inline;}
+    .car{transition:transform .3s ease;}
+    #sch:checked ~ label .car{transform:rotate(180deg);}
     #gift:checked ~ .cardwrap{max-height:1400px;opacity:1;transform:none;transition:max-height 1s ease .55s,opacity .7s ease .65s,transform .9s cubic-bezier(.2,.9,.3,1.15) .55s;}
     @keyframes wiggle{0%,60%,100%{transform:rotate(0)}66%{transform:rotate(-3.5deg)}72%{transform:rotate(3.5deg)}78%{transform:rotate(-3deg)}84%{transform:rotate(2.5deg)}90%{transform:rotate(0)}}
     @keyframes tapin{0%,100%{opacity:.6;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
@@ -235,10 +239,9 @@ ${sampleNotice}
         <tr><td class="pad" align="center" style="padding:30px 30px 0 30px;">
           <h1 class="h1" style="margin:0;font-family:${theme.head};font-size:36px;line-height:46px;font-weight:${theme.headWeight};color:${theme.headColor};">${headline}<br><span style="${theme.accent}">Your seat is confirmed.</span></h1>
         </td></tr>
-        <tr><td class="pad" align="center" style="padding:20px 44px 0 44px;">
+        <tr><td class="pad" align="center" style="padding:20px 44px 42px 44px;">
           <p style="margin:0;font-family:${SANS};font-size:16px;line-height:25px;color:${theme.sub};">Welcome to the AI Corporate Analyst program. Your first live class is <b>${esc(cls.weekday)}, ${esc(cls.day)} ${esc(monthName)}</b> at ${esc(cls.time)} IST.</p>
         </td></tr>
-        <tr><td align="center" style="padding:24px 20px 40px 20px;">${heroButton("View your schedule", scheduleUrl, theme)}</td></tr>
       </table>
     </td></tr>
 
@@ -280,9 +283,15 @@ ${sampleNotice}
         </td>
       </tr></table>
       <p style="margin:22px 0 10px 0;font-family:${SANS};font-size:13px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;color:${MUTED};">${MODULE_COUNT} classes, 4 real builds</p>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${classCards}</table>
-      <p style="margin:6px 0 16px 0;font-family:${SANS};font-size:13.5px;line-height:20px;color:${MUTED};">+ ${MODULE_COUNT - PREVIEW_CLASSES} more classes, from AI Excel to your own prototype</p>
-      ${button(`View all ${MODULE_COUNT} classes`, scheduleUrl, "navy")}
+      <!--[if !mso]><!-->
+      <input type="checkbox" id="sch" class="ixinput" style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+      <!--<![endif]-->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${firstClasses}</table>
+      <!--[if !mso]><!-->
+      <label for="sch" class="ixonly" style="display:none;max-height:0;overflow:hidden;mso-hide:all;cursor:pointer;margin:2px 0 6px 0;"><span style="display:inline-block;padding:12px 20px;border:2px solid ${NAVY};border-radius:10px;font-family:${SANS};font-size:15px;line-height:20px;font-weight:bold;color:${NAVY};"><span class="t-open">Show all ${MODULE_COUNT} classes</span><span class="t-close">Hide the list</span><span class="car" style="display:inline-block;width:0;height:0;margin-left:10px;vertical-align:middle;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid ${NAVY};"></span></span></label>
+      <!--<![endif]-->
+      <!-- the other classes: a dropdown where the mail app allows it, otherwise simply listed -->
+      <div class="moreclasses"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${moreClasses}</table></div>
 
       ${rule("30px 0 28px 0")}
 
