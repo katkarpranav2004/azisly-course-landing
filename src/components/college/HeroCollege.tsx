@@ -2,14 +2,16 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Award, Box, Code, ShieldCheck, Users, Video, type LucideIcon } from "lucide-react";
-import GlassClock from "@/components/clocks/GlassClock";
+import { ArrowRight, Award, Box, CalendarDays, Code, ShieldCheck, Users, Video, type LucideIcon } from "lucide-react";
 import MagneticButton from "@/components/launch/MagneticButton";
-import OfferPrice from "@/components/launch/OfferPrice";
 import DuoComposition from "./DuoComposition";
 import { hero } from "@/content/college-launch";
-import { reach } from "@/content/shared";
+import { cohort, reach } from "@/content/shared";
+import { useCountdown } from "@/lib/useCountdown";
 import type { PricingConfig } from "@/content/types";
+
+const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+const pad = (n: number) => String(n).padStart(2, "0");
 
 const STAT_ICONS: Record<(typeof hero.stats)[number]["icon"], LucideIcon> = { video: Video, box: Box, award: Award, code: Code };
 
@@ -18,6 +20,73 @@ const rise = (delay: number) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] as const },
 });
+
+/** Left block of the offer card: white discount tag, big price with the old price struck through, GST note. */
+function PriceBlock({ pricing }: { pricing: PricingConfig }) {
+  const off = Math.round((1 - pricing.offerPrice / pricing.listPrice) * 100);
+  return (
+    <div className="shrink-0">
+      <motion.span
+        className="inline-block rounded-lg bg-white px-2.5 py-1 font-[family-name:var(--font-unbounded)] text-[12px] font-extrabold tracking-tight text-[#c2185b] shadow-[0_8px_20px_-8px_rgba(255,255,255,.8)]"
+        initial={{ scale: 0, rotate: -14 }}
+        animate={{ scale: [0, 1.2, 1], rotate: -4 }}
+        transition={{ delay: 0.9, duration: 0.5, ease: "backOut" }}
+      >
+        {off}% OFF
+      </motion.span>
+      <div className="mt-2 flex items-baseline gap-2.5">
+        <motion.span
+          className="display font-[family-name:var(--font-unbounded)] text-[clamp(34px,3.4vw,44px)] leading-none text-white [text-shadow:0_0_34px_rgba(255,255,255,.55)]"
+          initial={{ opacity: 0, scale: 0.85, filter: "blur(8px)" }}
+          animate={{ opacity: 1, scale: [0.85, 1.05, 1], filter: "blur(0px)" }}
+          transition={{ delay: 0.5, duration: 0.8, times: [0, 0.6, 1], ease: [0.22, 1, 0.36, 1] }}
+        >
+          {inr(pricing.offerPrice)}
+        </motion.span>
+        <span className="text-[15px] text-white/75 line-through decoration-white/80">{inr(pricing.listPrice)}</span>
+      </div>
+      <p className="mt-1.5 text-[11.5px] font-medium uppercase tracking-[0.14em] text-white/80">Incl. GST</p>
+    </div>
+  );
+}
+
+/** Countdown as four frosted tiles with their unit labels underneath; the seconds tile drops in on every tick. */
+function TimerTiles({ endsAt }: { endsAt: string }) {
+  const left = useCountdown(endsAt);
+  const units = [
+    { v: left?.days ?? 0, u: "Days" },
+    { v: left?.hours ?? 0, u: "Hours" },
+    { v: left?.minutes ?? 0, u: "Mins" },
+    { v: left?.seconds ?? 0, u: "Secs" },
+  ];
+  return (
+    <div className="shrink-0" role="timer" aria-label="Offer ends in">
+      <p className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-white/90">
+        <span className="h-1.5 w-1.5 rounded-full bg-white [animation:soft-pulse_1s_infinite]" />
+        Offer ends in
+      </p>
+      <div className={`flex items-start gap-1.5 transition-opacity duration-500 ${left ? "opacity-100" : "opacity-0"}`}>
+        {units.map((x, i) => (
+          <div key={x.u} className="flex items-start gap-1.5">
+            <div className="flex flex-col items-center">
+              <span className="relative flex h-[44px] w-[46px] items-center justify-center overflow-hidden rounded-[11px] border border-white/40 bg-white/20 font-mono text-[20px] font-bold tabular-nums text-white shadow-[inset_0_1px_0_rgba(255,255,255,.5)] backdrop-blur-md">
+                {x.u === "Secs" ? (
+                  <motion.span key={x.v} initial={{ y: -12, opacity: 0.2 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28, ease: "easeOut" }}>
+                    {pad(x.v)}
+                  </motion.span>
+                ) : (
+                  pad(x.v)
+                )}
+              </span>
+              <span className="mt-1.5 text-[10px] font-semibold uppercase tracking-wide text-white/80">{x.u}</span>
+            </div>
+            {i < units.length - 1 && <span className="pt-2 font-mono text-[18px] font-bold text-white/70">:</span>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingConfig; onEnroll: () => void }) {
   return (
@@ -37,7 +106,7 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
         />
       </header>
 
-      <div className="relative z-10 mx-auto mt-4 grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-8 lg:mt-6 lg:grid-cols-[1.05fr_.95fr] lg:gap-6">
+      <div className="relative z-10 mx-auto mt-4 grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-8 lg:mt-6 lg:grid-cols-[1.05fr_.95fr] lg:items-start lg:gap-6">
         <div>
           <motion.p {...rise(0)} className="eyebrow text-white/90">
             {hero.eyebrow}
@@ -67,38 +136,39 @@ export default function HeroCollege({ pricing, onEnroll }: { pricing: PricingCon
             })}
           </motion.ul>
 
-          <motion.p {...rise(0.14)} className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold backdrop-blur-md">
-            <Users size={14} /> {reach.college}
-          </motion.p>
-
-          <motion.div {...rise(0.18)} className="card relative mt-6 max-w-[560px] rounded-[28px] p-5">
-            <OfferPrice pricing={pricing} size="lg" delay={0.5} variant="sunset" />
-            <div className="mt-4 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.24em] text-white/90">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white [animation:soft-pulse_1s_infinite]" />
-                  Offer ends in
-                </p>
-                <GlassClock endsAt={pricing.offerEndsAt} size="sm" />
-              </div>
-              {/* One column, one width: the badge, the button and the checkout line all centre on the same axis. */}
-              <div className="flex flex-col items-stretch gap-2 sm:w-[250px]">
-                <span className="badge justify-center whitespace-nowrap px-3 py-1.5 text-[11.5px]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_#fff] [animation:soft-pulse_1.2s_infinite]" />
-                  Student launch offer · {pricing.seatsLeft} seats left
-                </span>
-                <MagneticButton onClick={onEnroll} className="w-full">
-                  Grab my seat <ArrowRight size={16} />
-                </MagneticButton>
-                <span className="flex items-center justify-center gap-1.5 text-[11px] text-white/80">
-                  <ShieldCheck size={12} /> Secure checkout · Cashfree
-                </span>
-              </div>
+          {/* Offer card: price, countdown and the button together, with the checkout line centred under the button. */}
+          <motion.div {...rise(0.16)} className="card relative mt-6 max-w-[600px] rounded-[26px] p-4 sm:p-5">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-5">
+              <PriceBlock pricing={pricing} />
+              <span aria-hidden className="hidden h-[76px] w-px shrink-0 bg-white/35 sm:block" />
+              <TimerTiles endsAt={pricing.offerEndsAt} />
             </div>
+            <div className="mt-5 flex flex-col items-stretch gap-2">
+              <MagneticButton onClick={onEnroll} className="w-full">
+                Grab my seat <ArrowRight size={16} />
+              </MagneticButton>
+              <span className="flex items-center justify-center gap-1.5 text-[11.5px] text-white/80">
+                <ShieldCheck size={12} /> Secure checkout · Cashfree
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div {...rise(0.22)} className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="badge px-3 py-1.5 text-[12.5px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_#fff] [animation:soft-pulse_1.2s_infinite]" />
+              Student launch offer · {pricing.seatsLeft} seats left
+            </span>
+            <span className="badge px-3 py-1.5 text-[12.5px]">
+              <CalendarDays size={14} /> Classes start {cohort.startsLabel}
+            </span>
+            <span className="badge px-3 py-1.5 text-[12.5px]">
+              <Users size={14} /> {reach.college}
+            </span>
           </motion.div>
         </div>
 
         <motion.div
+          className="lg:pt-6"
           initial={{ opacity: 0, scale: 0.94, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
