@@ -149,8 +149,8 @@ export const curriculum: CurriculumModule[] = [
  */
 export const cohort = {
   /** ISO date of live class 1 */
-  startsAt: "2026-10-15T19:00:00+05:30",
-  startsLabel: "15 Oct",
+  startsAt: "2026-11-01T19:00:00+05:30",
+  startsLabel: "1 Nov",
   platform: "Zoom",
   /** what the learner receives right after paying */
   deliveredVia: "email and WhatsApp",
