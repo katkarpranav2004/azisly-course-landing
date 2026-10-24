@@ -58,10 +58,24 @@ const afterPaying: FaqItem = {
 /** Generic copy; also the fallback if no audience-specific set applies. */
 const courseStudio: StudioCopy = {
   hero: {
-    eyebrow: `Newly launched · ${LIVE}`,
-    title: courseContent.headline,
-    tagline: "Take your career further with AI",
-    body: "13 live classes with Prasun Choudhary. Learn to analyse, automate and build with AI, up to your own agents and a working prototype. No coding needed.",
+    eyebrow: "AI Corporate Analyst Program",
+    title: "Turn AI into your unfair advantage.",
+    titleAccent: "unfair advantage",
+    tagline: "",
+    body: "13 live classes with Prasun Choudhary. Learn to use AI for real work, from reports, Excel and presentations to building agents, dashboards and prototypes. No coding needed.",
+    pills: [`${LIVE}`, "Cohort-based", "For Students & Professionals"],
+    features: [
+      { icon: "work", title: "Real work use‑cases" },
+      { icon: "templates", title: "Templates & frameworks" },
+      { icon: "build", title: "Build & deploy AI projects" },
+      { icon: "certificate", title: "Certificate you can share" },
+    ],
+    tags: [
+      { icon: "excel", title: "Excel & Data Automation" },
+      { icon: "reports", title: "Reports & Presentations" },
+      { icon: "agents", title: "AI Agents & Workflows" },
+      { icon: "dashboards", title: "Dashboards & Prototypes" },
+    ],
   },
   credentials: course.credentials,
   founderHighlights: course.founderHighlights,

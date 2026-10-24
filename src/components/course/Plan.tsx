@@ -11,7 +11,16 @@ import type { AudienceContent } from "@/content/types";
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 const pad = (n: number) => String(n).padStart(2, "0");
 
-export default function Plan({ content, onEnroll }: { content: AudienceContent; onEnroll: () => void }) {
+export default function Plan({
+  content,
+  onEnroll,
+  onEnrollAs,
+}: {
+  content: AudienceContent;
+  onEnroll: () => void;
+  /** Combined page only: two buttons, one per audience, instead of the single one. */
+  onEnrollAs?: (audience: "college" | "corporate") => void;
+}) {
   const { pricing } = content;
   const off = Math.round((1 - pricing.offerPrice / pricing.listPrice) * 100);
   const perSession = Math.round(pricing.offerPrice / MODULE_COUNT);
@@ -43,9 +52,24 @@ export default function Plan({ content, onEnroll }: { content: AudienceContent; 
               <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[12.5px] font-medium">
                 <CalendarDays size={13} /> Classes start {cohort.startsLabel} · Live on {cohort.platform}
               </p>
-              <button onClick={onEnroll} className="btn-primary mt-6 w-full py-3.5 text-[15px]">
-                {CTA} <ArrowRight size={16} />
-              </button>
+              {onEnrollAs ? (
+                <div className="mt-6 flex flex-col gap-3">
+                  <button type="button" onClick={() => onEnrollAs("college")} className="btn-primary w-full py-3.5 text-[15px]">
+                    Enroll as a student <ArrowRight size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onEnrollAs("corporate")}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/35 py-3.5 text-[15px] font-semibold text-white transition hover:bg-white/10"
+                  >
+                    Enroll as a working professional <ArrowRight size={16} />
+                  </button>
+                </div>
+              ) : (
+                <button onClick={onEnroll} className="btn-primary mt-6 w-full py-3.5 text-[15px]">
+                  {CTA} <ArrowRight size={16} />
+                </button>
+              )}
               <p className="mt-3 flex items-center justify-center gap-1.5 text-[12px] text-white/70">
                 <ShieldCheck size={12} /> Secure checkout · Cashfree
               </p>

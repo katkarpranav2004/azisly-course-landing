@@ -400,7 +400,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
                 <CalendarPage label={cohort.startsLabel} />
                 Classes start {cohort.startsLabel}
               </motion.span>
-              {content.audience !== "course" && (
+              {(
                 <motion.span
                   whileHover={{ y: -2 }}
                   className="flex items-center gap-2 rounded-full border border-[#e3e6eb] bg-white py-1.5 pl-2.5 pr-3 text-[13px] font-semibold text-foreground"

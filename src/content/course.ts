@@ -16,9 +16,9 @@ const SAMPLES_ON = process.env.SAMPLE_CONTENT === "on";
 export const courseContent: AudienceContent = {
   audience: "course",
   theme: "studio",
-  metaTitle: "AI Corporate Analyst with Prasun Choudhary | Azisly",
+  metaTitle: "AI Corporate Analyst for Students and Working Professionals | Azisly",
   metaDescription:
-    "A hands-on program led by Prasun Choudhary (IIT Kharagpur, London Business School). 13 live sessions and 4 real AI builds that make you the AI person in any room.",
+    "Learn AI for real work in 13 live classes with Prasun Choudhary (IIT Kharagpur, London Business School). 4 real AI builds, for students and working professionals. No coding needed.",
   eyebrow: "Newly launched",
   headline: "AI Corporate Analyst",
   headlineAccent: "",
@@ -34,7 +34,7 @@ export const courseContent: AudienceContent = {
   closing: { lead: "Start building with AI", accent: "this week." },
   pricing: {
     currency: "INR",
-    listPrice: 11999,
+    listPrice: 29999,
     offerPrice: 5999,
     offerStartedAt: "2026-09-30T00:00:00+05:30",
     offerEndsAt: "2026-11-01T23:59:59+05:30",

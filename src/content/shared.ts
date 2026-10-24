@@ -160,6 +160,7 @@ export const cohort = {
 export const reach = {
   college: "15k+ students attended",
   corporate: "15k+ working professionals attended",
+  course: "15k+ learners attended",
 } as const;
 
 /**
