@@ -320,7 +320,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
           </ul>
         )}
 
-        <div className="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-10 lg:pb-[clamp(28px,4.6vh,52px)] lg:pt-[clamp(8px,1.8vh,26px)]">
+        <div className={`relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] items-center gap-12 py-5 sm:py-10 lg:grid-cols-[1.3fr_.7fr] lg:gap-10 lg:pb-[clamp(28px,4.6vh,52px)] ${hero.pills ? "lg:pt-[clamp(8px,1.8vh,26px)]" : "lg:pt-[clamp(40px,7vh,72px)]"}`}>
           <div className="px-1 sm:px-0">
             <motion.p {...rise(0)} className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent sm:text-[13px]">
               {hero.eyebrow}
@@ -400,7 +400,7 @@ export default function HeroStudio({ content, onEnroll }: { content: AudienceCon
                 <CalendarPage label={cohort.startsLabel} />
                 Classes start {cohort.startsLabel}
               </motion.span>
-              {(
+              {content.audience !== "course" && (
                 <motion.span
                   whileHover={{ y: -2 }}
                   className="flex items-center gap-2 rounded-full border border-[#e3e6eb] bg-white py-1.5 pl-2.5 pr-3 text-[13px] font-semibold text-foreground"
