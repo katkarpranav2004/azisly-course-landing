@@ -20,7 +20,7 @@ export const heroCombined = {
   offerTag: "Limited time offer",
   note: "Learn directly from Prasun",
   /** Prasun's LinkedIn profile. The badge on the credentials card links here; it stays a plain badge while this is empty. */
-  linkedin: "",
+  linkedin: "https://www.linkedin.com/in/prasunchoudhary/",
   credentials: [
     { icon: "school", title: "IIT Kharagpur", text: "Engineering alumnus" },
     { icon: "work", title: "Former OYO leader", text: "Ex-President, OYO International" },
