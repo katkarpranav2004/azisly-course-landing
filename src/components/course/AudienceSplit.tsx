@@ -6,7 +6,6 @@ import { audienceSplit } from "@/content/audience-split";
 import { CTA } from "@/content/course";
 
 const ICON = { college: GraduationCap, corporate: Briefcase } as const;
-const TOP = { college: "#ff4f8b", corporate: "#5624d0" } as const;
 
 /** Two cards that say why the same course fits students and working professionals, followed by one Enroll now button. */
 export default function AudienceSplit({ onEnroll }: { onEnroll: () => void }) {
@@ -25,10 +24,7 @@ export default function AudienceSplit({ onEnroll }: { onEnroll: () => void }) {
             const Icon = ICON[card.audience];
             return (
               <Reveal key={card.audience} delay={0.05 + i * 0.08} className="h-full">
-                <article
-                  className="flex h-full flex-col rounded-[24px] border border-[#e6e4f0] bg-white p-7 shadow-[0_24px_60px_-40px_rgba(60,40,160,.45)] sm:p-9"
-                  style={{ borderTop: `5px solid ${TOP[card.audience]}` }}
-                >
+                <article className="flex h-full flex-col rounded-[24px] border border-[#e6e4f0] bg-white p-7 shadow-[0_24px_60px_-40px_rgba(60,40,160,.45)] sm:p-9">
                   <div className="flex items-center gap-3">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f1ecff] text-accent">
                       <Icon size={22} />
