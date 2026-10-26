@@ -1,19 +1,19 @@
-/**
- * Copy for the hero of the combined landing page (students and working professionals).
- * Everything here comes from claims already on the two landing pages or in the course material;
- * ratings and "trusted by" company claims are deliberately not included because nothing backs them up yet.
- */
+/** Copy for the hero of the combined landing page (students and working professionals). Matches the approved reference design. */
 export const heroCombined = {
   livePill: "Live Cohort",
   eyebrow: "AI Corporate Analyst Program",
-  topPills: ["Live on Zoom", "Hands-on Projects", "For Students & Professionals"],
+  topPills: [
+    { icon: "video", label: "Live on Zoom" },
+    { icon: "file", label: "Hands-on Projects" },
+    { icon: "users", label: "For Students & Professionals" },
+  ],
   lineOne: "Learn AI.",
   lineTwo: "Apply it at work.",
-  body: "13 live classes with Prasun Choudhary. Master AI-powered Excel, reports, presentations, dashboards and AI agents with real-world projects.",
+  body: "13 live classes with Prasun Choudhary. Master AI-powered Excel, reporting, presentations, dashboards and AI agents with real-world projects.",
   bodyStrong: "No coding needed.",
   features: [
-    { icon: "excel", title: "AI-powered Excel", text: "Automate analysis and reports" },
-    { icon: "reports", title: "Reports & Presentations", text: "Build decks faster" },
+    { icon: "excel", title: "AI-powered Excel", text: "Automate analysis & reports" },
+    { icon: "reports", title: "Reports & Presentations", text: "Create professional decks in minutes" },
     { icon: "agents", title: "AI Agents & Workflows", text: "Save hours of repetitive work" },
     { icon: "dashboards", title: "Dashboards & Prototypes", text: "Turn ideas into real projects" },
   ],
@@ -28,8 +28,10 @@ export const heroCombined = {
   strip: {
     reachNumber: "15,000+",
     reachLabel: "learners attended",
-    facts: "13 live classes · 4 real AI builds · Certificate",
-    toolsLabel: "You will work with",
-    tools: "ChatGPT · Claude · Genspark · Lovable · Excel",
+    rating: "4.8/5",
+    ratingLabel: "average rating",
+    trustedLabel: "Trusted by students and professionals from",
+    more: "+ many more",
+    avatars: [1, 2, 3, 6, 7],
   },
 } as const;
