@@ -13,6 +13,10 @@ const SAMPLES_ON = process.env.SAMPLE_CONTENT === "on";
  * Shared course content (curriculum highlights, credentials, USPs, placeholder testimonials) used by the studio design.
  * PLACEHOLDER: listPrice, seatsLeft and dates. Confirm before launch.
  */
+/**
+ * Combined page checkout: paste the one shared Cashfree form link as `paymentUrl` below once it exists.
+ * Name that form with the word "Combined" (for example AzAICombinedLiveProgram) so the welcome-email webhook recognises it.
+ */
 export const courseContent: AudienceContent = {
   audience: "course",
   theme: "studio",

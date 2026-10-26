@@ -21,26 +21,18 @@ import { demoActivity as collegeActivity } from "@/content/college-launch";
 import { STUDIO_COPY } from "@/content/studio";
 import { StudioProvider } from "./StudioContext";
 import { startEnroll } from "@/lib/startEnroll";
-import { collegeContent } from "@/content/college";
 import { corporateContent } from "@/content/corporate";
 import type { AudienceContent } from "@/content/types";
 
 /**
  * The "studio" landing design. Words and pricing come from the audience's content and STUDIO_COPY.
- * With `combined`, one page serves students and working professionals: the Enroll buttons scroll to the
- * "who is this for" section, and each audience card (and the pricing panel) opens that audience's own payment form.
+ * With `combined`, one page serves students and working professionals: every Enroll button opens the one shared checkout.
  */
 export default function CourseLanding({ content, combined = false }: { content: AudienceContent; combined?: boolean }) {
   const [enrollOpen, setEnrollOpen] = useState(false);
-  const enrollAs = (audience: "college" | "corporate") =>
-    startEnroll(audience === "college" ? collegeContent : corporateContent, () => setEnrollOpen(true));
-  const openEnroll = () => {
-    if (combined) {
-      document.getElementById("who")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    startEnroll(content, () => setEnrollOpen(true));
-  };
+  // One checkout for everyone. The combined page uses its own payment form once one is set in content/course.ts;
+  // until then it falls back to the corporate form so the button always works.
+  const openEnroll = () => startEnroll(combined && !content.paymentUrl ? corporateContent : content, () => setEnrollOpen(true));
   const faq = STUDIO_COPY[content.audience].faq;
   const activity = content.audience === "college" ? collegeActivity : corporateActivity;
 
@@ -50,12 +42,12 @@ export default function CourseLanding({ content, combined = false }: { content: 
         <main className="flex-1">
           {combined ? <HeroCombined content={content} onEnroll={openEnroll} /> : <HeroStudio content={content} onEnroll={openEnroll} />}
           {!combined && <CredentialStrip />}
-          {combined && <AudienceSplit onEnroll={enrollAs} />}
+          {combined && <AudienceSplit onEnroll={openEnroll} />}
           <PainSolutions />
           <WhyThis />
           <TestimonialWall />
           <MentorsModules content={content} />
-          <Plan content={content} onEnroll={openEnroll} onEnrollAs={combined ? enrollAs : undefined} />
+          <Plan content={content} onEnroll={openEnroll} />
           <NextSteps />
           <div id="faq" className="scroll-mt-6">
             <FAQ content={{ ...content, faq }} />

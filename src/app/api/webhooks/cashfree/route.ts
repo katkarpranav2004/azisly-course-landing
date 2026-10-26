@@ -26,11 +26,23 @@ function verify(raw: string, request: NextRequest): "ok" | "bad" | "no-secret" {
   return a.length === b.length && timingSafeEqual(a, b) ? "ok" : "bad";
 }
 
-/** Which of the two payment forms was paid. Only the form and order notes are looked at, never the buyer's own text. */
+/** True when any field whose label looks like a college/university/institute has something typed in it. */
+function hasCollegeField(v: unknown, depth = 0): boolean {
+  if (!v || typeof v !== "object" || depth > 6) return false;
+  return Object.entries(v as Json).some(([key, val]) =>
+    /college|university|institute/i.test(key) && typeof val === "string" ? val.trim().length > 0 : hasCollegeField(val, depth + 1),
+  );
+}
+
+/**
+ * Which payment form was paid. The form and order notes pick the audience. The one combined form (its name contains
+ * "combined") is shared, so there a filled-in College Name field means a student and anything else a working professional.
+ */
 function audienceOf(data: Json): EmailAudience | null {
   const hints = [JSON.stringify(obj(data.form)), JSON.stringify(obj(data.payment_form)), str(obj(data.order).order_note), JSON.stringify(obj(data.order).order_tags ?? {})]
     .filter(Boolean)
     .join(" ");
+  if (/combined/i.test(hints)) return hasCollegeField(data) ? "college" : "corporate";
   if (/college/i.test(hints)) return "college";
   if (/corporate/i.test(hints)) return "corporate";
   return null;

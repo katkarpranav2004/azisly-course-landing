@@ -34,10 +34,10 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
   const startsOn = `${cohort.startsLabel} ${new Date(cohort.startsAt).getFullYear()}`;
 
   return (
-    <section className="relative overflow-hidden bg-white px-4 sm:px-5">
+    <section className="relative overflow-hidden bg-white px-4 sm:px-5 lg:flex lg:min-h-[100svh] lg:flex-col">
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_75%_at_80%_40%,rgba(124,77,255,.12),transparent_70%)]" />
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col lg:flex-1">
         <div className="flex flex-wrap items-center justify-between gap-3 pt-5 lg:pt-[clamp(14px,3vh,34px)]">
           <div className="flex items-center gap-3">
             <span className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-accent px-3.5 py-1.5 text-[13px] font-semibold text-white">
@@ -58,7 +58,7 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
           </ul>
         </div>
 
-        <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-8 py-6 lg:grid-cols-[1.12fr_.88fr] lg:gap-6 lg:pb-[clamp(10px,2.4vh,26px)] lg:pt-[clamp(8px,1.6vh,20px)]">
+        <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-8 py-6 lg:flex-1 lg:grid-cols-[1.12fr_.88fr] lg:gap-6 lg:pb-[clamp(10px,2.4vh,26px)] lg:pt-[clamp(8px,1.6vh,20px)]">
           <div className="px-1 sm:px-0">
             <motion.h1 {...rise(0.05)} className="display text-[clamp(44px,min(6.2vw,8.2vh),88px)] leading-[1.02]">
               {copy.lineOne}

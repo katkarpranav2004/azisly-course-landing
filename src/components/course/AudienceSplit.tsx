@@ -3,14 +3,13 @@
 import { ArrowRight, Briefcase, Check, GraduationCap } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import { audienceSplit } from "@/content/audience-split";
-
-type Pick = "college" | "corporate";
+import { CTA } from "@/content/course";
 
 const ICON = { college: GraduationCap, corporate: Briefcase } as const;
 const TOP = { college: "#ff4f8b", corporate: "#5624d0" } as const;
 
-/** Two cards that say why the same course fits students and working professionals, each with its own enrol button. */
-export default function AudienceSplit({ onEnroll }: { onEnroll: (audience: Pick) => void }) {
+/** Two cards that say why the same course fits students and working professionals, followed by one Enroll now button. */
+export default function AudienceSplit({ onEnroll }: { onEnroll: () => void }) {
   return (
     <section id="who" className="scroll-mt-20 px-5 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
@@ -50,18 +49,16 @@ export default function AudienceSplit({ onEnroll }: { onEnroll: (audience: Pick)
                       </li>
                     ))}
                   </ul>
-
-                  <button
-                    type="button"
-                    onClick={() => onEnroll(card.audience)}
-                    className="btn-primary mt-8 w-full py-3.5 text-[15px]"
-                  >
-                    {card.cta} <ArrowRight size={16} />
-                  </button>
                 </article>
               </Reveal>
             );
           })}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <button type="button" onClick={onEnroll} className="btn-primary px-10 py-3.5 text-[15px]">
+            {CTA} <ArrowRight size={16} />
+          </button>
         </div>
       </div>
     </section>
