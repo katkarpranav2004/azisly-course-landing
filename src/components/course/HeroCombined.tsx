@@ -84,18 +84,15 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
               {copy.body} <b className="text-foreground">{copy.bodyStrong}</b>
             </motion.p>
 
-            <motion.ul {...rise(0.18)} className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4 sm:gap-0 lg:mt-[clamp(12px,2.4vh,26px)] lg:max-w-[640px]">
+            <motion.ul {...rise(0.18)} className="mt-6 grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-4 sm:gap-0 lg:mt-[clamp(12px,2.4vh,26px)] lg:max-w-[640px]">
               {copy.features.map((f) => {
                 const { Icon, tint } = FEATURE[f.icon];
                 return (
-                  <li key={f.title} className="flex items-start gap-2.5 sm:border-l sm:border-border sm:px-3 sm:first:border-l-0 sm:first:pl-0">
-                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tint}`}>
-                      <Icon size={19} strokeWidth={1.9} />
+                  <li key={f.title} className="flex flex-col items-center gap-2 text-center sm:border-l sm:border-border sm:px-3 sm:first:border-l-0">
+                    <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${tint}`}>
+                      <Icon size={20} strokeWidth={1.9} />
                     </span>
-                    <span className="text-[13px] font-semibold leading-snug">
-                      {f.title}
-                      <span className="mt-0.5 block text-[11.5px] font-normal leading-snug text-muted">{f.text}</span>
-                    </span>
+                    <span className="text-[13px] font-semibold leading-snug">{f.title}</span>
                   </li>
                 );
               })}
