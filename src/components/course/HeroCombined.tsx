@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { BarChart3, Briefcase, FileSpreadsheet, FileText, Globe2, GraduationCap, ShieldCheck, Star, Users, Video, Zap } from "lucide-react";
+import { BarChart3, Briefcase, CreditCard, FileSpreadsheet, FileText, Globe2, GraduationCap, ShieldCheck, Star, Users, Video, Zap } from "lucide-react";
 import { cohort } from "@/content/shared";
+import { CTA } from "@/content/course";
 import { heroCombined as copy } from "@/content/hero-combined";
 import { CalendarPage, EnrollCta } from "./HeroStudio";
 import type { AudienceContent } from "@/content/types";
@@ -35,9 +36,19 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
 
   return (
     <>
-      <header className="border-b border-border bg-white px-5">
-        <div className="mx-auto flex h-[64px] max-w-6xl items-center">
+      <header className="sticky top-0 z-40 border-b border-border bg-white/90 px-5 backdrop-blur-xl">
+        <div className="mx-auto flex h-[64px] max-w-6xl items-center justify-between gap-3">
           <Image src="/logos/azisly-brand.svg" alt="Azisly.ai" width={2788} height={937} unoptimized className="h-[30px] w-auto sm:h-[36px]" priority />
+          <div className="flex items-center gap-3">
+            <span className="hidden text-right text-[12.5px] leading-tight text-muted sm:block">
+              <b className="text-[15px] text-foreground">{inr(pricing.offerPrice)}</b> incl. GST
+              <br />
+              Classes start {cohort.startsLabel}
+            </span>
+            <button onClick={onEnroll} className="btn-primary px-4 py-2.5 text-[14px]">
+              {CTA}
+            </button>
+          </div>
         </div>
       </header>
       <section className="relative overflow-hidden bg-white px-4 sm:px-5 lg:flex lg:min-h-[calc(100svh-65px)] lg:flex-col">
@@ -131,6 +142,9 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
                       <span className="flex items-center gap-1.5 text-muted">
                         <ShieldCheck size={14} /> Secure checkout via Cashfree
                       </span>
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <CreditCard size={14} className="text-accent" /> EMI available
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -156,8 +170,8 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
               </div>
 
               <div className="absolute right-[24%] top-0 hidden items-start gap-1 lg:flex">
-                <svg aria-hidden viewBox="0 0 60 50" className="mt-6 h-9 w-11 -scale-x-100 text-accent">
-                  <path d="M4 8 C 30 0, 52 18, 50 44 M50 44 L 41 34 M50 44 L 58 33" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                <svg aria-hidden viewBox="0 0 64 40" className="mt-5 h-8 w-12 text-accent">
+                  <path d="M60 24 C 44 6, 22 6, 5 24 M5 24 L 15 22 M5 24 L 8 14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 <p className="-rotate-3 font-[family-name:var(--font-serif)] text-[17px] font-semibold italic leading-tight text-accent">
                   Learn directly
