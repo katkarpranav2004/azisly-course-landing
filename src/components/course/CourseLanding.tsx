@@ -6,6 +6,7 @@ import EnrollModal from "@/components/EnrollModal";
 import FAQ from "@/components/sections/FAQ";
 import Footer from "@/components/sections/Footer";
 import HeroStudio from "./HeroStudio";
+import HeroCombined from "./HeroCombined";
 import Plan from "./Plan";
 import PainSolutions from "./PainSolutions";
 import TestimonialWall from "./TestimonialWall";
@@ -47,8 +48,8 @@ export default function CourseLanding({ content, combined = false }: { content: 
     <StudioProvider content={content}>
       <ThemeShell theme="studio">
         <main className="flex-1">
-          <HeroStudio content={content} onEnroll={openEnroll} />
-          <CredentialStrip />
+          {combined ? <HeroCombined content={content} onEnroll={openEnroll} /> : <HeroStudio content={content} onEnroll={openEnroll} />}
+          {!combined && <CredentialStrip />}
           {combined && <AudienceSplit onEnroll={enrollAs} />}
           <PainSolutions />
           <WhyThis />

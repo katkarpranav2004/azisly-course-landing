@@ -144,7 +144,7 @@ function TimerTiles({ left }: { left: ReturnType<typeof useCountdown> }) {
   );
 }
 /** The one CTA: purple shimmer, a soft pulsing ring, and an arrow that keeps nudging forward. */
-function EnrollCta({ onClick, full = false }: { onClick: () => void; full?: boolean }) {
+export function EnrollCta({ onClick, full = false }: { onClick: () => void; full?: boolean }) {
   return (
     <span className={`relative flex w-full ${full ? "" : "sm:inline-flex sm:w-auto"}`}>
       <motion.span
@@ -175,7 +175,7 @@ function EnrollCta({ onClick, full = false }: { onClick: () => void; full?: bool
 }
 
 /** Tiny tear-off calendar page, e.g. OCT / 15. */
-function CalendarPage({ label }: { label: string }) {
+export function CalendarPage({ label }: { label: string }) {
   const [day, month = ""] = label.split(" ");
   return (
     <span aria-hidden className="flex w-[30px] flex-col overflow-hidden rounded-[7px] border border-[#e3e6eb] bg-white text-center leading-none shadow-[0_2px_6px_-3px_rgba(28,29,31,.4)]">
