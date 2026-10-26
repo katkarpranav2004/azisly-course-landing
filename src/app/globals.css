@@ -102,6 +102,14 @@ body {
   color: #08080a;
 }
 
+/* Tailwind 4 resets buttons to the default arrow; show the hand on anything clickable. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
 @layer components {
   .display {
     font-family: var(--display);

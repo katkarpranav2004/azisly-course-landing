@@ -183,7 +183,21 @@ export default function HeroCombined({ content, onEnroll }: { content: AudienceC
               <div className="mx-auto mt-5 w-full max-w-[340px] rounded-[20px] border border-[#ebe8f7] bg-white p-4 shadow-[0_24px_50px_-28px_rgba(60,40,160,.55)] lg:absolute lg:right-0 lg:top-[22%] lg:mt-0 lg:w-[min(46%,235px)]">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-[15px] font-bold">{faculty.founder.name}</p>
-                  <span aria-hidden className="flex h-[18px] w-[18px] items-center justify-center rounded-[4px] bg-[#0a66c2] text-[10px] font-bold leading-none text-white">in</span>
+                  {copy.linkedin ? (
+                    <a
+                      href={copy.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${faculty.founder.name} on LinkedIn`}
+                      className="flex h-[18px] w-[18px] items-center justify-center rounded-[4px] bg-[#0a66c2] text-[10px] font-bold leading-none text-white transition hover:scale-110"
+                    >
+                      in
+                    </a>
+                  ) : (
+                    <span aria-hidden className="flex h-[18px] w-[18px] items-center justify-center rounded-[4px] bg-[#0a66c2] text-[10px] font-bold leading-none text-white">
+                      in
+                    </span>
+                  )}
                 </div>
                 <ul className="mt-3 flex flex-col gap-3">
                   {copy.credentials.map((c) => {
