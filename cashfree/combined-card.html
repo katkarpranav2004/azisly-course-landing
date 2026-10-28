@@ -3,94 +3,75 @@
 <head>
 <meta charset="utf-8">
 <title>Cashfree card, combined</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Source+Serif+4:ital,wght@0,700;1,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Source+Serif+4:wght@700&display=swap">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{width:1200px;height:1070px;overflow:hidden;background:#fff}
-  .card{position:relative;width:1200px;height:1070px;overflow:hidden;font-family:"Inter Tight",system-ui,sans-serif;color:#1c1d1f;
+  .card{position:relative;width:1200px;height:1070px;overflow:hidden;font-family:"Inter Tight",system-ui,sans-serif;color:#17181a;
     background:
-      radial-gradient(760px 760px at 82% 44%, rgba(124,77,255,.20) 0%, rgba(124,77,255,0) 68%),
-      radial-gradient(520px 420px at -4% 104%, rgba(124,77,255,.10) 0%, rgba(124,77,255,0) 70%),
+      radial-gradient(820px 760px at 80% 46%, rgba(124,77,255,.26) 0%, rgba(124,77,255,0) 66%),
+      radial-gradient(560px 460px at -2% 104%, rgba(124,77,255,.12) 0%, rgba(124,77,255,0) 70%),
       #fff;}
-  .live{position:absolute;left:64px;top:56px;display:flex;align-items:center;gap:14px}
-  .live .p{display:flex;align-items:center;gap:10px;padding:13px 24px;border-radius:999px;background:#5624d0;color:#fff;font-size:22px;font-weight:700}
-  .live .p svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-  .live .bar{width:2px;height:26px;background:#dcdbe6}
-  .live .e{font-size:19px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#6b6e75}
-  h1{position:absolute;left:64px;top:136px;font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:128px;line-height:1.02;letter-spacing:-.025em;color:#17181a}
+  .ring{position:absolute;border-radius:50%;border:2px solid rgba(124,77,255,.16)}
+  .pill{position:absolute;left:64px;top:60px;padding:13px 24px;border-radius:999px;font-size:21px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+    background:#f1ecff;color:#5624d0;border:1.5px solid #ddd3fb}
+  h1{position:absolute;left:64px;top:132px;font-family:"Source Serif 4",Georgia,serif;font-weight:700;font-size:124px;line-height:1.02;letter-spacing:-.025em;color:#17181a}
   h1 .acc{color:#5624d0;position:relative;white-space:nowrap}
-  h1 .acc svg{position:absolute;left:-4px;bottom:-20px;width:104%;height:26px}
-  .sub{position:absolute;left:64px;top:610px;width:440px;font-size:27px;line-height:1.4;font-weight:500;color:#33363b}
-  .sub b{font-weight:800;color:#17181a}
-  .feats{position:absolute;left:64px;top:756px;width:470px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .f{display:flex;align-items:center;gap:12px;height:76px;padding:0 14px;border-radius:20px;background:#fff;border:1.5px solid #ebe8f7;box-shadow:0 14px 30px -20px rgba(60,40,160,.45)}
-  .f .ic{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center}
-  .f .ic svg{width:23px;height:23px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .f span{font-size:17px;line-height:1.15;font-weight:700}
-  .g{background:#e3f5ea}.g svg{stroke:#1d7a45}
-  .v{background:#f1ecff}.v svg{stroke:#5624d0}
-  .o{background:#fff3dc}.o svg{stroke:#e08a00}
-  .b{background:#e8f1ff}.b svg{stroke:#2563c9}
-  .btn{position:absolute;left:64px;top:944px;height:84px;padding:0 22px 0 44px;border-radius:20px;background:linear-gradient(100deg,#5624d0,#7c4dff);color:#fff;display:flex;align-items:center;gap:22px;
-    font-size:30px;font-weight:800;box-shadow:0 18px 36px -16px rgba(86,36,208,.75)}
-  .btn svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-    .blob{position:absolute;right:196px;top:236px;width:420px;height:610px;border-radius:64px;background:linear-gradient(150deg,#e9e1ff,#cdbcff)}
-  .person{position:absolute;right:178px;bottom:0;width:470px;height:720px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 18px 30px rgba(28,29,31,.25));
-    -webkit-mask-image:linear-gradient(to bottom,#000 90%,transparent 100%);mask-image:linear-gradient(to bottom,#000 90%,transparent 100%)}
-  .note{position:absolute;right:150px;top:140px;display:flex;align-items:flex-start;gap:8px;color:#5624d0}
-  .note svg{width:84px;height:56px;margin-top:36px}
-  .note p{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-weight:600;font-size:30px;line-height:1.15;transform:rotate(-3deg)}
-  .cred{position:absolute;right:8px;top:500px;width:326px;background:#fff;border-radius:26px;padding:24px 24px 26px;border:1.5px solid #ebe8f7;box-shadow:0 30px 60px -30px rgba(60,40,160,.6)}
-  .cred .h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-  .cred .h b{font-size:23px;font-weight:800}
-  .cred .in{width:28px;height:28px;border-radius:6px;background:#0a66c2;color:#fff;font-size:16px;font-weight:800;display:grid;place-items:center}
-  .cred ul{list-style:none;display:flex;flex-direction:column;gap:17px}
-  .cred li{display:flex;gap:13px;align-items:flex-start}
-  .cred li svg{flex:none;width:26px;height:26px;margin-top:2px;stroke:#5624d0;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .cred li b{display:block;font-size:20px;font-weight:700;line-height:1.2}
-  .cred li span{display:block;font-size:15px;color:#6b6e75;line-height:1.25;margin-top:2px}
+  h1 .acc svg{position:absolute;left:-4px;right:0;bottom:-22px;width:105%;height:26px}
+  .sub{position:absolute;left:64px;top:632px;width:590px;font-size:27px;line-height:1.38;font-weight:500;color:#33363b}
+  .sub b{font-weight:700;color:#17181a}
+  .chips{position:absolute;left:64px;top:770px;display:flex;gap:14px}
+  .chip{width:182px;height:96px;border-radius:20px;background:#fff;border:1.5px solid #ebe8f7;box-shadow:0 14px 30px -20px rgba(60,40,160,.45);display:flex;align-items:center;gap:12px;padding:0 14px}
+  .chip .ic{flex:none;width:44px;height:44px;border-radius:50%;background:#f1ecff;display:grid;place-items:center}
+  .chip .ic svg{width:24px;height:24px;stroke:#5624d0;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .chip span{font-size:19px;line-height:1.15;font-weight:700;color:#17181a}
+  .btn{position:absolute;left:64px;top:896px;height:84px;padding:0 20px 0 36px;border-radius:999px;background:linear-gradient(100deg,#5624d0,#7c4dff);color:#fff;display:flex;align-items:center;gap:22px;
+    font-size:29px;font-weight:800;box-shadow:0 18px 36px -16px rgba(86,36,208,.75)}
+  .btn i{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center}
+  .btn i svg{width:26px;height:26px;stroke:#5624d0;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .foot{position:absolute;left:64px;top:1010px;display:flex;gap:30px;font-size:19px;font-weight:600;color:#4a4d54}
+  .foot div{display:flex;align-items:center;gap:9px}
+  .foot svg{width:24px;height:24px;stroke:#5624d0;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .glow{position:absolute;right:30px;top:300px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,77,255,.20) 0%,rgba(124,77,255,0) 68%)}
+  .person{position:absolute;right:-6px;bottom:0;width:560px;height:826px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 18px 30px rgba(28,29,31,.28))}
+  .name{position:absolute;right:46px;bottom:48px;background:#fff;border:1.5px solid #ebe8f7;border-radius:20px;padding:16px 24px;box-shadow:0 24px 50px -28px rgba(60,40,160,.6)}
+  .name b{display:block;font-size:26px;font-weight:800;color:#17181a}
+  .name span{font-size:18px;font-weight:600;color:#5624d0}
+  .star{position:absolute;fill:#7c4dff}
 </style>
 </head>
 <body>
 <div class="card">
-  <div class="live">
-    <div class="p"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5 21 8v8l-5-2.5"/></svg>Live Cohort</div>
-    <div class="bar"></div>
-    <div class="e">AI Corporate Analyst Program</div>
-  </div>
+  <div class="ring" style="width:520px;height:520px;right:-170px;top:-190px"></div>
+  <div class="ring" style="width:360px;height:360px;right:-90px;top:-110px"></div>
+  <div class="glow"></div>
+
+  <div class="pill">Students &amp; professionals &middot; Launch offer</div>
 
   <h1>Learn AI.<br>Apply it<br><span class="acc">at work.<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M3 16 C70 6, 170 5, 297 13" stroke="#5624d0" stroke-width="7" fill="none" stroke-linecap="round"/></svg></span></h1>
 
-  <p class="sub">13 live classes with Prasun Choudhary. Real-world projects, <b>no coding needed</b>.</p>
+  <p class="sub">Learn to use AI for <b>real work</b>: reports, Excel, presentations, agents and dashboards. Live classes, <b>no coding needed</b>.</p>
 
-  <div class="blob"></div>
+  <div class="chips">
+    <div class="chip"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5 21 8v8l-5-2.5"/></svg></div><span>13 live<br>sessions</span></div>
+    <div class="chip"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21 4 16.5v-9z"/><path d="M12 12 20 7.5M12 12 4 7.5M12 12v9"/></svg></div><span>4 real<br>AI builds</span></div>
+    <div class="chip"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/></svg></div><span>Completion<br>certificate</span></div>
+  </div>
+
+  <div class="btn">Join the Live Program <i><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></div>
+
+  <div class="foot">
+    <div><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Real work use-cases</div>
+    <div><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Templates &amp; frameworks</div>
+  </div>
+
   <img class="person" src="../public/faculty/prasun-cutout.webp" alt="">
 
-  <div class="note">
-    <svg viewBox="0 0 64 40"><path d="M60 24 C 44 6, 22 6, 5 24 M5 24 L 15 22 M5 24 L 8 14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <p>Learn directly<br>from Prasun</p>
-  </div>
+  <div class="name"><b>Prasun Choudhary</b><span>Ex-President, OYO International</span></div>
 
-  <div class="cred">
-    <div class="h"><b>Prasun Choudhary</b><div class="in">in</div></div>
-    <ul>
-      <li><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg><div><b>IIT Kharagpur</b><span>Engineering alumnus</span></div></li>
-      <li><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg><div><b>Former OYO leader</b><span>Ex-President, OYO International</span></div></li>
-      <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><div><b>13 countries</b><span>International work experience</span></div></li>
-      <li><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.6"/><path d="M17 14.3c2.9 0 4.5 2 4.5 4.7"/></svg><div><b>20+ years</b><span>Corporate leadership</span></div></li>
-    </ul>
-  </div>
-
-  <div class="feats">
-    <div class="f"><div class="ic g"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div><span>AI-powered<br>Excel</span></div>
-    <div class="f"><div class="ic v"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div><span>Reports &amp;<br>Presentations</span></div>
-    <div class="f"><div class="ic o"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div><span>AI Agents &amp;<br>Workflows</span></div>
-    <div class="f"><div class="ic b"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><span>Dashboards &amp;<br>Prototypes</span></div>
-  </div>
-
-  <div class="btn">Enroll now <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+  <svg class="star" style="left:690px;top:150px" width="34" height="34" viewBox="0 0 24 24"><path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z"/></svg>
+  <svg class="star" style="left:690px;top:560px;opacity:.55" width="22" height="22" viewBox="0 0 24 24"><path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z"/></svg>
+  <svg class="star" style="left:1128px;top:384px" width="30" height="30" viewBox="0 0 24 24"><path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z"/></svg>
 </div>
 </body>
 </html>
-
-
