@@ -39,7 +39,6 @@ const HERO = {
   css: "linear-gradient(180deg,#f3efff 0,#f3efff 112px,#ebe5ff 100%)",
   bg: "#f3efff",
   border: "border:1px solid #e0daf5;",
-  nav: "#1c1d1f",
   sub: "#33363b",
   head: SERIF,
   headWeight: "bold",
@@ -110,7 +109,6 @@ export function renderWelcomeEmail({ name, orderId, config, interactive = false 
     `<a href="${esc(href)}" target="_blank" style="font-family:${SANS};font-size:13.5px;line-height:20px;color:${color};text-decoration:none;padding:0 11px;">${esc(label)}</a>`;
   const navWith = (color: string) => [navLink("Support", `mailto:${config.supportEmail}`, color), navLink("Azisly.ai", config.azislyUrl, color)].join("");
   const nav = navWith(NAVY); // footer
-  const heroNav = navWith(theme.nav);
 
   const classRows = (from: number, to: number) =>
     curriculum
@@ -206,8 +204,7 @@ ${sampleNotice}
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${theme.bg}" style="background-color:${theme.bg};background-image:${theme.css};border-radius:16px;${theme.border}">
         <!-- opening: two party poppers pop in the top corners and shower confetti, once, then settle on the logo -->
         <tr><td style="font-size:0;line-height:0;"><img src="${esc(img(`email/popper-top-corporate.gif`))}" width="580" alt="Azisly.ai" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:16px 16px 0 0;"></td></tr>
-        <tr><td align="center" style="padding:4px 10px 0 10px;">${heroNav}</td></tr>
-        <tr><td class="pad" align="center" style="padding:30px 30px 0 30px;">
+        <tr><td class="pad" align="center" style="padding:22px 30px 0 30px;">
           <h1 class="h1" style="margin:0;font-family:${theme.head};font-size:36px;line-height:46px;font-weight:${theme.headWeight};color:${theme.headColor};">${headline}<br><span style="${theme.accent}">Your seat is confirmed.</span></h1>
         </td></tr>
         <tr><td class="pad" align="center" style="padding:20px 44px 42px 44px;">
