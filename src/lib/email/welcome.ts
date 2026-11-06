@@ -1,10 +1,10 @@
 import "server-only";
 import { cohort, curriculum, MODULE_COUNT } from "@/content/shared";
-import type { EmailAudience, EmailConfig } from "./config";
+import type { EmailConfig } from "./config";
 
 /**
  * The post-payment welcome email, styled after a clean corporate newsletter: a header panel in the landing
- * page's own theme (sunset for students, studio for working professionals; logo, links, headline, button),
+ * page's own theme (the studio look the combined student and working-professional page uses; logo, links, headline),
  * then a white body (greeting, a note from Prasun, three numbers,
  * the schedule as soft grey cards with a dropdown for the full list, the class link) and a mint panel with the Azisly gift of 50 free
  * AI Interview practice credits.
@@ -28,60 +28,32 @@ const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
 const BANNER = {
-  college: {
-    audience: "Freshers",
-    headline: "50 free credits for AI Interview practice",
-    body: "Rehearse your first interviews with AI before the real ones.",
-    cta: "Sign up and claim 50 credits",
-  },
-  corporate: {
-    audience: "Working professionals",
-    headline: "50 free credits for AI Interview practice",
-    body: "Rehearse your next interview with AI before the real one.",
-    cta: "Sign up and claim 50 credits",
-  },
+  audience: "Students and working professionals",
+  headline: "50 free credits for AI Interview practice",
+  body: "Rehearse your interviews with AI before the real ones.",
+  cta: "Sign up and claim 50 credits",
 } as const;
 
-/** The first card wears the landing page's own theme: sunset for students, studio for working professionals. */
+/** The header panel wears the landing page's own studio theme: lavender, serif headline, purple accent. */
 const HERO = {
-  college: {
-    css: "linear-gradient(180deg,#e0338f 0,#e0338f 112px,#a43bd8 58%,#5a6bff 100%)",
-    bg: "#e0338f",
-    border: "",
-    nav: "#ffffff",
-    sub: "#ffffff",
-    head: "'Arial Black','Helvetica Neue',Arial,sans-serif",
-    headWeight: "900",
-    headColor: "#ffffff",
-    // the white highlighter bar the student page puts under its accent words
-    accent: "background:linear-gradient(transparent 62%,rgba(255,255,255,.34) 62%,rgba(255,255,255,.34) 92%,transparent 92%);padding:0 4px;color:#ffffff;",
-    btnBg: "#ffffff",
-    btnFg: "#7a1d6b",
-    btnRadius: 18,
-  },
-  corporate: {
-    css: "linear-gradient(180deg,#f3efff 0,#f3efff 112px,#ebe5ff 100%)",
-    bg: "#f3efff",
-    border: "border:1px solid #e0daf5;",
-    nav: "#1c1d1f",
-    sub: "#33363b",
-    head: SERIF,
-    headWeight: "bold",
-    headColor: "#1c1d1f",
-    accent: "color:#5624d0;",
-    btnBg: "#5624d0",
-    btnFg: "#ffffff",
-    btnRadius: 12,
-  },
+  css: "linear-gradient(180deg,#f3efff 0,#f3efff 112px,#ebe5ff 100%)",
+  bg: "#f3efff",
+  border: "border:1px solid #e0daf5;",
+  nav: "#1c1d1f",
+  sub: "#33363b",
+  head: SERIF,
+  headWeight: "bold",
+  headColor: "#1c1d1f",
+  accent: "color:#5624d0;",
 } as const;
 
-function withUtm(url: string, audience: EmailAudience) {
+function withUtm(url: string) {
   try {
     const u = new URL(url);
     u.searchParams.set("utm_source", "welcome-email");
     u.searchParams.set("utm_medium", "email");
     u.searchParams.set("utm_campaign", "interview-credits");
-    u.searchParams.set("utm_content", audience);
+    u.searchParams.set("utm_content", "combined");
     return u.toString();
   } catch {
     return url;
@@ -116,17 +88,16 @@ const rule = (margin = "28px 0") => `<div style="margin:${margin};border-top:1px
 export interface WelcomeInput {
   /** Switch the tap-to-open gift on for every viewer (the browser preview). In mail it is limited to Apple Mail. */
   interactive?: boolean;
-  audience: EmailAudience;
   name?: string;
   orderId?: string;
   config: EmailConfig;
 }
 
-export function renderWelcomeEmail({ audience, name, orderId, config, interactive = false }: WelcomeInput) {
+export function renderWelcomeEmail({ name, orderId, config, interactive = false }: WelcomeInput) {
   const first = (name || "").trim().split(/\s+/)[0];
   const hello = first ? esc(first.charAt(0).toUpperCase() + first.slice(1)) : "there";
-  const banner = BANNER[audience];
-  const claimUrl = withUtm(config.azislyUrl, audience);
+  const banner = BANNER;
+  const claimUrl = withUtm(config.azislyUrl);
   const img = (file: string) => `${config.siteUrl}/${file}`;
   const cls = classParts();
   const monthName = cls.month.charAt(0) + cls.month.slice(1).toLowerCase();
@@ -134,7 +105,7 @@ export function renderWelcomeEmail({ audience, name, orderId, config, interactiv
   const preheader = `Your seat is confirmed. Class 1 is live on ${cohort.platform} on ${cohort.startsLabel}. Your links and 50 free interview-practice credits are inside.`;
   const headline = first ? `You&rsquo;re in, ${hello}!` : `You&rsquo;re in!`;
 
-  const theme = HERO[audience];
+  const theme = HERO;
   const navLink = (label: string, href: string, color: string) =>
     `<a href="${esc(href)}" target="_blank" style="font-family:${SANS};font-size:13.5px;line-height:20px;color:${color};text-decoration:none;padding:0 11px;">${esc(label)}</a>`;
   const navWith = (color: string) => [navLink("Support", `mailto:${config.supportEmail}`, color), navLink("Azisly.ai", config.azislyUrl, color)].join("");
@@ -234,7 +205,7 @@ ${sampleNotice}
     <tr><td style="padding:10px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${theme.bg}" style="background-color:${theme.bg};background-image:${theme.css};border-radius:16px;${theme.border}">
         <!-- opening: two party poppers pop in the top corners and shower confetti, once, then settle on the logo -->
-        <tr><td style="font-size:0;line-height:0;"><img src="${esc(img(`email/popper-top-${audience}.gif`))}" width="580" alt="Azisly.ai" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:16px 16px 0 0;"></td></tr>
+        <tr><td style="font-size:0;line-height:0;"><img src="${esc(img(`email/popper-top-corporate.gif`))}" width="580" alt="Azisly.ai" style="display:block;width:100%;max-width:580px;height:auto;border:0;border-radius:16px 16px 0 0;"></td></tr>
         <tr><td align="center" style="padding:4px 10px 0 10px;">${heroNav}</td></tr>
         <tr><td class="pad" align="center" style="padding:30px 30px 0 30px;">
           <h1 class="h1" style="margin:0;font-family:${theme.head};font-size:36px;line-height:46px;font-weight:${theme.headWeight};color:${theme.headColor};">${headline}<br><span style="${theme.accent}">Your seat is confirmed.</span></h1>
@@ -258,7 +229,7 @@ ${sampleNotice}
         <td width="64" valign="middle"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="${MINT}" style="border-radius:30px;padding:3px;"><img src="${esc(img("email/prasun.png"))}" width="54" height="54" alt="Prasun Choudhary" style="display:block;border:0;border-radius:27px;"></td></tr></table></td>
         <td valign="middle"><p style="margin:0;font-family:${SANS};font-size:16px;line-height:22px;font-weight:bold;color:${NAVY};">Prasun Choudhary</p><p style="margin:1px 0 0 0;font-family:${SANS};font-size:13px;line-height:18px;color:${MUTED};">Your instructor, Founder of Azisly.ai</p></td>
       </tr></table>
-      <p style="margin:0;font-family:${SANS};font-size:16px;line-height:27px;color:${TEXT};">Welcome aboard! Over ${MODULE_COUNT} live sessions you will go from using AI for quick answers to building your own <b style="background:${MINT};padding:0 4px;color:${NAVY};">agents</b>, <b style="background:${MINT};padding:0 4px;color:${NAVY};">dashboards</b> and a working <b style="background:${MINT};padding:0 4px;color:${NAVY};">prototype</b>. No coding needed. Come curious, and bring a real task from your day.</p>
+      <p style="margin:0;font-family:${SANS};font-size:16px;line-height:27px;color:${TEXT};">Welcome aboard! Over ${MODULE_COUNT} live sessions you will go from using AI for quick answers to building your own <b style="background:${MINT};padding:0 4px;color:${NAVY};">agents</b>, <b style="background:${MINT};padding:0 4px;color:${NAVY};">dashboards</b> and a working <b style="background:${MINT};padding:0 4px;color:${NAVY};">prototype</b>. No coding needed. Come curious, and bring a real task from your work or your studies.</p>
       <p style="margin:12px 0 0 0;font-family:${SERIF};font-size:28px;line-height:32px;font-style:italic;color:${NAVY};">Prasun</p>
 
       ${rule("28px 0 24px 0")}

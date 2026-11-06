@@ -1,7 +1,5 @@
 import "server-only";
 
-export type EmailAudience = "college" | "corporate";
-
 /**
  * Everything the welcome email needs that the team supplies later. All of it comes from environment
  * variables (Vercel: Settings, Environment Variables), so nothing here needs a code change:
@@ -26,7 +24,7 @@ export interface EmailConfig {
   sample: boolean;
 }
 
-export function getEmailConfig(audience: EmailAudience, preview = false): EmailConfig {
+export function getEmailConfig(preview = false): EmailConfig {
   const env = process.env;
   const siteUrl = (env.NEXT_PUBLIC_SITE_URL || "https://azisly-course-landing.vercel.app").replace(/\/$/, "");
 

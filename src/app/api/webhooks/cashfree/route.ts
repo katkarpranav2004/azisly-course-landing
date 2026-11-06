@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { sendWelcomeEmail } from "@/lib/email/send";
-import type { EmailAudience } from "@/lib/email/config";
 
 /**
  * Cashfree calls this after a payment. For a successful one, it queues the welcome email to the address
  * the buyer typed on the payment form (read from the payload, nobody types it twice).
  *
  * Set up once in the Cashfree dashboard: Developers, Webhooks, add  https://<your-site>/api/webhooks/cashfree
- * (for both payment forms / the payment events). Needs CASHFREE_SECRET_KEY to verify the signature.
+ * (for every payment form / the payment events). One welcome email goes to every buyer, whichever form they paid on. Needs CASHFREE_SECRET_KEY to verify the signature.
  */
 
 type Json = Record<string, unknown>;
@@ -24,28 +23,6 @@ function verify(raw: string, request: NextRequest): "ok" | "bad" | "no-secret" {
   const a = Buffer.from(sig);
   const b = Buffer.from(expected);
   return a.length === b.length && timingSafeEqual(a, b) ? "ok" : "bad";
-}
-
-/** True when any field whose label looks like a college/university/institute has something typed in it. */
-function hasCollegeField(v: unknown, depth = 0): boolean {
-  if (!v || typeof v !== "object" || depth > 6) return false;
-  return Object.entries(v as Json).some(([key, val]) =>
-    /college|university|institute/i.test(key) && typeof val === "string" ? val.trim().length > 0 : hasCollegeField(val, depth + 1),
-  );
-}
-
-/**
- * Which payment form was paid. The form and order notes pick the audience. The one combined form (its name contains
- * "combined") is shared, so there a filled-in College Name field means a student and anything else a working professional.
- */
-function audienceOf(data: Json): EmailAudience | null {
-  const hints = [JSON.stringify(obj(data.form)), JSON.stringify(obj(data.payment_form)), str(obj(data.order).order_note), JSON.stringify(obj(data.order).order_tags ?? {})]
-    .filter(Boolean)
-    .join(" ");
-  if (/combined/i.test(hints)) return hasCollegeField(data) ? "college" : "corporate";
-  if (/college/i.test(hints)) return "college";
-  if (/corporate/i.test(hints)) return "corporate";
-  return null;
 }
 
 export async function POST(request: NextRequest) {
@@ -85,13 +62,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, skipped: "no usable email or order id in the payload" });
   }
 
-  let audience = audienceOf(data);
-  if (!audience) {
-    audience = "corporate";
-    console.warn("Cashfree webhook: could not tell which form was paid; defaulting to the corporate email", { orderId });
-  }
-
-  const result = await sendWelcomeEmail({ to: email, name, orderId, audience });
+  const result = await sendWelcomeEmail({ to: email, name, orderId });
   if (result.status === "failed") {
     // A non-2xx makes Cashfree retry the webhook later, which is what we want for a provider hiccup.
     console.error("Welcome email failed", { orderId, detail: result.detail });
@@ -99,6 +70,6 @@ export async function POST(request: NextRequest) {
   }
 
   // No buyer details in the log.
-  console.log("Welcome email", { orderId, audience, status: result.status, sendAt: result.sendAt });
-  return NextResponse.json({ ok: true, audience, status: result.status, sendAt: result.sendAt });
+  console.log("Welcome email", { orderId, status: result.status, sendAt: result.sendAt });
+  return NextResponse.json({ ok: true, status: result.status, sendAt: result.sendAt });
 }

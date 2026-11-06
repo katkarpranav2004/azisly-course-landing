@@ -1,5 +1,5 @@
 import "server-only";
-import { getEmailConfig, type EmailAudience } from "./config";
+import { getEmailConfig } from "./config";
 import { renderWelcomeEmail } from "./welcome";
 
 /**
@@ -20,14 +20,13 @@ export interface SendResult {
   sendAt?: string;
 }
 
-export async function sendWelcomeEmail(input: { to: string; name?: string; orderId: string; audience: EmailAudience }): Promise<SendResult> {
+export async function sendWelcomeEmail(input: { to: string; name?: string; orderId: string }): Promise<SendResult> {
   const delay = Math.max(0, Number(process.env.EMAIL_DELAY_MINUTES ?? 5) || 5);
   const sendAt = new Date(Date.now() + delay * 60_000).toISOString();
   const mail = renderWelcomeEmail({
-    audience: input.audience,
     name: input.name,
     orderId: input.orderId,
-    config: getEmailConfig(input.audience, false),
+    config: getEmailConfig(false),
   });
 
   const key = process.env.RESEND_API_KEY;
