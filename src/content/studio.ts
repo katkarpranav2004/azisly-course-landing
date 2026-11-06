@@ -147,7 +147,7 @@ const collegeStudio: StudioCopy = {
     },
     {
       title: "Priced for students",
-      text: "₹5,999 one time, GST included. That's under ₹500 per live class, against the regular ₹29,999.",
+      text: "₹2,999 one time, GST included. That's under ₹250 per live class, against the regular ₹29,999.",
     },
     {
       title: "Projects recruiters ask about",
@@ -232,7 +232,7 @@ const corporateStudio: StudioCopy = {
     },
     {
       title: "A fraction of the usual price",
-      text: "₹5,999 one time, GST included. That's under ₹500 per live class, against the regular ₹29,999.",
+      text: "₹2,999 one time, GST included. That's under ₹250 per live class, against the regular ₹29,999.",
     },
     {
       title: "Built on your real work",

@@ -119,7 +119,7 @@ function LedgerLabel({ children, className = "" }: { children: ReactNode; classN
   return <span className={`min-w-0 font-mono text-[10.5px] uppercase leading-snug tracking-[0.14em] text-muted ${className}`}>{children}</span>;
 }
 
-/** ₹5,999 ÷ 13 worked out as a column sum, ruled off and double underlined like a final figure. */
+/** ₹2,999 ÷ 13 worked out as a column sum, ruled off and double underlined like a final figure. */
 function Ledger({ offer }: { offer: number }) {
   const perClass = Math.round(offer / MODULE_COUNT);
   const figure = `${serif} text-right text-[24px] font-bold leading-none lg:text-[28px]`;
@@ -160,7 +160,7 @@ function Ledger({ offer }: { offer: number }) {
   );
 }
 
-/** "Why this, not another course" as a by-the-numbers spread: 13 live classes, about ₹461 a class, 4 builds. */
+/** "Why this, not another course" as a by-the-numbers spread: 13 live classes, about ₹231 a class, 4 builds. */
 export default function WhyThis() {
   const { copy, content } = useStudio();
   const [live, price, real] = copy.usp;

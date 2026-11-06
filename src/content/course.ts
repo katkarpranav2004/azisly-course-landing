@@ -39,7 +39,7 @@ export const courseContent: AudienceContent = {
   pricing: {
     currency: "INR",
     listPrice: 29999,
-    offerPrice: 5999,
+    offerPrice: 2999,
     offerStartedAt: "2026-09-30T00:00:00+05:30",
     offerEndsAt: "2026-11-20T23:59:59+05:30",
     seatsLeft: 70,
@@ -70,7 +70,7 @@ export const courseContent: AudienceContent = {
     },
     {
       question: "How long do I have access?",
-      answer: "It's a one-time payment of ₹5,999 (GST included) with lifetime access to the course material.",
+      answer: "It's a one-time payment of ₹2,999 (GST included) with lifetime access to the course material.",
     },
   ],
 };
@@ -101,7 +101,7 @@ export const course = {
     },
     {
       title: "A fraction of the usual price",
-      text: "₹5,999 one time, GST included. That's under ₹500 per live class, for a program priced well below comparable AI courses.",
+      text: "₹2,999 one time, GST included. That's under ₹250 per live class, for a program priced well below comparable AI courses.",
     },
     {
       title: "Built on real corporate use cases",
@@ -109,7 +109,7 @@ export const course = {
     },
   ],
   nextSteps: [
-    { title: "Pay securely", text: "₹5,999 via Cashfree. UPI, cards and net banking. GST included." },
+    { title: "Pay securely", text: "₹2,999 via Cashfree. UPI, cards and net banking. GST included." },
     { title: `Get your ${cohort.platform} link`, text: `Sent instantly on ${cohort.deliveredVia}, along with your onboarding details.` },
     { title: `Join class 1 on ${cohort.startsLabel}`, text: `Live on ${cohort.platform} with Prasun. 13 classes, building as you go.` },
     { title: "Graduate with proof", text: "Four real AI builds, a certificate and lifetime access to the material." },
